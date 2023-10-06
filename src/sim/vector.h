@@ -13,17 +13,22 @@ typedef struct Pont{
     int y;
 } Pont;
 
-
 Vektor vektor_osszeAd(Vektor *u, Vektor *v);
 
 Vektor vektor_kivon(Vektor *u, Vektor *v);
+
+double vektor_szoroz(Vektor *u, Vektor *v);
 
 Vektor vektor_skalarSzoroz(Vektor *u, double skalar);
 
 Vektor vektor_skalarOszt(Vektor *u, double skalar);
 
-Vektor vektor_negal(Vektor *u);
+Vektor vektor_negal(Vektor *a);
 
 double vektor_tavolsag(Vektor *u, Vektor *v);
+
+double vektor_hossz(Vektor *a);
+
+double vektor_rad(Vektor *u, Vektor *v);
 
 Pont vektor_toPont(Vektor u);
