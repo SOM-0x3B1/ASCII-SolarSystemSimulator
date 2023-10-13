@@ -18,4 +18,7 @@ add_executable(ASCII_SSS src/main.c
         src/sim/simulator.h
         src/menu/main_menu.c
         src/menu/main_menu.h
+        src/graphics/layer.c
+        src/graphics/layer.h
+        src/econio/econio.c
 )

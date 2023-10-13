@@ -1,6 +1,7 @@
 #include "vector.h"
 #include "math.h"
 
+
 double negyzet(double x){
     return x * x;
 }

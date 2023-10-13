@@ -3,6 +3,7 @@
 
 #endif //ASCII_SSS_VECTOR_H
 
+
 typedef struct Vector{
     double x;
     double y;

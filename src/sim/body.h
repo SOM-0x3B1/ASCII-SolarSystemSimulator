@@ -5,6 +5,7 @@
 
 #include "../econio/econio.h"
 #include "vector.h"
+#include "../graphics/layer.h"
 
 
 typedef struct Body{
@@ -20,3 +21,6 @@ typedef struct Body{
 typedef struct Trail{
     Vector position;
 } Trail;
+
+
+Layer bodyLayer;

@@ -3,6 +3,7 @@
 
 #endif //ASCII_SSS_EDIT_MENU_H
 
+
 typedef enum EditMenuOption {
     ADD_BODY = 0,
     EDIT_BODY = 1,
