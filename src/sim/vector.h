@@ -3,32 +3,32 @@
 
 #endif //ASCII_SSS_VECTOR_H
 
-typedef struct Vektor{
+typedef struct Vector{
     double x;
     double y;
-} Vektor;
+} Vector;
 
-typedef struct Pont{
+typedef struct Point{
     int x;
     int y;
-} Pont;
+} Point;
 
-Vektor vektor_osszeAd(Vektor *u, Vektor *v);
+Vector vector_add(Vector u, Vector v);
 
-Vektor vektor_kivon(Vektor *u, Vektor *v);
+Vector vector_subtract(Vector u, Vector v);
 
-double vektor_szoroz(Vektor *u, Vektor *v);
+double vector_multiply(Vector u, Vector v);
 
-Vektor vektor_skalarSzoroz(Vektor *u, double skalar);
+Vector vector_scalarMultiply(Vector u, double skalar);
 
-Vektor vektor_skalarOszt(Vektor *u, double skalar);
+Vector vector_scalarDivision(Vector u, double skalar);
 
-Vektor vektor_negal(Vektor *a);
+Vector vector_invert(Vector a);
 
-double vektor_tavolsag(Vektor *u, Vektor *v);
+double vector_distance(Vector u, Vector v);
 
-double vektor_hossz(Vektor *a);
+double vector_length(Vector a);
 
-double vektor_rad(Vektor *u, Vektor *v);
+double vector_angle(Vector u, Vector v);
 
-Pont vektor_toPont(Vektor u);
+Point vector_toPoint(Vector u);

@@ -8,6 +8,6 @@
 int screen_widht;
 int screen_height;
 
-Pont screen_offset;
+Point screen_offset;
 
 char *map;

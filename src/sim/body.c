@@ -1,17 +1,17 @@
 #include "body.h"
 
-void body_addGravityEffect(Body *dest, Body *src){
-    double d = vektor_tavolsag(&dest->position, &src->position);
+void body_addGravityEffect(Body *dest, Body src){
+    double d = vector_distance(dest->position, src.position);
     double d2 = d *d;
-    double erosseg = src->mass / d2;
+    double force = src.mass / d2;
 
-    Vektor v = vektor_kivon(&dest->position, &src->position);
-    Vektor egysegVektor = vektor_skalarOszt(&v, d);
-    v = vektor_skalarSzoroz(&egysegVektor, erosseg);
+    Vector v = vector_subtract(dest->position, src.position);
+    Vector egysegVektor = vector_scalarDivision(v, d);
+    v = vector_scalarMultiply(egysegVektor, force);
 
-    dest->velocity = vektor_osszeAd(&dest->velocity, &src->velocity);
+    dest->velocity = vector_add(dest->velocity, v);
 }
 
 void body_move(Body body){
-    body.velocity = vektor_osszeAd(&body.position, &body.velocity);
+    body.velocity = vector_add(body.position, body.velocity);
 }

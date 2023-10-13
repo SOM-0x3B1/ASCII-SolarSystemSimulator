@@ -9,16 +9,14 @@
 
 typedef struct Body{
     int index;
-    Vektor position;
+    Vector position;
     int size;
     int mass;
-    int hasShadow;
     EconioColor color;
 
-    Vektor velocity;
+    Vector velocity;
 } Body;
 
 typedef struct Trail{
-    Vektor position;
+    Vector position;
 } Trail;
-

@@ -5,53 +5,53 @@ double negyzet(double x){
     return x * x;
 }
 
-Vektor vektor_osszeAd(Vektor *u, Vektor *v){
-    Vektor res = {u->x + v->x, u->y + v->y};
+Vector vector_add(Vector u, Vector v){
+    Vector res = {u.x + v.x, u.y + v.y};
     return res;
 }
 
-Vektor vektor_kivon(Vektor *u, Vektor *v){
-    Vektor res = {u->x - v->x, u->y - v->y};
+Vector vector_subtract(Vector u, Vector v){
+    Vector res = {u.x - v.x, u.y - v.y};
     return res;
 }
 
-double vektor_szoroz(Vektor *u, Vektor *v){
-    double res = (u->x * v->x) + (u->y * v->y);
+double vector_multiply(Vector u, Vector v){
+    double res = (u.x * v.x) + (u.y * v.y);
     return res;
 }
 
-Vektor vektor_skalarSzoroz(Vektor *u, double skalar){
-    Vektor res = {u->x * skalar, u->y * skalar};
+Vector vector_scalarMultiply(Vector u, double skalar){
+    Vector res = {u.x * skalar, u.y * skalar};
     return res;
 }
 
-Vektor vektor_skalarOszt(Vektor *u, double skalar){
-    Vektor res = {u->x / skalar, u->y / skalar};
+Vector vector_scalarDivision(Vector u, double skalar){
+    Vector res = {u.x / skalar, u.y / skalar};
     return res;
 }
 
-Vektor vektor_negal(Vektor *a){
-    Vektor res = {-(a->x), -(a->y)};
+Vector vector_invert(Vector a){
+    Vector res = {-(a.x), -(a.y)};
     return res;
 }
 
-double vektor_tavolsag(Vektor *u, Vektor *v){
-    return sqrt(negyzet(u->x - v->x) + negyzet(u->y - v->y));
+double vector_distance(Vector u, Vector v){
+    return sqrt(negyzet(u.x - v.x) + negyzet(u.y - v.y));
 }
 
-double vektor_hossz(Vektor *a){
-    return sqrt((a->x) + negyzet(a->y));
+double vector_length(Vector a){
+    return sqrt((a.x) + negyzet(a.y));
 }
 
-double vektor_rad(Vektor *u, Vektor *v){
-    double szorzat = vektor_szoroz(u, v);
-    double hU = vektor_hossz(u);
-    double hV = vektor_hossz(v);
+double vector_angle(Vector u, Vector v){
+    double szorzat = vector_multiply(u, v);
+    double hU = vector_length(u);
+    double hV = vector_length(v);
 
     return acos(szorzat / (hU * hV));
 }
 
-Pont vektor_toPont(Vektor u){
-    Pont p = {(int)u.x, (int)u.y};
+Point vector_toPoint(Vector u){
+    Point p = {(int)u.x, (int)u.y};
     return p;
 }
