@@ -21,3 +21,6 @@ typedef struct Body{
 typedef struct Trail{
     Vector position;
 } Trail;
+
+
+void body_draw(Body body);

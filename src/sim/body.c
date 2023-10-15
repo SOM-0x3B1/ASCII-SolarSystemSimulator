@@ -1,5 +1,6 @@
 #include "body.h"
 #include "../graphics/render.h"
+#include "../global.h"
 
 
 void body_addGravityEffect(Body *dest, Body src){
@@ -20,14 +21,13 @@ void body_move(Body body){
 
 void body_draw(Body body){
     Point p = vector_toPoint(body.position);
-    int v = p.y / 2;
-    for (int y = 0; y < 30; y++) {
-        for (int x = 0; x < 120; x++) {
+    for (int y = 0; y < screen_height; y++) {
+        for (int x = 0; x < screen_width; x++) {
             int dX = x - p.x;
-            int dY = (y - v) * 2;
+            int dY = (y - p.y) * 2;
 
             if ((dX * dX) + (dY * dY) <= (body.size * body.size))
-                layer_writeAtXY(bodyLayer, x, y, '#', body.color, body.color);
+                layer_writeAtXY(&bodyLayer, x, y, '@', body.color, body.color);
         }
     }
 }

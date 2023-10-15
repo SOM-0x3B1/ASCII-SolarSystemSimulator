@@ -4,3 +4,8 @@
 #endif //ASCII_SSS_RENDER_H
 
 
+void render_init();
+
+void render_refreshScreen();
+
+void render_full();

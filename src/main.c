@@ -11,14 +11,12 @@ int main() {
     econio_set_title("ASCII Solar System Simulator");
     econio_rawmode();
 
-    screen_width = 120;
-    screen_height = 30;
+    screen_width = 119;
+    screen_height = 29;
     currentState = EDIT_MENU;
 
-    guiLayer.enabled = true;
-    bodyLayer.enabled = true;
-    trailLayer.enabled = true;
-    menuLayer.enabled = true;
+    layer_init();
+    render_init();
 
     while (!exiting){
         switch (currentState) {
@@ -30,6 +28,7 @@ int main() {
                 simulation_processInput();
                 break;
         }
+        render_full();
         econio_sleep(0.1);
     }
 

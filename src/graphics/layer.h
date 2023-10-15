@@ -16,11 +16,16 @@ typedef struct Layer{
 
 
 extern Layer guiLayer;
+extern Layer menuLayer;
 extern Layer bodyLayer;
 extern Layer trailLayer;
-extern Layer menuLayer;
+
+extern int layerCount;
+extern Layer *layers[4];
 
 
-void layer_writeAtXY(Layer l, int x, int y, char c, EconioColor fgc, EconioColor bgc);
+void layer_init();
 
-void layer_clear(Layer l);
+void layer_writeAtXY(Layer *l, int x, int y, char c, EconioColor fgc, EconioColor bgc);
+
+void layer_clear(Layer *l);
