@@ -1,0 +1,6 @@
+#ifndef ASCII_SSS_RENDER_H
+#define ASCII_SSS_RENDER_H
+
+#endif //ASCII_SSS_RENDER_H
+
+

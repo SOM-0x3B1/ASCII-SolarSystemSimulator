@@ -9,7 +9,7 @@
 
 
 typedef struct Body{
-    int index;
+    char name[12];
     Vector position;
     int size;
     int mass;
@@ -21,6 +21,3 @@ typedef struct Body{
 typedef struct Trail{
     Vector position;
 } Trail;
-
-
-Layer bodyLayer;

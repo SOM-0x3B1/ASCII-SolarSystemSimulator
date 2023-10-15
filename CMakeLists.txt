@@ -8,17 +8,17 @@ add_executable(ASCII_SSS src/main.c
         src/sim/vector.h
         src/menu/edit_menu.c
         src/menu/edit_menu.h
-        src/graphics/renderer.c
-        src/graphics/renderer.h
-        src/screen.c
-        src/screen.h
+        src/graphics/render.c
+        src/graphics/render.h
         src/sim/body.c
         src/sim/body.h
-        src/sim/simulator.c
-        src/sim/simulator.h
         src/menu/main_menu.c
         src/menu/main_menu.h
         src/graphics/layer.c
         src/graphics/layer.h
         src/econio/econio.c
+        src/global.c
+        src/global.h
+        src/sim/simulator.c
+        src/sim/simulator.h
 )

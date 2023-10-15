@@ -1,4 +1,5 @@
 #include "body.h"
+#include "../graphics/render.h"
 
 
 void body_addGravityEffect(Body *dest, Body src){
@@ -26,7 +27,7 @@ void body_draw(Body body){
             int dY = (y - v) * 2;
 
             if ((dX * dX) + (dY * dY) <= (body.size * body.size))
-                layer_writeXY(bodyLayer, x, y, '#', body.color, body.color);
+                layer_writeAtXY(bodyLayer, x, y, '#', body.color, body.color);
         }
     }
 }
