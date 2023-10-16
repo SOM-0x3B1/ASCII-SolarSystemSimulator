@@ -7,9 +7,9 @@
 
 
 typedef struct Layer{
-    char text[30][120];
-    EconioColor bgColor[30][120];
-    EconioColor fgColor[30][120];
+    char **text;
+    EconioColor **bgColor;
+    EconioColor **fgColor;
     bool enabled;
 } Layer;
 
@@ -19,11 +19,12 @@ extern Layer menuLayer;
 extern Layer bodyLayer;
 extern Layer trailLayer;
 
-extern int layerCount;
+extern const int layerCount;
 extern Layer *layers[4];
 
 
-void layer_init();
+bool layer_init();
+void layer_dispose();
 
 void layer_writeAtXY(Layer *l, int x, int y, char c, EconioColor fgc, EconioColor bgc);
 

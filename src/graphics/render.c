@@ -1,5 +1,6 @@
 #include <string.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <stdbool.h>
 #include "../econio/econio.h"
 #include "render.h"
@@ -7,18 +8,29 @@
 #include "../sim/body.h"
 
 
-char buff[120*30];
+char *screenBuffer;
+size_t buffSize;
 
 Body testBody;
 
 
-void render_init(){
-    memset(buff, '\0', sizeof(buff));
+bool render_init(){
+    buffSize = screen_width * screen_height * sizeof(char);
+    screenBuffer = (char*) malloc(buffSize);
 
-    testBody.color = COL_LIGHTYELLOW;
-    testBody.size = 6;
-    Vector pos = {20, 15};
-    testBody.position = pos;
+    if(screenBuffer != NULL) {
+        memset(screenBuffer, '\0', buffSize);
+
+        testBody.color = COL_LIGHTYELLOW;
+        testBody.size = 6;
+        Vector pos = {20, 15};
+        testBody.position = pos;
+        return true;
+    } else
+        return false;
+}
+void render_dispose(){
+    free(screenBuffer);
 }
 
 void render_refreshScreen(){
@@ -37,28 +49,28 @@ void render_refreshScreen(){
                 }
             }
             if(empty) {
-                econio_textbackground(COL_BLACK);
+                //econio_textbackground(COL_BLACK);
                 fprintf(stdout, " ");
             }
         }
         fprintf(stdout, "\n");
     }
-    setvbuf(stdout, buff, _IOFBF, 120*30);
+    setvbuf(stdout, screenBuffer, _IOFBF, screen_height * screen_width);
 
     econio_gotoxy(0,0);
     econio_flush();
 }
 
-void render_bodies(){
+void render_renderBodies(){
     layer_clear(&bodyLayer);
 
-    Vector v = {0.2, 0.2};
+    Vector v = {1, 0.1};
     testBody.position = vector_add(testBody.position, v);
 
-    body_draw(testBody);
+    body_draw(&testBody);
 }
 
-void render_full(){
-    render_bodies();
+void render_fullRender(){
+    render_renderBodies();
     render_refreshScreen();
 }

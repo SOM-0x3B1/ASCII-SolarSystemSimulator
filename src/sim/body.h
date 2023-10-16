@@ -7,7 +7,7 @@
 
 
 typedef struct Body{
-    char name[12];
+    char name[13];
     Vector position;
     int size;
     int mass;
@@ -27,6 +27,7 @@ typedef struct BodyNode{
 } BodyNode;
 
 
-void body_draw(Body body);
+void body_draw(Body const *body);
+
 
 #endif //ASCII_SSS_BODY_H

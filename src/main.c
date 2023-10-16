@@ -16,7 +16,10 @@ int main() {
     currentState = EDIT_MENU;
 
     layer_init();
-    render_init();
+    if (!render_init()){
+        // failed to allocate buffer
+        exiting = true;
+    }
 
     while (!exiting){
         switch (currentState) {
@@ -28,9 +31,12 @@ int main() {
                 simulation_processInput();
                 break;
         }
-        render_full();
+        render_fullRender();
         econio_sleep(0.01);
     }
+
+    layer_dispose();
+    render_dispose();
 
     return 0;
 }

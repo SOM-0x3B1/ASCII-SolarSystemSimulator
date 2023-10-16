@@ -2,11 +2,12 @@
 #define ASCII_SSS_RENDER_H
 
 
-void render_init();
+bool render_init();
+void render_dispose();
 
 void render_refreshScreen();
 
-void render_full();
+void render_fullRender();
 
 
 #endif //ASCII_SSS_RENDER_H
