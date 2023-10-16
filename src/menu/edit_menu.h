@@ -1,8 +1,6 @@
 #ifndef ASCII_SSS_EDIT_MENU_H
 #define ASCII_SSS_EDIT_MENU_H
 
-#endif //ASCII_SSS_EDIT_MENU_H
-
 
 typedef enum EditMenuOption {
     ADD_BODY,
@@ -15,3 +13,6 @@ typedef enum EditMenuOption {
     SET_SIM_SPEED,
     EXIT,
 } EditMenuOption;
+
+
+#endif //ASCII_SSS_EDIT_MENU_H

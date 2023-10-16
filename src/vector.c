@@ -26,7 +26,7 @@ Vector vector_scalarMultiply(Vector u, double skalar){
     return res;
 }
 
-Vector vector_scalarDivision(Vector u, double skalar){
+Vector vector_scalarDivide(Vector u, double skalar){
     Vector res = {u.x / skalar, u.y / skalar};
     return res;
 }
@@ -55,4 +55,15 @@ double vector_angle(Vector u, Vector v){
 Point vector_toPoint(Vector u){
     Point p = {(int)u.x, (int)u.y};
     return p;
+}
+
+
+Point point_scalarSubtract(Point p, Point q){
+    Point res = {p.x - q.x, p.y - q.y};
+    return res;
+}
+
+Point point_scalarDivide(Point p, int d){
+    Point res = {p.x / d, p.y / d};
+    return res;
 }

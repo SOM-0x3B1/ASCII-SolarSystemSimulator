@@ -1,9 +1,8 @@
 #ifndef ASCII_SSS_GLOBAL_H
 #define ASCII_SSS_GLOBAL_H
 
-#endif //ASCII_SSS_GLOBAL_H
-
 #include <stdbool.h>
+#include "vector.h"
 
 
 typedef enum State{
@@ -15,5 +14,9 @@ extern State currentState;
 
 extern int screen_width;
 extern int screen_height;
+extern Point screen_offset;
 
 extern bool exiting;
+
+
+#endif //ASCII_SSS_GLOBAL_H

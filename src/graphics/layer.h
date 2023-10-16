@@ -1,7 +1,6 @@
 #ifndef ASCII_SSS_LAYER_H
 #define ASCII_SSS_LAYER_H
 
-#endif //ASCII_SSS_LAYER_H
 
 #include <stdbool.h>
 #include "../econio/econio.h"
@@ -29,3 +28,6 @@ void layer_init();
 void layer_writeAtXY(Layer *l, int x, int y, char c, EconioColor fgc, EconioColor bgc);
 
 void layer_clear(Layer *l);
+
+
+#endif //ASCII_SSS_LAYER_H

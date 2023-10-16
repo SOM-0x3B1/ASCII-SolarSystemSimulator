@@ -9,8 +9,16 @@
 
 char buff[120*30];
 
+Body testBody;
+
+
 void render_init(){
     memset(buff, '\0', sizeof(buff));
+
+    testBody.color = COL_LIGHTYELLOW;
+    testBody.size = 6;
+    Vector pos = {20, 15};
+    testBody.position = pos;
 }
 
 void render_refreshScreen(){
@@ -20,7 +28,7 @@ void render_refreshScreen(){
             for (int i = 0; i < layerCount; ++i) {
                 Layer *l = layers[i];
                 if(l->enabled && l->text[y][x] != ' ') {
-                    EconioColor bgColor = l->bgColor[y][x];
+                    //EconioColor bgColor = l->bgColor[y][x];
                     EconioColor fgColor = l->fgColor[y][x];
                     econio_textcolor(fgColor);
                     fprintf(stdout, "%c", l->text[y][x]);
@@ -44,11 +52,8 @@ void render_refreshScreen(){
 void render_bodies(){
     layer_clear(&bodyLayer);
 
-    Body testBody;
-    testBody.color = COL_RED;
-    testBody.size = 6;
-    Vector pos = {20, 15};
-    testBody.position = pos;
+    Vector v = {0.2, 0.2};
+    testBody.position = vector_add(testBody.position, v);
 
     body_draw(testBody);
 }

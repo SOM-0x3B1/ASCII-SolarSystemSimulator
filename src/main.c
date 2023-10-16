@@ -29,7 +29,7 @@ int main() {
                 break;
         }
         render_full();
-        econio_sleep(0.1);
+        econio_sleep(0.01);
     }
 
     return 0;

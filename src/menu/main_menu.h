@@ -1,6 +1,0 @@
-#ifndef ASCII_SSS_MAIN_MENU_H
-#define ASCII_SSS_MAIN_MENU_H
-
-#endif //ASCII_SSS_MAIN_MENU_H
-
-

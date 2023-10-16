@@ -13,14 +13,14 @@ Layer *layers[4];
 
 void layer_init(){
     guiLayer.enabled = true;
+    menuLayer.enabled = true;
     bodyLayer.enabled = true;
     trailLayer.enabled = true;
-    menuLayer.enabled = true;
 
     layers[0] = &guiLayer;
     layers[1] = &menuLayer;
-    layers[2] = &trailLayer;
-    layers[3] = &bodyLayer;
+    layers[2] = &bodyLayer;
+    layers[3] = &trailLayer;
 
     for (int i = 0; i < 4; ++i)
         layer_clear(layers[i]);

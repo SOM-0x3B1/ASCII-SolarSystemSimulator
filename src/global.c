@@ -1,5 +1,4 @@
 #include "global.h"
-#include "sim/vector.h"
 
 State currentState;
 
