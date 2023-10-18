@@ -16,6 +16,9 @@ extern int screen_width;
 extern int screen_height;
 extern Point screen_offset;
 
+extern int targetFPS;
+
+
 extern bool exiting;
 
 extern double sleepTime;

@@ -24,6 +24,8 @@ bool render_init(){
     buffSize = screen_width * screen_height * sizeof(char);
     screenBuffer = (char*) malloc(buffSize);
 
+    frameCountReseted = time(NULL);
+
     if(screenBuffer != NULL) {
         memset(screenBuffer, '\0', buffSize);
 
@@ -34,24 +36,39 @@ bool render_init(){
         return true;
     } else
         return false;
-
-    frameCountReseted = time(NULL);
 }
 void render_dispose(){
     free(screenBuffer);
 }
 
-void render_refreshScreen(){
+
+void render_handleFPS(){
+    frameCount++;
+    if(time(NULL) - frameCountReseted > 0)
+    {
+        fps = frameCount;
+        frameCount = 0;
+        frameCountReseted = time(NULL);
+
+        if(fps < targetFPS)
+            sleepTime *= 0.95;
+        else if(fps > targetFPS)
+            sleepTime *= 1.05;
+    }
+
     char sfps[10];
     sprintf(sfps, "%d FPS", fps);
     drawing_drawText(&guiLayer, sfps, 2, 1, COL_WHITE);
+}
 
+
+void render_refreshScreen(){
     for (int y = 0; y < screen_height; ++y) {
         for (int x = 0; x < screen_width; ++x) {
             bool empty = true;
             for (int i = 0; i < layerCount; ++i) {
                 Layer *l = layers[i];
-                if(l->enabled && l->text[y][x] != ' ') {
+                if(l->enabled && l->text[y][x] != '\0') {
                     //EconioColor bgColor = l->bgColor[y][x];
                     EconioColor fgColor = l->fgColor[y][x];
                     econio_textcolor(fgColor);
@@ -69,22 +86,12 @@ void render_refreshScreen(){
     }
     setvbuf(stdout, screenBuffer, _IOFBF, screen_height * screen_width);
 
-    econio_gotoxy(0,0);
     econio_flush();
+    econio_gotoxy(0,0);
 
-    frameCount++;
-    if(time(NULL) - frameCountReseted)
-    {
-        fps = frameCount;
-        frameCount = 0;
-        frameCountReseted = time(NULL);
-
-        if(fps < 60)
-            sleepTime /= 1.1;
-        else if(fps > 60)
-            sleepTime *= 1.1;
-    }
+    render_handleFPS();
 }
+
 
 void render_renderBodies(){
     layer_clear(&bodyLayer);
@@ -94,6 +101,7 @@ void render_renderBodies(){
 
     body_draw(&testBody);
 }
+
 
 void render_fullRender(){
     render_renderBodies();

@@ -63,7 +63,7 @@ void layer_writeAtXY(Layer *l, int x, int y, char c, EconioColor fgc, EconioColo
 void layer_clear(Layer *l){
     for (int y = 0; y < screen_height; ++y) {
         for (int x = 0; x < screen_width; ++x)
-            l->text[y][x] = ' ';
+            l->text[y][x] = '\0';
     }
 }
 
