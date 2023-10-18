@@ -17,7 +17,7 @@ void body_addGravityEffect(Body *dest, Body const *src){
 }
 
 void body_move(Body *body){
-    body->velocity = vector_add(body->position, body->velocity);
+    body->position = vector_add(body->position, body->velocity);
 }
 
 void body_draw(Body const *body){

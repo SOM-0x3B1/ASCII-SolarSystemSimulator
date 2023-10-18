@@ -32,7 +32,7 @@ int main() {
                 break;
         }
         render_fullRender();
-        econio_sleep(0.01);
+        econio_sleep(sleepTime);
     }
 
     layer_dispose();

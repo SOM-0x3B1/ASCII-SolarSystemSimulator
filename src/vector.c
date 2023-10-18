@@ -46,14 +46,14 @@ double vector_length(Vector a){
 
 double vector_angle(Vector u, Vector v){
     double szorzat = vector_multiply(u, v);
-    double hU = vector_length(u);
-    double hV = vector_length(v);
+    double dU = vector_length(u);
+    double dV = vector_length(v);
 
-    return acos(szorzat / (hU * hV));
+    return acos(szorzat / (dU * dV));
 }
 
-Point vector_toPoint(Vector u){
-    Point p = {(int)u.x, (int)u.y};
+Point vector_toPoint(Vector u) {
+    Point p = {(int) round(u.x), (int) round(u.y)};
     return p;
 }
 

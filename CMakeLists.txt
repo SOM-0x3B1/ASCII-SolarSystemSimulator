@@ -19,4 +19,6 @@ add_executable(ASCII_SSS src/main.c
         src/global.h
         src/sim/simulator.c
         src/sim/simulator.h
+        src/graphics/drawing.c
+        src/graphics/drawing.h
 )
