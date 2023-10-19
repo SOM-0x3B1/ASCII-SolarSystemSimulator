@@ -7,6 +7,7 @@
 #include "graphics/render.h"
 #include "sim/simulator.h"
 #include "graphics/layer.h"
+#include "gui/edit_menu.h"
 
 
 int getINIParam(char* dest, const char* src);
@@ -28,7 +29,7 @@ int main() {
         targetFPS = 60;
     }
 
-    currentState = EDIT_MENU;
+    currentState = SIMULATION;
 
 
     if(!layer_init()){
@@ -43,6 +44,7 @@ int main() {
     while (!exiting){
         switch (currentState) {
             case EDIT_MENU:
+                editMenu_processInput();
                 break;
             case SIMULATION:
                 simulation_doVectorCalculations();

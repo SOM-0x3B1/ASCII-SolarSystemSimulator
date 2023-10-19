@@ -2,6 +2,7 @@
 #include "../econio/econio.h"
 #include "../graphics/layer.h"
 #include "../global.h"
+#include "../gui/edit_menu.h"
 
 
 void simulation_doVectorCalculations(){
@@ -18,9 +19,7 @@ void simulation_processInput(){
         while (econio_kbhit())
             key = econio_getch();
 
-        if(key == KEY_ESCAPE || key =='m') {
-            currentState = EDIT_MENU;
-            menuLayer.enabled = true;
-        }
+        if(key == KEY_ESCAPE || key =='m')
+            editMenu_switchTo();
     }
 }

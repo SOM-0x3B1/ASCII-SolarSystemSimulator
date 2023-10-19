@@ -13,7 +13,7 @@ Layer *layers[4];
 
 bool layer_init(){
     overlayLayer.enabled = true;
-    menuLayer.enabled = true;
+    menuLayer.enabled = false;
     bodyLayer.enabled = true;
     trailLayer.enabled = true;
 

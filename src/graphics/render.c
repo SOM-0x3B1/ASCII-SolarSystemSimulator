@@ -9,6 +9,7 @@
 #include "../sim/body.h"
 #include "drawing.h"
 #include "../gui/overlay.h"
+#include "../gui/edit_menu.h"
 
 
 char *screenBuffer;
@@ -31,8 +32,9 @@ bool render_init(){
         memset(screenBuffer, '\0', buffSize);
 
         testBody.color = COL_LIGHTYELLOW;
-        testBody.size = 6;
-        Vector pos = {20, 30};
+        testBody.r = 6;
+        testBody.mass = 20;
+        Vector pos = {40, 30};
         testBody.position = pos;
         return true;
     } else
@@ -108,4 +110,6 @@ void render_fullRender(){
     render_renderBodies();
     overlay_render(fps);
     render_refreshScreen();
+    if(menuLayer.enabled)
+        editMenu_render();
 }
