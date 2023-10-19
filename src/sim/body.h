@@ -9,7 +9,7 @@
 typedef struct Body{
     char name[13];
     Vector position;
-    int size;
+    int r;
     int mass;
     EconioColor color;
 

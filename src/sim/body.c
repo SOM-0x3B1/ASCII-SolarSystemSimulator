@@ -29,8 +29,10 @@ void body_draw(Body const *body){
             int dX = x - p.x;
             int dY = (y - p.y) * 2;
 
-            if ((dX * dX) + (dY * dY) <= (body->size * body->size))
+            if ((dX * dX) + (dY * dY) <= (body->r * body->r))
                 layer_writeAtXY(&bodyLayer, x, y, '@', body->color, body->color);
+            else if(abs(((dX * dX) + (dY * dY)) - ((body->r + body->mass) * (body->r + body->mass))) < body->r + body->mass)
+                layer_writeAtXY(&bodyLayer, x, y, '.', body->color, body->color);
         }
     }
 }
