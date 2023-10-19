@@ -14,7 +14,7 @@ typedef struct Layer{
 } Layer;
 
 
-extern Layer guiLayer;
+extern Layer overlayLayer;
 extern Layer menuLayer;
 extern Layer bodyLayer;
 extern Layer trailLayer;

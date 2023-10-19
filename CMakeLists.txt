@@ -6,8 +6,8 @@ set(CMAKE_C_STANDARD 11)
 add_executable(ASCII_SSS src/main.c
         src/vector.c
         src/vector.h
-        src/menu/edit_menu.c
-        src/menu/edit_menu.h
+        src/gui/edit_menu.c
+        src/gui/edit_menu.h
         src/graphics/render.c
         src/graphics/render.h
         src/sim/body.c
@@ -21,4 +21,6 @@ add_executable(ASCII_SSS src/main.c
         src/sim/simulator.h
         src/graphics/drawing.c
         src/graphics/drawing.h
+        src/gui/overlay.c
+        src/gui/overlay.h
 )

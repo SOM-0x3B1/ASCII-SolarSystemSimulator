@@ -11,11 +11,11 @@ void drawing_drawText(Layer *l, char const *s, int x, int y, EconioColor color) 
 
 
 void drawing_drawLine(Layer *l, int x, int y, int h, bool vertical) {
-    if (vertical && y > 0) {
+    if (vertical && y >= 0) {
         for (int i = y; i < y + h && i < screen_height; ++i)
             l->text[i][x] = '|';
-    } else if (!vertical && x > 0) {
+    } else if (!vertical && x >= 0) {
         for (int i = x; i < x + h && i < screen_width; ++i)
-            l->text[i][x] = '_';
+            l->text[y][i] = '_';
     }
 }

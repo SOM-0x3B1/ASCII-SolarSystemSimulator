@@ -3,7 +3,7 @@
 #include "../global.h"
 
 
-Layer guiLayer;
+Layer overlayLayer;
 Layer menuLayer;
 Layer bodyLayer;
 Layer trailLayer;
@@ -12,12 +12,12 @@ const int layerCount = 4;
 Layer *layers[4];
 
 bool layer_init(){
-    guiLayer.enabled = true;
+    overlayLayer.enabled = true;
     menuLayer.enabled = true;
     bodyLayer.enabled = true;
     trailLayer.enabled = true;
 
-    layers[0] = &guiLayer;
+    layers[0] = &overlayLayer;
     layers[1] = &menuLayer;
     layers[2] = &bodyLayer;
     layers[3] = &trailLayer;

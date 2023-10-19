@@ -11,7 +11,7 @@
 
 int getINIParam(char* dest, const char* src);
 
-int getINIValue(const char* src, int start);
+int getIntValue(const char* src, int start, int *value);
 
 int loadSettings();
 
@@ -71,12 +71,15 @@ int getINIParam(char* dest, const char* src) {
     return i;
 }
 
-int getINIValue(const char* src, int start){
-    int value = 0, i;
-    for (i = start + 1; src[i] != '\0'; ++i)
-        value = value * 10 + (src[i] - '0');
-
-    return value;
+int getIntValue(const char* src, int start, int *value) {
+    *value = 0;
+    int i;
+    for (i = start + 1; src[i] != '\0'; ++i) {
+        if(src[i] < '0' || src[i] > '9')
+            return 1;
+        *value = *value * 10 + (src[i] - '0');
+    }
+    return 0;
 }
 
 int loadSettings() {
@@ -89,7 +92,9 @@ int loadSettings() {
             char param[16];
             int valueStart = getINIParam(param, line);
 
-            int value = getINIValue(line, valueStart);
+            int value;
+            if (getIntValue(line, valueStart, &value) != 0)
+                return 3; // invalid value
 
             if (strcmp(param, "screen_width") == 0)
                 screen_width = value;
