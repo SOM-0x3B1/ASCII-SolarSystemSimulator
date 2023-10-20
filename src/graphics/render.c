@@ -3,13 +3,14 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
-#include "../econio/econio.h"
+#include "../lib/econio.h"
 #include "render.h"
 #include "../global.h"
 #include "../sim/body.h"
 #include "drawing.h"
 #include "../gui/overlay.h"
 #include "../gui/edit_menu.h"
+#include "../lib/debugmalloc.h"
 
 
 char *screenBuffer;
@@ -79,7 +80,8 @@ void render_refreshScreen(){
                 fprintf(stdout, " ");
             }
         }
-        fprintf(stdout, "\n");
+        if(y < screen_height - 1)
+            fprintf(stdout, "\n");
     }
     //setbuf(stdout, NULL);
     //setvbuf(stdout, NULL, _IONBF, 0);

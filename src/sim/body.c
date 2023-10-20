@@ -11,7 +11,7 @@ Body sun;
 void body_sun_init() {
     strcpy(sun.name, "Sun");
     sun.color = COL_LIGHTYELLOW;
-    sun.r = 6;
+    sun.r = 7;
     sun.mass = 20;
     Vector pos = {40, 30};
     sun.position = pos;
@@ -38,8 +38,10 @@ void body_move(Body *body){
 
 void body_drawInfo(Body const *body) {
     if(infoLayer.enabled) {
-        Point p = point_subtract(vector_toPoint(body->position), screen_offset);
-        drawing_drawText(&infoLayer, p.x - (int) strlen(body->name) / 2, p.y / 2, body->name, COL_WHITE);
+        Point p = vector_toPoint(body->position);
+        p.y /= 2;
+        p = point_subtract(p, screen_offset);
+        drawing_drawText(&infoLayer, p.x - (int) strlen(body->name) / 2, p.y, body->name, COL_WHITE);
     }
 }
 
@@ -52,9 +54,12 @@ void body_draw(Body const *body){
             int dX = x - p.x;
             int dY = (y - p.y) * 2;
 
-            if ((dX * dX) + (dY * dY) <= (body->r * body->r))
+            int dx2dy2 = (dX * dX) + (dY * dY);
+            int er = body->r + body->mass;
+
+            if (dx2dy2 <= (body->r * body->r))
                 layer_writeAtXY(&bodyLayer, x, y, '@', body->color, body->color);
-            else if(abs(((dX * dX) + (dY * dY)) - ((body->r + body->mass) * (body->r + body->mass))) < body->r + body->mass)
+            else if(abs(dx2dy2 / 2 - er * er) < er * 0.8)
                 layer_writeAtXY(&bodyLayer, x, y, '.', body->color, body->color);
         }
     }
