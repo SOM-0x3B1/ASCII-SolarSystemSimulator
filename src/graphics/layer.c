@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include "layer.h"
 #include "../global.h"
+#include "../lib/debugmalloc.h"
 
 
 Layer overlayLayer;
@@ -38,6 +39,7 @@ bool layer_init(){
 
         layers[i]->fgColor = (EconioColor **) malloc(screen_height * sizeof(EconioColor *));
         layers[i]->fgColor[0] = (EconioColor *) malloc(screenSize * sizeof(EconioColor));
+        //layers[i]->bgColor[0] = (EconioColor *) malloc(screenSize * sizeof(EconioColor));
         for (int y = 1; y < screen_height; ++y)
             layers[i]->fgColor[y] = layers[i]->fgColor[0] + y * screen_width;
 
@@ -50,10 +52,15 @@ bool layer_init(){
 
     return true;
 }
+
 void layer_dispose(){
     for (int i = 0; i < layerCount; ++i) {
         free(layers[i]->text[0]);
         free(layers[i]->text);
+        free(layers[i]->fgColor[0]);
+        free(layers[i]->fgColor);
+        /*free(layers[i]->bgColor[0]);
+        free(layers[i]->bgColor);*/
     }
 }
 

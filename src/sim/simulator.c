@@ -1,5 +1,5 @@
 #include "simulator.h"
-#include "../econio/econio.h"
+#include "../lib/econio.h"
 #include "../graphics/layer.h"
 #include "../global.h"
 #include "../gui/edit_menu.h"
@@ -25,7 +25,7 @@ void simulation_processInput() {
         while (econio_kbhit())
             key = econio_getch();
 
-        if (key == KEY_ESCAPE || key == 'm')
+        if (key == KEY_ESCAPE || key == 'e')
             editMenu_switchTo();
         else if (key == 's' || key == KEY_DOWN)
             screen_offset.y++;

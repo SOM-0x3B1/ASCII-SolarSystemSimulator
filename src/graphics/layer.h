@@ -2,7 +2,7 @@
 #define ASCII_SSS_LAYER_H
 
 #include <stdbool.h>
-#include "../econio/econio.h"
+#include "../lib/econio.h"
 
 #define LAYER_COUNT 5
 

@@ -2,13 +2,14 @@
 #include <stdbool.h>
 #include <string.h>
 #include <stdlib.h>
-#include "econio/econio.h"
+#include "lib/econio.h"
 #include "global.h"
 #include "graphics/render.h"
 #include "sim/simulator.h"
 #include "graphics/layer.h"
 #include "gui/edit_menu.h"
 #include "sim/body.h"
+#include "lib/debugmalloc.h"
 
 
 int getINIParam(char* dest, const char* src);
@@ -16,6 +17,8 @@ int getINIParam(char* dest, const char* src);
 int getIntValue(const char* src, int start, int *value);
 
 int loadSettings();
+
+void exitProgram();
 
 
 int main() {
@@ -26,8 +29,8 @@ int main() {
     if(loadSettingResult != 0) {
         // ERR: unable to load settings from settings.ini
         screen_width = 119;
-        screen_height = 29;
-        targetFPS = 60;
+        screen_height = 30;
+        targetFPS = 30;
     }
 
     currentState = SIMULATION;
@@ -58,8 +61,7 @@ int main() {
         econio_sleep(sleepTime);
     }
 
-    layer_dispose();
-    render_dispose();
+    exitProgram();
 
     return 0;
 }
@@ -114,4 +116,17 @@ int loadSettings() {
         return 1; // unable to open
 
     return 0;
+}
+
+void exitProgram(){
+    econio_clrscr();
+    econio_gotoxy(0, 0);
+    printf("Exiting...\n\n");
+
+    layer_dispose();
+    render_dispose();
+
+    debugmalloc_atexit_dump();
+
+    econio_sleep(5);
 }

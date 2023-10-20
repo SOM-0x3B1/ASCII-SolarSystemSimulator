@@ -1,7 +1,7 @@
 #ifndef ASCII_SSS_BODY_H
 #define ASCII_SSS_BODY_H
 
-#include "../econio/econio.h"
+#include "../lib/econio.h"
 #include "../vector.h"
 #include "../graphics/layer.h"
 
