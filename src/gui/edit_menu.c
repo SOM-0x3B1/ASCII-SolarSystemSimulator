@@ -26,11 +26,13 @@ char *sOptions[OPTIONS_COUNT] = {"Add body", "Edit body", "Delete body", "Follow
                      "Export system", "Toggle details", "Set simulation speed", "Exit"};
 
 
-void editMenu_switchTo(){
+void editMenu_switchTo(EconioKey key){
     currentState = EDIT_MENU;
     menuLayer.enabled = true;
-
     screen_offset.x += 16;
+
+    if(key == KEY_ESCAPE)
+        cursorPos = EXIT;
 }
 
 

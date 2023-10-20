@@ -26,7 +26,7 @@ void simulation_processInput() {
             key = econio_getch();
 
         if (key == KEY_ESCAPE || key == 'e')
-            editMenu_switchTo();
+            editMenu_switchTo(key);
         else if (key == 's' || key == KEY_DOWN)
             screen_offset.y++;
         else if (key == 'w' || key == KEY_UP)

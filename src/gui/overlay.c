@@ -1,5 +1,6 @@
 #include "overlay.h"
 #include <stdio.h>
+#include <string.h>
 #include "../lib/econio.h"
 #include "../graphics/drawing.h"
 #include "../global.h"
@@ -23,7 +24,16 @@ void overlay_render(int fps) {
 
     drawing_drawLine(ol, 0, screen_height - 3, screen_width, false, '_');
     drawing_drawLine(ol, 0, screen_height - 2, screen_width, false, ' ');
-    drawing_drawText(ol, 0, screen_height - 2, "Status: RUNNING", COL_WHITE);
+    drawing_drawText(ol, 2, screen_height - 2, "Status: RUNNING", COL_WHITE);
+
+    char *sCamPos[32];
+    sprintf((char*)sCamPos, "Camera: {%d; %d}", screen_offset.x, -screen_offset.y);
+    drawing_drawText(ol, screen_width / 2 - strlen((char*)sCamPos) / 2, screen_height - 2, (char*)sCamPos, COL_WHITE);
+
+    char *sFollowing[32];
+    sprintf((char*)sFollowing, "Following: %s", "[FREE]");
+    drawing_drawText(ol, screen_width - strlen((char*)sFollowing) - 2, screen_height - 2, (char*)sFollowing, COL_WHITE);
+
     drawing_drawLine(ol, 0, screen_height - 1, screen_width, false, ' ');
     //drawing_drawLine(ol, 0, screen_height - 1, screen_width, false, '_');
 }

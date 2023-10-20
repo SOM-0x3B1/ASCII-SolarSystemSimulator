@@ -2,7 +2,10 @@
 #define ASCII_SSS_EDIT_MENU_H
 
 
-void editMenu_switchTo();
+#include "../lib/econio.h"
+
+
+void editMenu_switchTo(EconioKey key);
 
 void editMenu_render();
 
