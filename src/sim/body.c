@@ -4,9 +4,11 @@
 #include "../global.h"
 #include <string.h>
 #include "../graphics/drawing.h"
+#include "../graphics/layer.h"
 
 
 Body sun;
+Body *follow = &sun;
 
 void body_sun_init() {
     strcpy(sun.name, "Sun");
@@ -33,6 +35,16 @@ void body_addGravityEffect(Body *dest, Body const *src){
 
 void body_move(Body *body){
     body->position = vector_add(body->position, body->velocity);
+
+    if(follow == body) {
+        Point p = vector_toPoint(body->position);
+        p.y /= 2;
+        Point screenSize = {screen_width / 2, screen_height / 2};
+        p = point_subtract(p, screenSize);
+        if(menuLayer.enabled)
+            p.x += 16;
+        screen_offset = p;
+    }
 }
 
 

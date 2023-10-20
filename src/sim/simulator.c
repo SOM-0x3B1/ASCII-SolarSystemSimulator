@@ -1,3 +1,4 @@
+#include <stdlib.h>
 #include "simulator.h"
 #include "../lib/econio.h"
 #include "../graphics/layer.h"
@@ -19,6 +20,26 @@ void simulation_tick(){
     simulation_doMovements();
 }
 
+bool simulation_moveCam(EconioKey key){
+    if (key == 's' || key == KEY_DOWN) {
+        screen_offset.y++;
+        return true;
+    }
+    else if (key == 'w' || key == KEY_UP) {
+        screen_offset.y--;
+        return true;
+    }
+    else if (key == 'a' || key == KEY_LEFT) {
+        screen_offset.x -= 2;
+        return true;
+    }
+    else if (key == 'd' || key == KEY_RIGHT) {
+        screen_offset.x += 2;
+        return true;
+    }
+    return false;
+}
+
 void simulation_processInput() {
     if (econio_kbhit()) {
         int key;
@@ -27,13 +48,7 @@ void simulation_processInput() {
 
         if (key == KEY_ESCAPE || key == 'e')
             editMenu_switchTo(key);
-        else if (key == 's' || key == KEY_DOWN)
-            screen_offset.y++;
-        else if (key == 'w' || key == KEY_UP)
-            screen_offset.y--;
-        else if (key == 'a' || key == KEY_LEFT)
-            screen_offset.x -= 2;
-        else if (key == 'd' || key == KEY_RIGHT)
-            screen_offset.x += 2;
+        else if(simulation_moveCam(key))
+            follow = NULL;
     }
 }
