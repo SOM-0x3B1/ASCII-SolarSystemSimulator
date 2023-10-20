@@ -17,7 +17,7 @@ void overlay_updateFPS(int fps){
 void overlay_render(int fps) {
     drawing_drawLine(ol, 0, 0, screen_width, false, ' ');
     overlay_updateFPS(fps);
-    drawing_drawText(ol, screen_width / 2 - 14, 0, "ASCII-SSS", COL_WHITE);
+    drawing_drawText(ol, screen_width / 2 - 5, 0, "ASCII-SSS", COL_WHITE);
     drawing_drawText(ol, screen_width - 25, 0, "PRESS 'M' for edit menu", COL_WHITE);
     drawing_drawLine(ol, 0, 1, screen_width, false, '_');
 

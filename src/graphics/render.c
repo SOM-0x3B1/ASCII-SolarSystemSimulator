@@ -19,23 +19,17 @@ time_t frameCountReseted;
 int frameCount = 0;
 int fps = 0;
 
-Body testBody;
-
 
 bool render_init(){
     buffSize = screen_width * screen_height * sizeof(char);
     screenBuffer = (char*) malloc(buffSize);
+    //setvbuf(stdout, NULL, _IONBF, 0);
 
     frameCountReseted = time(NULL);
 
     if(screenBuffer != NULL) {
         memset(screenBuffer, '\0', buffSize);
-
-        testBody.color = COL_LIGHTYELLOW;
-        testBody.r = 6;
-        testBody.mass = 20;
-        Vector pos = {40, 30};
-        testBody.position = pos;
+        setvbuf(stdout, screenBuffer, _IOFBF, screen_height * screen_width);
         return true;
     } else
         return false;
@@ -72,9 +66,9 @@ void render_refreshScreen(){
             for (int i = 0; i < layerCount; ++i) {
                 Layer *l = layers[i];
                 if(l->enabled && l->text[y][x] != '\0') {
-                    /*EconioColor bgColor = l->bgColor[y][x];
+                    //EconioColor bgColor = l->bgColor[y][x];
                     EconioColor fgColor = l->fgColor[y][x];
-                    econio_textcolor(fgColor);*/
+                    //econio_textcolor(fgColor);
                     fprintf(stdout, "%c", l->text[y][x]);
                     empty = false;
                     break;
@@ -87,7 +81,8 @@ void render_refreshScreen(){
         }
         fprintf(stdout, "\n");
     }
-    setvbuf(stdout, screenBuffer, _IOFBF, screen_height * screen_width);
+    //setbuf(stdout, NULL);
+    //setvbuf(stdout, NULL, _IONBF, 0);
 
     econio_flush();
     econio_gotoxy(0,0);
@@ -96,18 +91,15 @@ void render_refreshScreen(){
 }
 
 
-void render_renderBodies(){
+/*void render_renderBodies(){
     layer_clear(&bodyLayer);
-
-    Vector v = {0.01, -0.01};
-    testBody.position = vector_add(testBody.position, v);
-
-    body_draw(&testBody);
-}
+    body_render();
+}*/
 
 
 void render_fullRender(){
-    render_renderBodies();
+    //render_renderBodies();
+    body_render();
     overlay_render(fps);
     render_refreshScreen();
     if(menuLayer.enabled)

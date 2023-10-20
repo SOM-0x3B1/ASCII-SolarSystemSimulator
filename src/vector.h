@@ -34,7 +34,7 @@ double vector_angle(Vector u, Vector v);
 Point vector_toPoint(Vector u);
 
 
-Point point_scalarSubtract(Point p, Point q);
+Point point_subtract(Point p, Point q);
 
 Point point_scalarDivide(Point p, int d);
 

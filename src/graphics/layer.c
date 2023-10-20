@@ -5,22 +5,25 @@
 
 Layer overlayLayer;
 Layer menuLayer;
+Layer infoLayer;
 Layer bodyLayer;
 Layer trailLayer;
 
-const int layerCount = 4;
-Layer *layers[4];
+const int layerCount = LAYER_COUNT;
+Layer *layers[LAYER_COUNT];
 
 bool layer_init(){
     overlayLayer.enabled = true;
     menuLayer.enabled = false;
+    infoLayer.enabled = true;
     bodyLayer.enabled = true;
     trailLayer.enabled = true;
 
     layers[0] = &overlayLayer;
     layers[1] = &menuLayer;
-    layers[2] = &bodyLayer;
-    layers[3] = &trailLayer;
+    layers[2] = &infoLayer;
+    layers[3] = &bodyLayer;
+    layers[4] = &trailLayer;
 
     int screenSize = screen_width * screen_height;
     for (int i = 0; i < layerCount; ++i) {

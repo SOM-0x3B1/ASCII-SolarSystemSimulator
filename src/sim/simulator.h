@@ -2,9 +2,7 @@
 #define ASCII_SSS_SIMULATOR_H
 
 
-void simulation_doVectorCalculations();
-
-void simulation_doMovements();
+void simulation_tick();
 
 void simulation_processInput();
 

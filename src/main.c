@@ -8,6 +8,7 @@
 #include "sim/simulator.h"
 #include "graphics/layer.h"
 #include "gui/edit_menu.h"
+#include "sim/body.h"
 
 
 int getINIParam(char* dest, const char* src);
@@ -40,15 +41,16 @@ int main() {
         // ERR: failed to allocate screen buffer
         exiting = true;
     }
+    body_sun_init();
 
     while (!exiting){
         switch (currentState) {
             case EDIT_MENU:
+                simulation_tick();
                 editMenu_processInput();
                 break;
             case SIMULATION:
-                simulation_doVectorCalculations();
-                simulation_doMovements();
+                simulation_tick();
                 simulation_processInput();
                 break;
         }

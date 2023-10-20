@@ -6,6 +6,7 @@ void drawing_drawText(Layer *l, int x, int y, char const *s, EconioColor color) 
     for (int i = 0; s[i] != '\0'; ++i) {
         l->text[y][x + i] = s[i];
         l->fgColor[y][x + i] = color;
+        layer_writeAtXY(l, x+i, y, s[i], color, color);
     }
 }
 

@@ -13,7 +13,7 @@ typedef enum EditMenuOption {
     FOLLOW_BODY = 3,
     IMPORT_SYSTEM = 4,
     EXPORT_SYSTEM = 5,
-    TOGGLE_NAMES = 6,
+    TOGGLE_DETAILS = 6,
     SET_SIM_SPEED = 7,
     EXIT = 8,
 } EditMenuOption;
@@ -23,7 +23,7 @@ int cursorPos = 0;
 Layer *eml = &menuLayer;
 
 char *sOptions[OPTIONS_COUNT] = {"Add body", "Edit body", "Delete body", "Follow body", "Import system",
-                     "Export system", "Toggle names", "Set simulation speed", "Exit"};
+                     "Export system", "Toggle details", "Set simulation speed", "Exit"};
 
 
 void editMenu_switchTo(){
@@ -44,12 +44,19 @@ void editMenu_render(){
             drawing_drawText(eml, screen_width - 30, 5 + i, ">",COL_WHITE);
         else
             drawing_drawText(eml, screen_width - 30, 5 + i, " ",COL_WHITE);
+
+        if(i == TOGGLE_DETAILS)
+            drawing_drawText(eml, screen_width - 13, 5 + i,
+                             infoLayer.enabled ? "[ON] " : "[OFF]",COL_WHITE);
     }
 }
 
 
 void editMenu_selectOption(){
     switch (cursorPos) {
+        case TOGGLE_DETAILS:
+            infoLayer.enabled = !infoLayer.enabled;
+            break;
         case EXIT:
             exiting = true;
             break;

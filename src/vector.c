@@ -58,7 +58,7 @@ Point vector_toPoint(Vector u) {
 }
 
 
-Point point_scalarSubtract(Point p, Point q){
+Point point_subtract(Point p, Point q){
     Point res = {p.x - q.x, p.y - q.y};
     return res;
 }

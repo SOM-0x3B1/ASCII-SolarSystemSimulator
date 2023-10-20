@@ -27,7 +27,16 @@ typedef struct BodyNode{
 } BodyNode;
 
 
-void body_draw(Body const *body);
+Body extern sun;
+
+
+void body_sun_init();
+
+void body_move(Body *body);
+
+// void body_draw(Body const *body);
+
+void body_render();
 
 
 #endif //ASCII_SSS_BODY_H

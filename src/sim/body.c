@@ -2,7 +2,22 @@
 #include "body.h"
 #include "../graphics/render.h"
 #include "../global.h"
+#include <string.h>
+#include "../graphics/drawing.h"
 
+
+Body sun;
+
+void body_sun_init() {
+    strcpy(sun.name, "Sun");
+    sun.color = COL_LIGHTYELLOW;
+    sun.r = 6;
+    sun.mass = 20;
+    Vector pos = {40, 30};
+    sun.position = pos;
+    Vector v = {0.01, -0.01};
+    sun.velocity = v;
+}
 
 void body_addGravityEffect(Body *dest, Body const *src){
     double d = vector_distance(dest->position, src->position);
@@ -20,10 +35,18 @@ void body_move(Body *body){
     body->position = vector_add(body->position, body->velocity);
 }
 
+
+void body_drawInfo(Body const *body) {
+    if(infoLayer.enabled) {
+        Point p = point_subtract(vector_toPoint(body->position), screen_offset);
+        drawing_drawText(&infoLayer, p.x - (int) strlen(body->name) / 2, p.y / 2, body->name, COL_WHITE);
+    }
+}
+
 void body_draw(Body const *body){
     Point p = vector_toPoint(body->position);
     p.y /= 2;
-    p = point_scalarSubtract(p, screen_offset);
+    p = point_subtract(p, screen_offset);
     for (int y = 0; y < screen_height; y++) {
         for (int x = 0; x < screen_width; x++) {
             int dX = x - p.x;
@@ -35,4 +58,11 @@ void body_draw(Body const *body){
                 layer_writeAtXY(&bodyLayer, x, y, '.', body->color, body->color);
         }
     }
+    body_drawInfo(body);
+}
+
+void body_render(){
+    layer_clear(&bodyLayer);
+    layer_clear(&infoLayer);
+    body_draw(&sun);
 }
