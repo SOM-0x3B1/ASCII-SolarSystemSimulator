@@ -9,11 +9,10 @@
 typedef struct Body{
     char name[13];
     Vector position;
+    Vector velocity;
     int r;
     int mass;
-    EconioColor color;
-
-    Vector velocity;
+    char color;
 } Body;
 
 typedef struct Trail{

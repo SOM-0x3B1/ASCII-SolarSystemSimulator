@@ -4,26 +4,25 @@
 #include "../global.h"
 
 
-#define OPTIONS_COUNT 9
+#define OPTION_COUNT 8
 
 typedef enum EditMenuOption {
     ADD_BODY = 0,
     EDIT_BODY = 1,
     DELETE_BODY = 2,
     FOLLOW_BODY = 3,
-    IMPORT_SYSTEM = 4,
-    EXPORT_SYSTEM = 5,
-    TOGGLE_DETAILS = 6,
-    SET_SIM_SPEED = 7,
-    EXIT = 8,
+    TOGGLE_DETAILS = 4,
+    IMPORT_SYSTEM = 5,
+    EXPORT_SYSTEM = 6,
+    EXIT = 7,
 } EditMenuOption;
 
 
 int cursorPos = 0;
 Layer *eml = &menuLayer;
 
-char *sOptions[OPTIONS_COUNT] = {"Add body", "Edit body", "Delete body", "Follow body", "Import system",
-                     "Export system", "Toggle details", "Set simulation speed", "Exit"};
+char *sOptions[OPTION_COUNT] = {"Add body", "Edit body", "Delete body", "Follow body", "Toggle details", "Import system",
+                                "Export system", "Exit"};
 
 
 void editMenu_switchTo(EconioKey key){
@@ -42,18 +41,26 @@ void editMenu_render(){
     for (int y = 2; y < screen_height-2; ++y)
         drawing_drawLine(eml, screen_width-31, y, 31, false, ' ');
 
-    drawing_drawText(eml, screen_width - 30, 3, "[EDIT MENU]",COL_WHITE);
+    drawing_drawText(eml, screen_width - 30, 3, "[EDIT MENU]");
 
-    for (int i = 0; i < OPTIONS_COUNT; ++i) {
-        drawing_drawText(eml, screen_width - 28, 5 + i, sOptions[i],COL_WHITE);
+    int yOffset = 0;
+    for (int i = 0; i < OPTION_COUNT; ++i) {
+        if(i > EXPORT_SYSTEM)
+            yOffset = 3;
+        else if(i > TOGGLE_DETAILS)
+            yOffset = 2;
+        else if(i > DELETE_BODY)
+            yOffset = 1;
+
+        drawing_drawText(eml, screen_width - 28, 5 + i + yOffset, sOptions[i]);
         if(i == cursorPos)
-            drawing_drawText(eml, screen_width - 30, 5 + i, ">",COL_WHITE);
+            drawing_drawText(eml, screen_width - 30, 5 + i + yOffset, ">");
         else
-            drawing_drawText(eml, screen_width - 30, 5 + i, " ",COL_WHITE);
+            drawing_drawText(eml, screen_width - 30, 5 + i + yOffset, " ");
 
         if(i == TOGGLE_DETAILS)
-            drawing_drawText(eml, screen_width - 13, 5 + i,
-                             infoLayer.enabled ? "[ON] " : "[OFF]",COL_WHITE);
+            drawing_drawText(eml, screen_width - 13, 5 + i + yOffset,
+                             infoLayer.enabled ? "[ON] " : "[OFF]");
     }
 }
 
@@ -83,7 +90,7 @@ void editMenu_processInput(){
 
             screen_offset.x -= 16;
         }
-        else if ((key == 's' || key == KEY_DOWN) && cursorPos < OPTIONS_COUNT - 1)
+        else if ((key == 's' || key == KEY_DOWN) && cursorPos < OPTION_COUNT - 1)
             cursorPos++;
         else if ((key == 'w' || key == KEY_UP) && cursorPos > 0)
             cursorPos--;

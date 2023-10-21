@@ -66,25 +66,18 @@ void render_refreshScreen(){
             bool empty = true;
             for (int i = 0; i < layerCount; ++i) {
                 Layer *l = layers[i];
-                if(l->enabled && l->text[y][x] != '\0') {
-                    //EconioColor bgColor = l->bgColor[y][x];
-                    EconioColor fgColor = l->fgColor[y][x];
-                    //econio_textcolor(fgColor);
+                if(l->enabled && l->text[y][x] != '\0') {;
                     fprintf(stdout, "%c", l->text[y][x]);
                     empty = false;
                     break;
                 }
             }
-            if(empty) {
-                //econio_textbackground(COL_BLACK);
+            if(empty)
                 fprintf(stdout, " ");
-            }
         }
         if(y < screen_height - 1)
             fprintf(stdout, "\n");
     }
-    //setbuf(stdout, NULL);
-    //setvbuf(stdout, NULL, _IONBF, 0);
 
     econio_flush();
     econio_gotoxy(0,0);
@@ -93,14 +86,7 @@ void render_refreshScreen(){
 }
 
 
-/*void render_renderBodies(){
-    layer_clear(&bodyLayer);
-    body_render();
-}*/
-
-
 void render_fullRender(){
-    //render_renderBodies();
     body_render();
     overlay_render(fps);
     render_refreshScreen();
