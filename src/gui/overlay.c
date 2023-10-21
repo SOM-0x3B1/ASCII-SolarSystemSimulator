@@ -19,7 +19,7 @@ void overlay_updateFPS(int fps){
 void overlay_render(int fps) {
     drawing_drawLine(ol, 0, 0, screen_width, false, ' ');
     overlay_updateFPS(fps);
-    drawing_drawText(ol, screen_width / 2 - 5, 0, "ASCII-SSS");
+    drawing_drawText(ol, screen_width / 2 - 4, 0, "ASCII-SSS");
     drawing_drawText(ol, screen_width - 25, 0, "PRESS 'E' for edit menu");
     drawing_drawLine(ol, 0, 1, screen_width, false, '_');
 
@@ -28,8 +28,8 @@ void overlay_render(int fps) {
     drawing_drawText(ol, 2, screen_height - 2, "Status: RUNNING");
 
     char *sCamPos[50];
-    sprintf((char*)sCamPos, "Camera center: {%d ; %d}", screen_offset.x + screen_width / 2, -screen_offset.y + screen_height);
-    drawing_drawText(ol, screen_width / 2 - strlen((char*)sCamPos) / 2, screen_height - 2, (char*)sCamPos);
+    sprintf((char*)sCamPos, "Camera center: {%lld ; %lld}", screen_offset.x + screen_width / 2, -screen_offset.y + screen_height);
+    drawing_drawText(ol, screen_width / 2 - (int)strlen((char*)sCamPos) / 2, screen_height - 2, (char*)sCamPos);
 
     char *sFollowing[32];
     sprintf((char*)sFollowing, "Following: %s", (follow == NULL) ? "[FREE]" : follow->name);

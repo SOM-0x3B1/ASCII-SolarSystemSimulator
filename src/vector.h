@@ -8,8 +8,8 @@ typedef struct Vector{
 } Vector;
 
 typedef struct Point{
-    int x;
-    int y;
+    long long int x;
+    long long int y;
 } Point;
 
 

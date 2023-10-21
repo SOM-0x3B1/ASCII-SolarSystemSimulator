@@ -53,7 +53,7 @@ double vector_angle(Vector u, Vector v){
 }
 
 Point vector_toPoint(Vector u) {
-    Point p = {(int) round(u.x), (int) round(u.y)};
+    Point p = {(long long int) round(u.x), (long long int) round(u.y)};
     return p;
 }
 

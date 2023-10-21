@@ -18,7 +18,7 @@ void body_sun_init() {
     sun.mass = 20;
     Vector pos = {40, 30};
     sun.position = pos;
-    Vector v = {0.01, -0.01};
+    Vector v = {0.1, 0.1};
     sun.velocity = v;
 }
 
@@ -64,15 +64,17 @@ void body_draw(Body const *body){
     p = point_subtract(p, screen_offset);
     for (int y = 0; y < screen_height; y++) {
         for (int x = 0; x < screen_width; x++) {
-            int dX = x - p.x;
-            int dY = (y - p.y) * 2;
+            long long int dX = x - p.x;
+            long long int dY = (y - p.y) * 2;
 
-            double dx2dy2 = (dX * dX) + (dY * dY);
+            long long int dx2dy2 = (dX * dX) + (dY * dY);
             double er = body->r + body->mass * 1.2;
+
+            long long int drange = llabs((dx2dy2 / 2) - (long long int)(er * er));
 
             if (dx2dy2 <= (body->r * body->r))
                 layer_writeAtXY(&bodyLayer, x, y, '@');
-            else if(fabs(dx2dy2 / 2 - er * er) < er * 0.8)
+            else if(drange < (long long int)(er * 0.8))
                 layer_writeAtXY(&bodyLayer, x, y, '.');
         }
     }
