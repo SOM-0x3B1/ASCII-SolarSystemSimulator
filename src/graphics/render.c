@@ -13,24 +13,24 @@
 #include "../lib/debugmalloc.h"
 
 
-char *screenBuffer;
-size_t buffSize;
+static char *screenBuffer;
+static size_t buffSize;
 
-time_t frameCountReseted;
-int frameCount = 0;
-int fps = 0;
+static time_t frameCountReseted;
+static int frameCount = 0;
+static int fps = 0;
 
 
 bool render_init(){
     buffSize = screen_width * screen_height * sizeof(char);
     screenBuffer = (char*) malloc(buffSize);
-    //setvbuf(stdout, NULL, _IONBF, 0);
 
     frameCountReseted = time(NULL);
 
     if(screenBuffer != NULL) {
         memset(screenBuffer, '\0', buffSize);
         setvbuf(stdout, screenBuffer, _IOFBF, screen_height * screen_width);
+        //setbuf(stdout, NULL); // disable buffering (slow!)
         return true;
     } else
         return false;
@@ -50,10 +50,12 @@ void render_handleFPS(){
         frameCount = 0;
         frameCountReseted = time(NULL);
 
+        double adjust = 0.001 * ((double)fps / targetFPS);
+
         if(fps < targetFPS)
-            sleepTime *= 0.95;
+            sleepTime -= adjust;
         else if(fps > targetFPS)
-            sleepTime *= 1.05;
+            sleepTime += adjust;
     }
 
     overlay_updateFPS(fps);
