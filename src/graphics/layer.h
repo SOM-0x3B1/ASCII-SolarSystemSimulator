@@ -4,7 +4,7 @@
 #include <stdbool.h>
 #include "../lib/econio.h"
 
-#define LAYER_COUNT 3
+#define LAYER_COUNT 6
 
 
 typedef struct Layer{
@@ -15,9 +15,10 @@ typedef struct Layer{
 
 extern Layer overlayLayer;
 extern Layer menuLayer;
-//extern Layer infoLayer;
+extern Layer infoLayer;
 extern Layer bodyLayer;
-//extern Layer trailLayer;
+extern Layer rangeLayer;
+extern Layer trailLayer;
 
 extern const int layerCount;
 extern Layer *layers[LAYER_COUNT];

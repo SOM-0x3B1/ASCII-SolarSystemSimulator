@@ -9,10 +9,11 @@
 #include "math.h"
 
 
-Body sun;
 Body *sun;
 Body *following;
 
+/*bool showDeatils = true;
+bool showGRange = true;*/
 
 Body *body_new(char *name, Vector pos, Vector v, int r, int mass, char color){
     Body b;
@@ -67,11 +68,11 @@ void body_move(Body *body){
 
 
 void body_drawInfo(Body const *body) {
-    if(showDeatils) {
+    if(infoLayer.enabled) {
         Point p = vector_toPoint(body->position);
         p.y /= 2;
         p = point_subtract(p, screen_offset);
-        drawing_drawText(&bodyLayer, (int)(p.x - strlen(body->name) / 2), (int)p.y, body->name);
+        drawing_drawText(&infoLayer, (int)(p.x - strlen(body->name) / 2), (int)p.y, body->name);
     }
 }
 
@@ -90,9 +91,9 @@ void body_draw(Body const *body){
             long long int drange = llabs((dx2dy2 / 2) - (long long int)(er * er));
 
             if (dx2dy2 <= (body->r * body->r))
-                layer_writeAtXY(&bodyLayer, x, y, '@');
-            else if(showGRange && drange < (long long int)(er * 0.8))
-                layer_writeAtXY(&bodyLayer, x, y, '.');
+                layer_writeAtXY(&bodyLayer, x, y, body->color);
+            else if(rangeLayer.enabled && drange < (long long int)(er * 0.8))
+                layer_writeAtXY(&rangeLayer, x, y, '.');
         }
     }
     body_drawInfo(body);
@@ -100,7 +101,8 @@ void body_draw(Body const *body){
 
 void body_render(){
     layer_clear(&bodyLayer);
-    body_draw(&sun);
+    layer_clear(&rangeLayer);
+    layer_clear(&infoLayer);
     for (int i = 0; i < bodyArray.length; ++i)
         body_draw(&bodyArray.data[i]);
 }

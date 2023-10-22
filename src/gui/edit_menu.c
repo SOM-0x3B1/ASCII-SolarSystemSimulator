@@ -5,7 +5,7 @@
 #include "../sim/body.h"
 
 
-#define OPTION_COUNT 9
+#define OPTION_COUNT 10
 
 typedef enum EditMenuOption {
     ADD_BODY = 0,
@@ -14,16 +14,17 @@ typedef enum EditMenuOption {
     FOLLOW_BODY = 3,
     TOGGLE_DETAILS = 4,
     TOGGLE_G_RANGE = 5,
-    IMPORT_SYSTEM = 6,
-    EXPORT_SYSTEM = 7,
-    EXIT = 8,
+    TOGGLE_TRAILS = 6,
+    IMPORT_SYSTEM = 7,
+    EXPORT_SYSTEM = 8,
+    EXIT = 9,
 } EditMenuOption;
 
 
 static int cursorPos = 0;
 static Layer *ml = &menuLayer;
 
-char *sOptions[OPTION_COUNT] = {"Add body", "Edit body", "Delete body", "Follow body", "Toggle details", "Toggle G range", "Import system",
+char *sOptions[OPTION_COUNT] = {"Add body", "Edit body", "Delete body", "Follow body", "Toggle details", "Toggle G range", "Toggle trails", "Import system",
                                 "Export system", "Exit"};
 
 
@@ -36,6 +37,9 @@ void editMenu_switchTo(EconioKey key){
         cursorPos = EXIT;
 }
 
+void editMenu_renderToggleStatus(int y, bool stat){
+    drawing_drawText(ml, screen_width - 13, y, stat ? "[ON] " : "[OFF]");
+}
 
 void editMenu_render(){
     drawing_drawLine(ml, screen_width - 32, 2, screen_height - 4, true, '|');
@@ -46,21 +50,25 @@ void editMenu_render(){
     for (int i = 0; i < OPTION_COUNT; ++i) {
         if(i > EXPORT_SYSTEM)
             yOffset = 3;
-        else if(i > TOGGLE_G_RANGE)
+        else if(i > TOGGLE_TRAILS)
             yOffset = 2;
         else if(i > DELETE_BODY)
             yOffset = 1;
 
-        drawing_drawText(ml, screen_width - 28, 5 + i + yOffset, sOptions[i]);
+        int y = 5 + i + yOffset;
+
+        drawing_drawText(ml, screen_width - 28, y, sOptions[i]);
         if(i == cursorPos)
-            drawing_drawText(ml, screen_width - 30, 5 + i + yOffset, ">");
+            drawing_drawText(ml, screen_width - 30, y, ">");
         else
-            drawing_drawText(ml, screen_width - 30, 5 + i + yOffset, " ");
+            drawing_drawText(ml, screen_width - 30, y, " ");
 
         if(i == TOGGLE_DETAILS)
-            drawing_drawText(ml, screen_width - 13, 5 + i + yOffset, infoLayer.enabled ? "[ON] " : "[OFF]");
+            editMenu_renderToggleStatus(y, infoLayer.enabled);
         else if(i == TOGGLE_G_RANGE)
-            drawing_drawText(ml, screen_width - 13, 5 + i + yOffset, rangeLayer.enabled ? "[ON] " : "[OFF]");
+            editMenu_renderToggleStatus(y, rangeLayer.enabled);
+        else if (i == TOGGLE_TRAILS)
+            editMenu_renderToggleStatus(y, trailLayer.enabled);
     }
 }
 
@@ -72,6 +80,9 @@ void editMenu_selectOption(){
             break;
         case TOGGLE_G_RANGE:
             rangeLayer.enabled = !rangeLayer.enabled;
+            break;
+        case TOGGLE_TRAILS:
+            trailLayer.enabled = !trailLayer.enabled;
             break;
         case EXIT:
             exiting = true;
