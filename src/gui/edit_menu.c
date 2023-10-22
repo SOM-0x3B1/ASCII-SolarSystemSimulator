@@ -2,9 +2,10 @@
 #include "../graphics/drawing.h"
 #include "../graphics/layer.h"
 #include "../global.h"
+#include "../sim/body.h"
 
 
-#define OPTION_COUNT 8
+#define OPTION_COUNT 9
 
 typedef enum EditMenuOption {
     ADD_BODY = 0,
@@ -12,16 +13,17 @@ typedef enum EditMenuOption {
     DELETE_BODY = 2,
     FOLLOW_BODY = 3,
     TOGGLE_DETAILS = 4,
-    IMPORT_SYSTEM = 5,
-    EXPORT_SYSTEM = 6,
-    EXIT = 7,
+    TOGGLE_G_RANGE = 5,
+    IMPORT_SYSTEM = 6,
+    EXPORT_SYSTEM = 7,
+    EXIT = 8,
 } EditMenuOption;
 
 
-int cursorPos = 0;
-Layer *eml = &menuLayer;
+static int cursorPos = 0;
+static Layer *ml = &menuLayer;
 
-char *sOptions[OPTION_COUNT] = {"Add body", "Edit body", "Delete body", "Follow body", "Toggle details", "Import system",
+char *sOptions[OPTION_COUNT] = {"Add body", "Edit body", "Delete body", "Follow body", "Toggle details", "Toggle G range", "Import system",
                                 "Export system", "Exit"};
 
 
@@ -36,31 +38,29 @@ void editMenu_switchTo(EconioKey key){
 
 
 void editMenu_render(){
-    drawing_drawLine(eml, screen_width-32, 2, screen_height-4, true, '|');
-
-    for (int y = 2; y < screen_height-2; ++y)
-        drawing_drawLine(eml, screen_width-31, y, 31, false, ' ');
-
-    drawing_drawText(eml, screen_width - 30, 3, "[EDIT MENU]");
+    drawing_drawLine(ml, screen_width - 32, 2, screen_height - 4, true, '|');
+    drawing_drawRectangle(ml, screen_width - 31, 2, screen_width - 1, screen_height-2, ' ');
+    drawing_drawText(ml, screen_width - 30, 3, "[EDIT MENU]");
 
     int yOffset = 0;
     for (int i = 0; i < OPTION_COUNT; ++i) {
         if(i > EXPORT_SYSTEM)
             yOffset = 3;
-        else if(i > TOGGLE_DETAILS)
+        else if(i > TOGGLE_G_RANGE)
             yOffset = 2;
         else if(i > DELETE_BODY)
             yOffset = 1;
 
-        drawing_drawText(eml, screen_width - 28, 5 + i + yOffset, sOptions[i]);
+        drawing_drawText(ml, screen_width - 28, 5 + i + yOffset, sOptions[i]);
         if(i == cursorPos)
-            drawing_drawText(eml, screen_width - 30, 5 + i + yOffset, ">");
+            drawing_drawText(ml, screen_width - 30, 5 + i + yOffset, ">");
         else
-            drawing_drawText(eml, screen_width - 30, 5 + i + yOffset, " ");
+            drawing_drawText(ml, screen_width - 30, 5 + i + yOffset, " ");
 
         if(i == TOGGLE_DETAILS)
-            drawing_drawText(eml, screen_width - 13, 5 + i + yOffset,
-                             infoLayer.enabled ? "[ON] " : "[OFF]");
+            drawing_drawText(ml, screen_width - 13, 5 + i + yOffset, showDeatils ? "[ON] " : "[OFF]");
+        else if(i == TOGGLE_G_RANGE)
+            drawing_drawText(ml, screen_width - 13, 5 + i + yOffset, showGRange ? "[ON] " : "[OFF]");
     }
 }
 
@@ -68,7 +68,10 @@ void editMenu_render(){
 void editMenu_selectOption(){
     switch (cursorPos) {
         case TOGGLE_DETAILS:
-            infoLayer.enabled = !infoLayer.enabled;
+            showDeatils = !showDeatils;
+            break;
+        case TOGGLE_G_RANGE:
+            showGRange = !showGRange;
             break;
         case EXIT:
             exiting = true;
