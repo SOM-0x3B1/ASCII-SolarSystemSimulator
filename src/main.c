@@ -9,6 +9,7 @@
 #include "graphics/layer.h"
 #include "gui/edit_menu.h"
 #include "sim/body.h"
+#include "sim/body_array.h"
 #include "lib/debugmalloc.h"
 
 
@@ -44,7 +45,12 @@ int main() {
         // ERR: failed to allocate screen buffer
         exiting = true;
     }
-    body_sun_init();
+    if(body_init())
+    {   // ERR: failed to allocate body array
+        exiting = true;
+    }
+
+    body_new("Earth", (Vector) {40, 0}, (Vector) {0, 0.15}, 4, 5, '#');
 
     while (!exiting){
         switch (currentState) {
@@ -129,6 +135,7 @@ void exitProgram(){
 
     layer_dispose();
     render_dispose();
+    bodyArray_dispose();
 
     debugmalloc_atexit_dump();
 

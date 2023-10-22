@@ -10,32 +10,43 @@
 
 
 Body sun;
-
-Body *following = &sun;
-
-bool showDeatils = true;
-bool showGRange = true;
+Body *sun;
+Body *following;
 
 
-void body_sun_init() {
-    strcpy(sun.name, "Sun");
-    sun.color = '@';
-    sun.r = 7;
-    sun.mass = 20;
-    Vector pos = {40, 30};
-    sun.position = pos;
-    Vector v = {0.1, 0.1};
-    sun.velocity = v;
+Body *body_new(char *name, Vector pos, Vector v, int r, int mass, char color){
+    Body b;
+    strcpy(b.name, name);
+    b.color = color;
+    b.r = r;
+    b.mass = mass;
+    b.position = pos;
+    b.velocity = v;
+
+    return bodyArray_add(b);
+}
+
+int body_init() {
+    if (bodyArray_init() != 0)
+        return 1; // failed to allocate memory for body array
+
+    sun = body_new("Sun", (Vector) {0, 0}, (Vector) {0, 0}, 7, 20, '@');
+    if (sun == NULL)
+        return 2; // failed to allocate memory for sun
+
+    following = sun;
+
+    return 0;
 }
 
 void body_addGravityEffect(Body *dest, Body const *src){
     double d = vector_distance(dest->position, src->position);
     double d2 = d * d;
-    double force = src->mass / d2;
+    double force = src->mass / d2 / targetFPS * 2;
 
     Vector v = vector_subtract(dest->position, src->position);
     Vector unitVector = vector_scalarDivide(v, d);
-    v = vector_scalarMultiply(unitVector, force);
+    v = vector_invert(vector_scalarMultiply(unitVector, force));
 
     dest->velocity = vector_add(dest->velocity, v);
 }
@@ -90,4 +101,6 @@ void body_draw(Body const *body){
 void body_render(){
     layer_clear(&bodyLayer);
     body_draw(&sun);
+    for (int i = 0; i < bodyArray.length; ++i)
+        body_draw(&bodyArray.data[i]);
 }

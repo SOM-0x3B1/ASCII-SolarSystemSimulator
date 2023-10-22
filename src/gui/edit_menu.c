@@ -58,9 +58,9 @@ void editMenu_render(){
             drawing_drawText(ml, screen_width - 30, 5 + i + yOffset, " ");
 
         if(i == TOGGLE_DETAILS)
-            drawing_drawText(ml, screen_width - 13, 5 + i + yOffset, showDeatils ? "[ON] " : "[OFF]");
+            drawing_drawText(ml, screen_width - 13, 5 + i + yOffset, infoLayer.enabled ? "[ON] " : "[OFF]");
         else if(i == TOGGLE_G_RANGE)
-            drawing_drawText(ml, screen_width - 13, 5 + i + yOffset, showGRange ? "[ON] " : "[OFF]");
+            drawing_drawText(ml, screen_width - 13, 5 + i + yOffset, rangeLayer.enabled ? "[ON] " : "[OFF]");
     }
 }
 
@@ -68,10 +68,10 @@ void editMenu_render(){
 void editMenu_selectOption(){
     switch (cursorPos) {
         case TOGGLE_DETAILS:
-            showDeatils = !showDeatils;
+            infoLayer.enabled = !infoLayer.enabled;
             break;
         case TOGGLE_G_RANGE:
-            showGRange = !showGRange;
+            rangeLayer.enabled = !rangeLayer.enabled;
             break;
         case EXIT:
             exiting = true;

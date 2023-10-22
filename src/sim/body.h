@@ -5,7 +5,6 @@
 #include "../vector.h"
 #include "../graphics/layer.h"
 
-
 typedef struct Body{
     char name[13];
     Vector position;
@@ -20,21 +19,21 @@ typedef struct Trail{
 } Trail;
 
 
-typedef struct BodyNode{
-    Body body;
-    struct BodyNode *next;
-} BodyNode;
+#include "body_array.h"
 
 
-Body extern sun;
+extern Body *sun;
+extern Body *following;
 
-Body extern *following;
-
-extern bool showDeatils;
-extern bool showGRange;
+/*extern bool showDeatils;
+extern bool showGRange;*/
 
 
-void body_sun_init();
+int body_init();
+
+Body *body_new(char *name, Vector pos, Vector v, int r, int mass, char color);
+
+void body_addGravityEffect(Body *dest, Body const *src);
 
 void body_move(Body *body);
 

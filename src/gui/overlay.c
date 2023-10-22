@@ -31,7 +31,7 @@ void overlay_render(int fps) {
     drawing_drawText(ol, 2, screen_height - 2, "Status: RUNNING");
 
     char *sCamPos[50];
-    sprintf((char*)sCamPos, "Camera center: {%lld ; %lld}", screen_offset.x + screen_width / 2, -screen_offset.y + screen_height);
+    sprintf((char*)sCamPos, "Camera center: {%lld ; %lld}", screen_offset.x + screen_width / 2, (screen_offset.y + screen_height / 2) * 2);
     drawing_drawText(ol, screen_width / 2 - (int)strlen((char*)sCamPos) / 2, screen_height - 2, (char*)sCamPos);
 
     char *sFollowing[32];
