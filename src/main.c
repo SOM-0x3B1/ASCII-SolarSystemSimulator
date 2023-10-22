@@ -94,7 +94,7 @@ int loadSettings() {
 
     if(f != NULL) {
         char line[32];
-        while (fscanf(f, "%s ", line) != EOF) {
+        while (fscanf(f, "%s", line) != EOF) {
             char param[16];
             int valueStart = getINIParam(param, line);
 
@@ -106,8 +106,12 @@ int loadSettings() {
                 screen_width = value;
             else if (strcmp(param, "screen_height") == 0)
                 screen_height = value;
-            else if (strcmp(param, "targetFPS") == 0)
-                targetFPS = value;
+            else if (strcmp(param, "targetFPS") == 0) {
+                if(value > 0)
+                    targetFPS = value;
+                else
+                    return 4; // target fps must be higher than 0
+            }
             else
                 return 2; // invalid parameter
         }

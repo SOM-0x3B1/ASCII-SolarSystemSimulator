@@ -10,6 +10,7 @@ typedef enum State{
     SIMULATION
 } State;
 
+
 extern State currentState;
 
 extern int screen_width;
@@ -18,9 +19,9 @@ extern Point screen_offset;
 
 extern int targetFPS;
 
-
 extern bool exiting;
 
 extern double sleepTime;
+
 
 #endif //ASCII_SSS_GLOBAL_H

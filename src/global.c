@@ -1,5 +1,6 @@
 #include "global.h"
 
+
 State currentState;
 
 int screen_width;

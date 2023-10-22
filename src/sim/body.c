@@ -1,4 +1,5 @@
 #include <stdlib.h>
+#include <stdbool.h>
 #include "body.h"
 #include "../graphics/render.h"
 #include "../global.h"
@@ -9,7 +10,12 @@
 
 
 Body sun;
-Body *follow = &sun;
+
+Body *following = &sun;
+
+bool showDeatils = true;
+bool showGRange = true;
+
 
 void body_sun_init() {
     strcpy(sun.name, "Sun");
@@ -37,7 +43,7 @@ void body_addGravityEffect(Body *dest, Body const *src){
 void body_move(Body *body){
     body->position = vector_add(body->position, body->velocity);
 
-    if(follow == body) {
+    if(following == body) {
         Point p = vector_toPoint(body->position);
         p.y /= 2;
         Point screenSize = {screen_width / 2, screen_height / 2};
@@ -50,11 +56,11 @@ void body_move(Body *body){
 
 
 void body_drawInfo(Body const *body) {
-    if(infoLayer.enabled) {
+    if(showDeatils) {
         Point p = vector_toPoint(body->position);
         p.y /= 2;
         p = point_subtract(p, screen_offset);
-        drawing_drawText(&infoLayer, p.x - (int) strlen(body->name) / 2, p.y, body->name);
+        drawing_drawText(&bodyLayer, (int)(p.x - strlen(body->name) / 2), (int)p.y, body->name);
     }
 }
 
@@ -74,7 +80,7 @@ void body_draw(Body const *body){
 
             if (dx2dy2 <= (body->r * body->r))
                 layer_writeAtXY(&bodyLayer, x, y, '@');
-            else if(drange < (long long int)(er * 0.8))
+            else if(showGRange && drange < (long long int)(er * 0.8))
                 layer_writeAtXY(&bodyLayer, x, y, '.');
         }
     }
@@ -83,6 +89,5 @@ void body_draw(Body const *body){
 
 void body_render(){
     layer_clear(&bodyLayer);
-    layer_clear(&infoLayer);
     body_draw(&sun);
 }

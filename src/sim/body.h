@@ -28,7 +28,10 @@ typedef struct BodyNode{
 
 Body extern sun;
 
-Body extern *follow;
+Body extern *following;
+
+extern bool showDeatils;
+extern bool showGRange;
 
 
 void body_sun_init();

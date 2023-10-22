@@ -10,11 +10,11 @@ void drawing_drawText(Layer *l, int x, int y, char const *s) {
 
 void drawing_drawLine(Layer *l, int x, int y, int length, bool vertical, char c) {
     if (vertical) {
-        for (int i = y; i < y + length && i < screen_height; ++i)
+        for (int i = y; i <= y + length && i < screen_height; ++i)
             layer_writeAtXY(l, x, i, c);
     }
     else {
-        for (int i = x; i < x + length && i < screen_width; ++i)
+        for (int i = x; i <= x + length && i < screen_width; ++i)
             layer_writeAtXY(l, i, y, c);
     }
 }
@@ -30,8 +30,8 @@ void drawing_drawRectangle(Layer *l, int x1, int y1, int x2, int y2, char c){
         swapInts(&x1, &x2);
     if(y1 > y2)
         swapInts(&y1, &y2);
-    for (int y = y1; y < y2 && y < screen_height; ++y) {
-        for (int x = x1; x < x2 && x < screen_width; ++x)
+    for (int y = y1; y <= y2 && y < screen_height; ++y) {
+        for (int x = x1; x <= x2 && x < screen_width; ++x)
             layer_writeAtXY(l, x, y, c);
     }
 }

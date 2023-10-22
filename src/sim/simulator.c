@@ -49,6 +49,6 @@ void simulation_processInput() {
         if (key == KEY_ESCAPE || key == 'e')
             editMenu_switchTo(key);
         else if(simulation_moveCam(key))
-            follow = NULL;
+            following = NULL;
     }
 }
