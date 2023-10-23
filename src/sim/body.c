@@ -17,7 +17,7 @@ double solarMass;
 /*bool showDeatils = true;
 bool showGRange = true;*/
 
-Body *body_new(char *name, Vector pos, Vector v, int r, double mass, char color){
+Body *body_new(char *name, Vector pos, Vector v, double r, double mass, char color){
     Body b;
     strcpy(b.name, name);
     b.color = color;
@@ -26,7 +26,7 @@ Body *body_new(char *name, Vector pos, Vector v, int r, double mass, char color)
     b.position = pos;
     b.velocity = v;
 
-    return bodyArray_add(b);
+    return bodyArray_add(&b);
 }
 
 int body_init() {
@@ -92,7 +92,7 @@ void body_draw(Body const *body){
 
             long long int drange = llabs((dx2dy2 / 2) - (long long int)(er * er));
 
-            if (dx2dy2 <= (body->r * body->r))
+            if (dx2dy2 <= (int)(body->r * body->r))
                 layer_writeAtXY(&bodyLayer, x, y, body->color);
             else if(rangeLayer.enabled && drange < (long long int)(er * 0.8))
                 layer_writeAtXY(&rangeLayer, x, y, '.');

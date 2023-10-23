@@ -9,7 +9,7 @@ typedef struct Body{
     char name[13];
     Vector position;
     Vector velocity;
-    int r;
+    double r;
     double mass;
     char color;
 } Body;
@@ -33,7 +33,7 @@ extern bool showGRange;*/
 
 int body_init();
 
-Body *body_new(char *name, Vector pos, Vector v, int r, double mass, char color);
+Body *body_new(char *name, Vector pos, Vector v, double r, double mass, char color);
 
 void body_addGravityEffect(Body *dest, Body const *src);
 
