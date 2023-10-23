@@ -32,6 +32,7 @@ int main() {
         screen_width = 119;
         screen_height = 30;
         targetFPS = 30;
+        solarMass = 333000;
     }
 
     currentState = SIMULATION;
@@ -50,7 +51,9 @@ int main() {
         exiting = true;
     }
 
-    body_new("Earth", (Vector) {40, 0}, (Vector) {0, 0.15}, 4, 5, '#');
+    following = body_new("Venus", (Vector) {13, 0}, (Vector) {0, 0.3}, 4, 0.815, '#');
+    following = body_new("Earth", (Vector) {30, 0}, (Vector) {0, 0.2}, 4, 1, '#');
+    following = body_new("Mars", (Vector) {-50, 0}, (Vector) {0, -0.15}, 3, 0.15, '+');
 
     while (!exiting){
         switch (currentState) {
@@ -117,6 +120,12 @@ int loadSettings() {
                     targetFPS = value;
                 else
                     return 4; // target fps must be higher than 0
+            }
+            else if (strcmp(param, "solarMass") == 0) {
+                if(value > 0)
+                    solarMass = value;
+                else
+                    return 5; // sunmass must be higher than 0
             }
             else
                 return 2; // invalid parameter

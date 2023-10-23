@@ -24,8 +24,10 @@ typedef enum EditMenuOption {
 static int cursorPos = 0;
 static Layer *ml = &menuLayer;
 
-char *sOptions[OPTION_COUNT] = {"Add body", "Edit body", "Delete body", "Follow body", "Toggle details", "Toggle G range", "Toggle trails", "Import system",
-                                "Export system", "Exit"};
+char *sOptions[OPTION_COUNT] = {"Add body", "Edit body", "Delete body",
+                                "Follow body", "Toggle details", "Toggle G range", "Toggle trails",
+                                "Import system", "Export system",
+                                "Exit"};
 
 
 void editMenu_switchTo(EconioKey key){

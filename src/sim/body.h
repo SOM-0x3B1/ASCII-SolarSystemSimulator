@@ -10,7 +10,7 @@ typedef struct Body{
     Vector position;
     Vector velocity;
     int r;
-    int mass;
+    double mass;
     char color;
 } Body;
 
@@ -25,13 +25,15 @@ typedef struct Trail{
 extern Body *sun;
 extern Body *following;
 
+extern double solarMass;
+
 /*extern bool showDeatils;
 extern bool showGRange;*/
 
 
 int body_init();
 
-Body *body_new(char *name, Vector pos, Vector v, int r, int mass, char color);
+Body *body_new(char *name, Vector pos, Vector v, int r, double mass, char color);
 
 void body_addGravityEffect(Body *dest, Body const *src);
 

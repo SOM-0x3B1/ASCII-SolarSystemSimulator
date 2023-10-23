@@ -18,10 +18,9 @@ extern int screen_height;
 extern Point screen_offset;
 
 extern int targetFPS;
+extern double sleepTime;
 
 extern bool exiting;
-
-extern double sleepTime;
 
 
 #endif //ASCII_SSS_GLOBAL_H

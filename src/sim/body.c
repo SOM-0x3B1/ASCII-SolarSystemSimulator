@@ -12,10 +12,12 @@
 Body *sun;
 Body *following;
 
+double solarMass;
+
 /*bool showDeatils = true;
 bool showGRange = true;*/
 
-Body *body_new(char *name, Vector pos, Vector v, int r, int mass, char color){
+Body *body_new(char *name, Vector pos, Vector v, int r, double mass, char color){
     Body b;
     strcpy(b.name, name);
     b.color = color;
@@ -31,7 +33,7 @@ int body_init() {
     if (bodyArray_init() != 0)
         return 1; // failed to allocate memory for body array
 
-    sun = body_new("Sun", (Vector) {0, 0}, (Vector) {0, 0}, 7, 20, '@');
+    sun = body_new("Sun", (Vector) {0, 0}, (Vector) {0, 0}, 7, solarMass, '@');
     if (sun == NULL)
         return 2; // failed to allocate memory for sun
 
@@ -42,8 +44,8 @@ int body_init() {
 
 void body_addGravityEffect(Body *dest, Body const *src){
     double d = vector_distance(dest->position, src->position);
-    double d2 = d * d;
-    double force = src->mass / d2 / targetFPS * 2;
+    double d2 = d * d * solarMass;
+    double force = src->mass / d2; // TODO: adaptive simulation speed regulation
 
     Vector v = vector_subtract(dest->position, src->position);
     Vector unitVector = vector_scalarDivide(v, d);
@@ -53,7 +55,7 @@ void body_addGravityEffect(Body *dest, Body const *src){
 }
 
 void body_move(Body *body){
-    body->position = vector_add(body->position, body->velocity);
+    body->position = vector_add(body->position, body->velocity); // TODO: adaptive simulation speed regulation
 
     if(following == body) {
         Point p = vector_toPoint(body->position);
@@ -86,7 +88,7 @@ void body_draw(Body const *body){
             long long int dY = (y - p.y) * 2;
 
             long long int dx2dy2 = (dX * dX) + (dY * dY);
-            double er = body->r + body->mass * 1.2;
+            double er = body->r + body->mass * 10;
 
             long long int drange = llabs((dx2dy2 / 2) - (long long int)(er * er));
 

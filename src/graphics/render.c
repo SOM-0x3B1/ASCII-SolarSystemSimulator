@@ -41,8 +41,6 @@ void render_dispose(){
 
 
 void render_handleFPS(){
-    // TODO: adaptive simulation speed regulation
-
     frameCount++;
     if(time(NULL) - frameCountReseted > 0)
     {
