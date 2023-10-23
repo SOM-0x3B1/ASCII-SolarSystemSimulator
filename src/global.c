@@ -1,7 +1,7 @@
 #include "global.h"
 
 
-State currentState;
+State programState;
 
 int screen_width;
 int screen_height;

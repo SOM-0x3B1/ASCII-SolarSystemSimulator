@@ -35,7 +35,7 @@ int main() {
         solarMass = 333000;
     }
 
-    currentState = SIMULATION;
+    programState = SIMULATION;
 
 
     if(!layer_init()){
@@ -51,12 +51,13 @@ int main() {
         exiting = true;
     }
 
-    following = body_new("Venus", (Vector) {13, 0}, (Vector) {0, 0.3}, 4, 0.815, '#');
     following = body_new("Earth", (Vector) {30, 0}, (Vector) {0, 0.2}, 4, 1, '#');
     following = body_new("Mars", (Vector) {-50, 0}, (Vector) {0, -0.15}, 3, 0.15, '+');
+    following = body_new("Venus", (Vector) {13, 0}, (Vector) {0, 0.3}, 4, 0.815, '#');
+
 
     while (!exiting){
-        switch (currentState) {
+        switch (programState) {
             case EDIT_MENU:
                 simulation_tick();
                 editMenu_processInput();

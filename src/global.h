@@ -11,7 +11,7 @@ typedef enum State{
 } State;
 
 
-extern State currentState;
+extern State programState;
 
 extern int screen_width;
 extern int screen_height;
