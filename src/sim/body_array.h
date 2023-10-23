@@ -19,7 +19,7 @@ int bodyArray_init();
 
 void bodyArray_dispose();
 
-Body *bodyArray_add(Body b);
+Body *bodyArray_add(Body *b);
 
 
 #endif //ASCII_SSS_BODY_ARRAY_H

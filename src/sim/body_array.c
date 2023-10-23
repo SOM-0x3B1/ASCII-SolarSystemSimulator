@@ -17,7 +17,7 @@ void bodyArray_dispose(){
     free(bodyArray.data);
 }
 
-Body *bodyArray_add(Body b){
+Body *bodyArray_add(Body *b){
     if(bodyArray.length + 1 > bodyArray.capacity) {
         Body *newArray = realloc(bodyArray.data, bodyArray.capacity * 2 * sizeof(Body));
         if(newArray == NULL)
@@ -28,7 +28,7 @@ Body *bodyArray_add(Body b){
         }
     }
 
-    bodyArray.data[bodyArray.length] = b;
+    bodyArray.data[bodyArray.length] = *b;
     bodyArray.length++;
 
     return &bodyArray.data[bodyArray.length - 1];
