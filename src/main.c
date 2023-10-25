@@ -11,6 +11,7 @@
 #include "sim/body.h"
 #include "sim/body_array.h"
 #include "lib/debugmalloc.h"
+#include "gui/body_editor.h"
 
 
 int getINIParam(char* dest, const char* src);
@@ -26,13 +27,13 @@ int main() {
     econio_set_title("ASCII Solar System Simulator");
     econio_rawmode();
 
+    screen_width = 119;
+    screen_height = 30;
+    targetFPS = 30;
+    solarMass = 333000;
     int loadSettingResult = loadSettings();
     if(loadSettingResult != 0) {
         // ERR: unable to load settings from settings.ini
-        screen_width = 119;
-        screen_height = 30;
-        targetFPS = 30;
-        solarMass = 333000;
     }
 
     programState = SIMULATION;
@@ -66,9 +67,15 @@ int main() {
                 simulation_tick();
                 simulation_processInput();
                 break;
+            case PLACING_BODY:
+                bodyEditor_processPlacementInput();
+                break;
         }
         render_fullRender();
         econio_sleep(sleepTime);
+
+        if(programState == TEXT_INPUT)
+            bodyEditor_processTextInput();
     }
 
     exitProgram();

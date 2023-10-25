@@ -1,3 +1,4 @@
+#include <string.h>
 #include "drawing.h"
 #include "../global.h"
 
@@ -19,19 +20,41 @@ void drawing_drawLine(Layer *l, int x, int y, int length, bool vertical, char c)
     }
 }
 
-void swapInts(int *a, int *b){
+static void swapInts(int *a, int *b){
     int temp = *a;
     *a = *b;
     *b = temp;
 }
 
-void drawing_drawRectangle(Layer *l, int x1, int y1, int x2, int y2, char c){
+static void sortPoints(int x1, int y1, int x2, int y2){
     if(x1 > x2)
         swapInts(&x1, &x2);
     if(y1 > y2)
         swapInts(&y1, &y2);
+}
+
+void drawing_drawRectangle(Layer *l, int x1, int y1, int x2, int y2, char c){
+    sortPoints(x1, y1, x2, y2);
     for (int y = y1; y <= y2 && y < screen_height; ++y) {
         for (int x = x1; x <= x2 && x < screen_width; ++x)
             layer_writeAtXY(l, x, y, c);
     }
+}
+
+int drawing_drawBox(Layer *l, int x1, int y1, int x2, int y2, char* title){
+    sortPoints(x1, y1, x2, y2);
+
+    int xCenter = x1 + (x2 - x1) / 2;
+
+    drawing_drawRectangle(l, x1 + 1, y1 + 1, x2 - 1, y2 - 1, ' ');
+
+    drawing_drawLine(l, x1 + 1, y1, x2-x1 - 2, false, '_');
+    drawing_drawText(l, xCenter - (int)strlen(title) / 2, y1 + 1, title);
+    drawing_drawLine(l, x1 + 1, y1 + 2, x2 - x1 -2, false, '_');
+    drawing_drawLine(l, x1, y2, x2- x1, false, '_');
+
+    drawing_drawLine(l, x1, y1 + 1, y2 - y1 - 1, true, '|');
+    drawing_drawLine(l, x2, y1 + 1, y2 - y1 - 1, true, '|');
+
+    return xCenter;
 }

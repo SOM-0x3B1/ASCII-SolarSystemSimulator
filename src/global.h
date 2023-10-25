@@ -7,7 +7,9 @@
 
 typedef enum State{
     EDIT_MENU,
-    SIMULATION
+    SIMULATION,
+    TEXT_INPUT,
+    PLACING_BODY,
 } State;
 
 

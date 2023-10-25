@@ -5,6 +5,19 @@
 #include "../lib/econio.h"
 
 
+typedef enum EditMenuSTATE {
+    STATE_MAIN,
+    STATE_ADD_BODY,
+    STATE_EDIT_BODY,
+    STATE_EDIT_BODY_SET,
+    STATE_DELETE_BODY,
+    STATE_FOLLOW_BODY,
+} EditMenuSTATE;
+
+
+extern EditMenuSTATE editMenu_state;
+
+
 void editMenu_switchTo(EconioKey key);
 
 void editMenu_render();

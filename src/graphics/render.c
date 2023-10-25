@@ -11,6 +11,7 @@
 #include "../gui/overlay.h"
 #include "../gui/edit_menu.h"
 #include "../lib/debugmalloc.h"
+#include "../gui/body_editor.h"
 
 
 static char *screenBuffer;
@@ -89,7 +90,9 @@ void render_refreshScreen(){
 void render_fullRender(){
     body_render();
     overlay_render(fps);
-    render_refreshScreen();
     if(menuLayer.enabled)
         editMenu_render();
+    if(programState == TEXT_INPUT)
+        bodyEditor_render();
+    render_refreshScreen();
 }

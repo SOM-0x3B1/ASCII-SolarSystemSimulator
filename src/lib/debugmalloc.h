@@ -60,7 +60,7 @@ typedef struct DebugmallocEntry {
 } DebugmallocEntry;
 
 
-/* debugmalloc singleton, storing all state */
+/* debugmalloc singleton, storing all bodyEditor_state */
 typedef struct DebugmallocData {
     char logfile[256];    /* log file name or empty string */
     long max_block_size;  /* max size of a single block allocated */

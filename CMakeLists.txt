@@ -26,4 +26,6 @@ add_executable(ASCII_SSS src/main.c
         src/lib/debugmalloc.h
         src/sim/body_array.c
         src/sim/body_array.h
+        src/gui/body_editor.c
+        src/gui/body_editor.h
 )

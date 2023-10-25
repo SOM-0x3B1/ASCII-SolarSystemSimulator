@@ -56,16 +56,6 @@ void body_addGravityEffect(Body *dest, Body const *src){
 
 void body_move(Body *body){
     body->position = vector_add(body->position, body->velocity); // TODO: adaptive simulation speed regulation
-
-    if(following == body) {
-        Point p = vector_toPoint(body->position);
-        p.y /= 2;
-        Point screenSize = {screen_width / 2, screen_height / 2};
-        p = point_subtract(p, screenSize);
-        if(menuLayer.enabled)
-            p.x += 16;
-        screen_offset = p;
-    }
 }
 
 
@@ -88,7 +78,7 @@ void body_draw(Body const *body){
             long long int dY = (y - p.y) * 2;
 
             long long int dx2dy2 = (dX * dX) + (dY * dY);
-            double er = body->r + body->mass * 10;
+            double er = sqrt(body->mass * 100);
 
             long long int drange = llabs((dx2dy2 / 2) - (long long int)(er * er));
 
@@ -105,6 +95,20 @@ void body_render(){
     layer_clear(&bodyLayer);
     layer_clear(&rangeLayer);
     layer_clear(&infoLayer);
-    for (int i = 0; i < bodyArray.length; ++i)
-        body_draw(&bodyArray.data[i]);
+
+    for (int i = 0; i < bodyArray.length; ++i) {
+        Body *b = &bodyArray.data[i];
+
+        if(following == &bodyArray.data[i]) {
+            Point p = vector_toPoint(b->position);
+            p.y /= 2;
+            Point screenSize = {screen_width / 2, screen_height / 2};
+            p = point_subtract(p, screenSize);
+            if(menuLayer.enabled)
+                p.x += 16;
+            screen_offset = p;
+        }
+
+        body_draw(b);
+    }
 }
