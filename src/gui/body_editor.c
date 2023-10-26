@@ -38,6 +38,10 @@ void bodyEditor_render(){
         textPos = (Point){margin + 3 - 16 + (int)strlen(prompts[bodyEditor_state]) + 2, yCenter + 1};
 
         drawing_drawText(ml, xCentrer - 12, yCenter + 3, "Press 'ENTER' to accept");
+    } else{
+        int xCentrer = drawing_drawBox(ml, 2, 2, 43, 8, "Placing body");
+        drawing_drawText(ml, xCentrer - 14, 6, "Use 'WASD' to move the body");
+        drawing_drawText(ml, xCentrer - 12, 7, "Press 'ENTER' to accept");
     }
 }
 
@@ -71,7 +75,7 @@ void bodyEditor_processTextInput() {
             scanf("%lf %lf", &editedBody->velocity.x, &editedBody->velocity.y);
             if (editMenu_state == STATE_ADD_BODY) {
                 programState = EDIT_MENU;
-                bodyEditor_state = BODY_SET_NAME;
+                editMenu_state = STATE_EDIT_BODY_SET;
             } else
                 programState = EDIT_MENU;
             break;

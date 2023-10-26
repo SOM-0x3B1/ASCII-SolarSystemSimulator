@@ -92,7 +92,7 @@ void render_fullRender(){
     overlay_render(fps);
     if(menuLayer.enabled)
         editMenu_render();
-    if(programState == TEXT_INPUT)
+    if(programState == TEXT_INPUT || programState == PLACING_BODY)
         bodyEditor_render();
     render_refreshScreen();
 }
