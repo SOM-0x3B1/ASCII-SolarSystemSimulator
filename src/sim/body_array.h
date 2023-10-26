@@ -21,5 +21,7 @@ void bodyArray_dispose();
 
 Body *bodyArray_add(Body *b);
 
+void bodyArray_removeAt(int i);
+
 
 #endif //ASCII_SSS_BODY_ARRAY_H

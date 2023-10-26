@@ -33,3 +33,10 @@ Body *bodyArray_add(Body *b){
 
     return &bodyArray.data[bodyArray.length - 1];
 }
+
+void bodyArray_removeAt(int i){
+    for (int j = i; j < bodyArray.length - 1; ++j)
+        bodyArray.data[j] = bodyArray.data[j + 1];
+
+    bodyArray.length--;
+}

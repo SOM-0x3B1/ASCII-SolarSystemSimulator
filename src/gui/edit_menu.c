@@ -4,6 +4,7 @@
 #include "../global.h"
 #include "../sim/body.h"
 #include "body_editor.h"
+#include "stdio.h"
 
 
 #define MAIN_OPTION_COUNT 10
@@ -127,6 +128,7 @@ void editMenu_render(){
             editMenu_renderMain();
             break;
         case STATE_EDIT_BODY:
+        case STATE_DELETE_BODY:
         case STATE_FOLLOW_BODY:
             editMenu_renderBodyList();
             break;
@@ -149,6 +151,10 @@ void editMenu_selectMainOption(){
                             0.0, 0.0, 0.0, 0.0, '#'};
             editedBody = bodyArray_add(&b);
             following = editedBody;
+            break;
+        case OPTION_DELETE_BODY:
+            cursorPos = 0;
+            editMenu_state = STATE_DELETE_BODY;
             break;
         case OPTION_EDIT_BODY:
             cursorPos = 0;
@@ -178,10 +184,10 @@ void editMenu_selectEditOption(){
         editMenu_state = STATE_MAIN;
         cursorPos = 0;
     } else{
-        cursorPos = 0;
         editedBody = &bodyArray.data[cursorPos];
         following = editedBody;
         editMenu_state = STATE_EDIT_BODY_SET;
+        cursorPos = 0;
     }
 }
 
@@ -195,6 +201,16 @@ void editMenu_selectEditSettingsOption(){
             programState = TEXT_INPUT;
         else
             programState = PLACING_BODY;
+    }
+}
+
+void editMenu_selectDeleteOption(){
+    if(cursorPos == bodyArray.length){
+        editMenu_state = STATE_MAIN;
+        cursorPos = 0;
+        following = NULL;
+    } else {
+        bodyArray_removeAt(cursorPos);
     }
 }
 
@@ -239,6 +255,9 @@ void editMenu_processInput(){
                     break;
                 case STATE_EDIT_BODY_SET:
                     editMenu_selectEditSettingsOption();
+                    break;
+                case STATE_DELETE_BODY:
+                    editMenu_selectDeleteOption();
                     break;
                 case STATE_FOLLOW_BODY:
                     editMenu_selectFollowOption();
