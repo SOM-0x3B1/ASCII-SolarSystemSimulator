@@ -1,6 +1,7 @@
 #ifndef ASCII_SSS_BODY_H
 #define ASCII_SSS_BODY_H
 
+
 #include "../lib/econio.h"
 #include "../vector.h"
 #include "../graphics/layer.h"
@@ -15,7 +16,7 @@ typedef struct Body{
 } Body;
 
 typedef struct Trail{
-    Vector position;
+    Point position;
 } Trail;
 
 

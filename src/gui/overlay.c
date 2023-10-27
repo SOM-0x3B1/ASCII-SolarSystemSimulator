@@ -10,6 +10,9 @@
 
 static Layer *ol = &overlayLayer;
 
+static char *sStates[4] = {"RUNNING", "RUNNING", "PAUSED (INPUT)", "PAUSED (PLACING)"};
+
+
 void overlay_updateFPS(int fps){
     char sfps[16];
     sprintf(sfps, "%d/%d FPS   ", fps, targetFPS);
@@ -28,10 +31,11 @@ void overlay_render(int fps) {
 
     drawing_drawLine(ol, 0, screen_height - 3, screen_width, false, '_');
     drawing_drawLine(ol, 0, screen_height - 2, screen_width, false, ' ');
-    drawing_drawText(ol, 2, screen_height - 2, "Status: RUNNING");
+    drawing_drawText(ol, 2, screen_height - 2, "Status:");
+    drawing_drawText(ol, 10, screen_height - 2, sStates[programState]);
 
     char *sCamPos[50];
-    sprintf((char*)sCamPos, "Camera center: {%lld ; %lld}", screen_offset.x + screen_width / 2, (screen_offset.y + screen_height / 2) * 2);
+    sprintf((char*)sCamPos, "Camera center: {%lld ; %lld}", screen_offset.x + screen_width / 2, -(screen_offset.y + screen_height / 2) * 2);
     drawing_drawText(ol, screen_width / 2 - (int)strlen((char*)sCamPos) / 2, screen_height - 2, (char*)sCamPos);
 
     char *sFollowing[32];

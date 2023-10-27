@@ -73,6 +73,7 @@ void bodyEditor_processTextInput() {
             break;
         case BODY_SET_V:
             scanf("%lf %lf", &editedBody->velocity.x, &editedBody->velocity.y);
+            editedBody->velocity.y = -editedBody->velocity.y;
             if (editMenu_state == STATE_ADD_BODY) {
                 programState = EDIT_MENU;
                 editMenu_state = STATE_EDIT_BODY_SET;
