@@ -1,7 +1,5 @@
 #include <stdio.h>
 #include <stdbool.h>
-#include <string.h>
-#include <stdlib.h>
 #include "lib/econio.h"
 #include "global.h"
 #include "graphics/render.h"
@@ -12,13 +10,8 @@
 #include "sim/body_array.h"
 #include "lib/debugmalloc.h"
 #include "gui/body_editor.h"
+#include "file_manager.h"
 
-
-int getINIParam(char* dest, const char* src);
-
-int getIntValue(const char* src, int start, int *value);
-
-int loadSettings();
 
 void exitProgram();
 
@@ -31,7 +24,9 @@ int main() {
     screen_height = 30;
     targetFPS = 30;
     solarMass = 333000;
-    int loadSettingResult = loadSettings();
+    useLegacyRendering = false;
+
+    int loadSettingResult = settings_loadSettings();
     if(loadSettingResult != 0) {
         // ERR: unable to load settings from settings.ini
     }
@@ -47,7 +42,7 @@ int main() {
         // ERR: failed to allocate screen buffer
         exiting = true;
     }
-    if(body_init())
+    if(body_init() != 0)
     {   // ERR: failed to allocate body array
         exiting = true;
     }
@@ -70,9 +65,13 @@ int main() {
             case PLACING_BODY:
                 bodyEditor_processPlacementInput();
                 break;
+            case TEXT_INPUT:
+                break;
         }
         render_fullRender();
-        econio_sleep(sleepTime);
+
+        if(!useLegacyRendering)
+            econio_sleep(sleepTime);
 
         if(programState == TEXT_INPUT)
             bodyEditor_processTextInput();

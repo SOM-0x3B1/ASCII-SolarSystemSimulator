@@ -19,22 +19,23 @@ static size_t buffSize;
 
 static time_t frameCountReseted;
 static int frameCount = 0;
-static int fps = 0;
 
 
 bool render_init(){
-    buffSize = screen_width * screen_height * sizeof(char);
-    screenBuffer = (char*) malloc(buffSize);
+    if(!useLegacyRendering) {
+        buffSize = screen_width * screen_height * sizeof(char);
+        screenBuffer = (char *) malloc(buffSize);
 
-    frameCountReseted = time(NULL);
+        frameCountReseted = time(NULL);
 
-    if(screenBuffer != NULL) {
-        memset(screenBuffer, '\0', buffSize);
-        setvbuf(stdout, screenBuffer, _IOFBF, screen_height * screen_width);
-        //setbuf(stdout, NULL); // disable buffering (slow!)
-        return true;
-    } else
-        return false;
+        if (screenBuffer != NULL) {
+            memset(screenBuffer, '\0', buffSize);
+            if(setvbuf(stdout, screenBuffer, _IOFBF, screen_height * screen_width))
+                return false;
+        } else
+            return false;
+    }
+    return true;
 }
 void render_dispose(){
     free(screenBuffer);
@@ -49,15 +50,15 @@ void render_handleFPS(){
         frameCount = 0;
         frameCountReseted = time(NULL);
 
-        double adjust = 0.001 * ((double)fps / targetFPS);
+        if(!useLegacyRendering) {
+            double adjust = 0.001 * ((double) fps / targetFPS);
 
-        if(fps < targetFPS)
-            sleepTime -= adjust;
-        else if(fps > targetFPS)
-            sleepTime += adjust;
+            if (fps < targetFPS)
+                sleepTime -= adjust;
+            else if (fps > targetFPS)
+                sleepTime += adjust;
+        }
     }
-
-    overlay_updateFPS(fps);
 }
 
 
@@ -80,7 +81,8 @@ void render_refreshScreen(){
             fprintf(stdout, "\n");
     }
 
-    econio_flush();
+    if(!useLegacyRendering)
+        econio_flush();
     econio_gotoxy(0,0);
 
     render_handleFPS();
@@ -89,7 +91,7 @@ void render_refreshScreen(){
 
 void render_fullRender(){
     body_render();
-    overlay_render(fps);
+    overlay_render();
     if(menuLayer.enabled)
         editMenu_render();
     if(programState == TEXT_INPUT || programState == PLACING_BODY)

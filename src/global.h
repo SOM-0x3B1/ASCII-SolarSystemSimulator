@@ -5,22 +5,29 @@
 #include "vector.h"
 
 
-typedef enum State{
+#define PROGRAM_STATE_COUNT 4
+
+
+typedef enum {
     EDIT_MENU,
     SIMULATION,
     TEXT_INPUT,
     PLACING_BODY,
-} State;
+} ProgramState;
 
 
-extern State programState;
+extern ProgramState programState;
 
 extern int screen_width;
 extern int screen_height;
 extern Point screen_offset;
 
+extern int fps;
 extern int targetFPS;
 extern double sleepTime;
+extern bool useLegacyRendering;
+
+extern bool pausedByUser;
 
 extern bool exiting;
 
