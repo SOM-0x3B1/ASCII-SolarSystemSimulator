@@ -23,8 +23,10 @@ void simulation_doMovements(){
 }
 
 void simulation_tick(){
-    simulation_doVectorCalculations();
-    simulation_doMovements();
+    if(!pausedByUser) {
+        simulation_doVectorCalculations();
+        simulation_doMovements();
+    }
 }
 
 bool simulation_moveCam(EconioKey key){
@@ -43,7 +45,13 @@ bool simulation_moveCam(EconioKey key){
     else if (key == 'd' || key == KEY_RIGHT) {
         screen_offset.x += 2;
         return true;
+    } else if(key == ' ') {
+        if(pausedByUser)
+            pausedByUser = false;
+        else
+            pausedByUser = true;
     }
+
     return false;
 }
 

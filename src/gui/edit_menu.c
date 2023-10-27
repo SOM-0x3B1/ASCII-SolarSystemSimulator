@@ -208,8 +208,9 @@ void editMenu_selectDeleteOption(){
     if(cursorPos == bodyArray.length){
         editMenu_state = STATE_MAIN;
         cursorPos = 0;
-        following = NULL;
     } else {
+        if(following == &bodyArray.data[cursorPos])
+            following = NULL;
         bodyArray_removeAt(cursorPos);
     }
 }
@@ -222,6 +223,16 @@ void editMenu_selectFollowOption(){
         following = &bodyArray.data[cursorPos];
 }
 
+static void editMenu_close(){
+    programState = SIMULATION;
+    editMenu_state = STATE_MAIN;
+    menuLayer.enabled = false;
+    cursorPos = 0;
+    editMenu_render();
+
+    screen_offset.x -= 16;
+}
+
 void editMenu_processInput(){
     if (econio_kbhit()) {
         int key;
@@ -232,15 +243,8 @@ void editMenu_processInput(){
         if(cursorMax < 0)
             cursorMax = bodyArray.length + 1;
 
-        if(key == KEY_ESCAPE || key =='e') {
-            programState = SIMULATION;
-            editMenu_state = STATE_MAIN;
-            menuLayer.enabled = false;
-            cursorPos = 0;
-            editMenu_render();
-
-            screen_offset.x -= 16;
-        }
+        if(key == KEY_ESCAPE || key =='e')
+            editMenu_close();
         else if ((key == 's' || key == KEY_DOWN) && cursorPos < cursorMax - 1)
             cursorPos++;
         else if ((key == 'w' || key == KEY_UP) && cursorPos > 0)
@@ -261,6 +265,8 @@ void editMenu_processInput(){
                     break;
                 case STATE_FOLLOW_BODY:
                     editMenu_selectFollowOption();
+                    break;
+                default:
                     break;
             }
         }
