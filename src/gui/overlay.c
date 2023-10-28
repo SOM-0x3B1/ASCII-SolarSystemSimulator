@@ -4,22 +4,25 @@
 #include "../lib/econio.h"
 #include "../graphics/drawing.h"
 #include "../global.h"
-#include "../graphics/layer.h"
 #include "../sim/body.h"
 
 
-static Layer *ol = &overlayLayer;
+static Layer *ol;
 
 static char *sStates[PROGRAM_STATE_COUNT] = {"RUNNING", "RUNNING", "PAUSED (INPUT)", "PAUSED (PLACING)"};
 
 
-void overlay_writeFPS(){
+void overlay_init(){
+    ol = &overlayLayer;
+}
+
+static void overlay_writeFPS(){
     char sfps[16];
     sprintf(sfps, "%d/%d FPS   ", fps, targetFPS);
     drawing_drawText(ol, 2, 0, sfps);
 }
 
-void overlay_renderHeader(){
+static void overlay_renderHeader(){
     drawing_drawLine(ol, 0, 0, screen_width, false, ' ');
     overlay_writeFPS();
     drawing_drawText(ol, screen_width / 2 - 4, 0, "ASCII-SSS");
@@ -30,7 +33,7 @@ void overlay_renderHeader(){
     drawing_drawLine(ol, 0, 1, screen_width, false, '_');
 }
 
-void overlay_renderFooter(){
+static void overlay_renderFooter(){
     drawing_drawLine(ol, 0, screen_height - 3, screen_width, false, '_');
     drawing_drawLine(ol, 0, screen_height - 2, screen_width, false, ' ');
     drawing_drawText(ol, 2, screen_height - 2, "Status:");

@@ -18,10 +18,13 @@ typedef enum EditMenuSTATE {
 extern EditMenuSTATE editMenu_state;
 
 
+void editMenu_init();
+
 void editMenu_switchTo(EconioKey key);
 
 void editMenu_render();
 
 void editMenu_processInput();
+
 
 #endif //ASCII_SSS_EDIT_MENU_H

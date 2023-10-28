@@ -18,6 +18,8 @@ extern Body *editedBody;
 extern BodyEditorOptions bodyEditor_state;
 
 
+void bodyEditor_init();
+
 void bodyEditor_render();
 
 void bodyEditor_processTextInput();

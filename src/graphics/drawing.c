@@ -3,6 +3,20 @@
 #include "../global.h"
 
 
+static void swapInts(int *a, int *b){
+    int temp = *a;
+    *a = *b;
+    *b = temp;
+}
+
+static void sortPoints(int x1, int y1, int x2, int y2){
+    if(x1 > x2)
+        swapInts(&x1, &x2);
+    if(y1 > y2)
+        swapInts(&y1, &y2);
+}
+
+
 void drawing_drawText(Layer *l, int x, int y, char const *s) {
     for (int i = 0; s[i] != '\0' && x + i < screen_width; ++i)
         layer_writeAtXY(l, x + i, y, s[i]);
@@ -18,19 +32,6 @@ void drawing_drawLine(Layer *l, int x, int y, int length, bool vertical, char c)
         for (int i = x; i <= x + length && i < screen_width; ++i)
             layer_writeAtXY(l, i, y, c);
     }
-}
-
-static void swapInts(int *a, int *b){
-    int temp = *a;
-    *a = *b;
-    *b = temp;
-}
-
-static void sortPoints(int x1, int y1, int x2, int y2){
-    if(x1 > x2)
-        swapInts(&x1, &x2);
-    if(y1 > y2)
-        swapInts(&y1, &y2);
 }
 
 void drawing_drawRectangle(Layer *l, int x1, int y1, int x2, int y2, char c){

@@ -1,16 +1,14 @@
 #include <stdlib.h>
-#include <stdbool.h>
 #include "body.h"
-#include "../graphics/render.h"
 #include "../global.h"
 #include <string.h>
 #include "../graphics/drawing.h"
-#include "../graphics/layer.h"
 #include "math.h"
 
 
 Body *sun;
 Body *following;
+Body *editedBody;
 
 double solarMass;
 
@@ -41,6 +39,7 @@ int body_init() {
 
     return 0;
 }
+
 
 void body_addGravityEffect(Body *dest, Body const *src){
     double d = vector_distance(dest->position, src->position);

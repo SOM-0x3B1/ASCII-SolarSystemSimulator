@@ -6,6 +6,7 @@
 #include "sim/simulator.h"
 #include "graphics/layer.h"
 #include "gui/edit_menu.h"
+#include "gui/overlay.h"
 #include "sim/body.h"
 #include "sim/body_array.h"
 #include "lib/debugmalloc.h"
@@ -46,6 +47,10 @@ int main() {
     {   // ERR: failed to allocate body array
         exiting = true;
     }
+    bodyEditor_init();
+    editMenu_init();
+    overlay_init();
+
 
     following = body_new("Mars", (Vector) {-50, 0}, (Vector) {0, -0.15}, 3, 0.15, '+');
     following = body_new("Venus", (Vector) {13, 0}, (Vector) {0, 0.3}, 4, 0.815, '#');

@@ -1,4 +1,3 @@
-#include <stdlib.h>
 #include "layer.h"
 #include "../global.h"
 #include "../lib/debugmalloc.h"

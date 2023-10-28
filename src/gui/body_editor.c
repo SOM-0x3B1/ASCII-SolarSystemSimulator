@@ -7,15 +7,13 @@
 #include "edit_menu.h"
 
 
-Body *editedBody;
-
 BodyEditorOptions bodyEditor_state = BODY_SET_NAME;
 
 
 //bool bodyEditor_enabled = false;
 static Point textPos;
 
-static Layer *ml = &menuLayer;
+static Layer *ml;
 
 static char *prompts[5] = {"Name:", "Mass (relative to Earth):",
                            "Size (in character radius):", "Position:",
@@ -25,6 +23,10 @@ static char *prompts[5] = {"Name:", "Mass (relative to Earth):",
 /*static bool isStateTextInput(){
     return bodyEditor_state == BODY_SET_NAME || bodyEditor_state == BODY_SET_MASS || bodyEditor_state == BODY_SET_SIZE || bodyEditor_state == BODY_SET_V;
 }*/
+
+void bodyEditor_init(){
+    ml = &menuLayer;
+}
 
 void bodyEditor_render(){
     if(programState == TEXT_INPUT) {
@@ -79,6 +81,8 @@ void bodyEditor_processTextInput() {
                 editMenu_state = STATE_EDIT_BODY_SET;
             } else
                 programState = EDIT_MENU;
+            break;
+        default:
             break;
     }
     econio_rawmode();

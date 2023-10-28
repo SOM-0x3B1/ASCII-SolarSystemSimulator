@@ -1,7 +1,6 @@
 #include <stdlib.h>
 #include "simulator.h"
 #include "../lib/econio.h"
-#include "../graphics/layer.h"
 #include "../global.h"
 #include "../gui/edit_menu.h"
 #include "body.h"

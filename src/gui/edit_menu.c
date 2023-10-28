@@ -1,6 +1,5 @@
 #include "edit_menu.h"
 #include "../graphics/drawing.h"
-#include "../graphics/layer.h"
 #include "../global.h"
 #include "../sim/body.h"
 #include "body_editor.h"
@@ -31,7 +30,7 @@ EditMenuSTATE editMenu_state = STATE_MAIN;
 
 static int cursorPos = 0;
 
-static Layer *ml = &menuLayer;
+static Layer *ml;
 
 char *sMainOptions[MAIN_OPTION_COUNT] = {"Add body", "Edit body", "Delete body",
                                          "Follow body", "Toggle details", "Toggle G range", "Toggle trails",
@@ -43,6 +42,10 @@ int stateOptionCounts[STATE_COUNT] = {MAIN_OPTION_COUNT, BODY_PROPERTY_COUNT + 1
 
 char *sBodySettingOptions[BODY_PROPERTY_COUNT] = {"Set name", "Set mass", "Set size", "Set position", "Set velocity"};
 
+
+void editMenu_init(){
+    ml = &menuLayer;
+}
 
 void editMenu_switchTo(EconioKey key){
     programState = EDIT_MENU;
@@ -139,29 +142,26 @@ void editMenu_render(){
 }
 
 void editMenu_selectMainOption(){
+    EditMenuSTATE lastState = editMenu_state;
+
     switch (cursorPos) {
         case OPTION_ADD_BODY:
-            cursorPos = 0;
             editMenu_state = STATE_ADD_BODY;
             bodyEditor_state = BODY_SET_NAME;
             programState = TEXT_INPUT;
-            Body b = (Body){"",
-                            (double)screen_offset.x + (double)(screen_width) / 2 - 16,
-                            ((double)screen_offset.y + (double)screen_height / 2) * 2,
-                            0.0, 0.0, 0.0, 0.0, '#'};
-            editedBody = bodyArray_add(&b);
+            editedBody = body_new("", (Vector) {
+                                          (double) screen_offset.x + (double) (screen_width) / 2 - 16,
+                                          ((double) screen_offset.y + (double) screen_height / 2) * 2},
+                                  (Vector) {0, 0}, 0.0, 0.0, '#');
             following = editedBody;
             break;
         case OPTION_DELETE_BODY:
-            cursorPos = 0;
             editMenu_state = STATE_DELETE_BODY;
             break;
         case OPTION_EDIT_BODY:
-            cursorPos = 0;
             editMenu_state = STATE_EDIT_BODY;
             break;
         case OPTION_FOLLOW_BODY:
-            cursorPos = 0;
             editMenu_state = STATE_FOLLOW_BODY;
             break;
         case OPTION_TOGGLE_DETAILS:
@@ -176,7 +176,12 @@ void editMenu_selectMainOption(){
         case OPTION_EXIT:
             exiting = true;
             break;
+        default:
+            break;
     }
+
+    if(lastState != editMenu_state)
+        cursorPos = 0;
 }
 
 void editMenu_selectEditOption(){

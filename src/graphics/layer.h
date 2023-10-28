@@ -20,7 +20,6 @@ extern Layer bodyLayer;
 extern Layer rangeLayer;
 extern Layer trailLayer;
 
-extern const int layerCount;
 extern Layer *layers[LAYER_COUNT];
 
 

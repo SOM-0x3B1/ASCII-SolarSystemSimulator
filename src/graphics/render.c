@@ -1,7 +1,6 @@
 #include <time.h>
 #include <string.h>
 #include <stdio.h>
-#include <stdlib.h>
 #include <stdbool.h>
 #include "../lib/econio.h"
 #include "render.h"
@@ -66,9 +65,9 @@ void render_refreshScreen(){
     for (int y = 0; y < screen_height; ++y) {
         for (int x = 0; x < screen_width; ++x) {
             bool empty = true;
-            for (int i = 0; i < layerCount; ++i) {
+            for (int i = 0; i < LAYER_COUNT; ++i) {
                 Layer *l = layers[i];
-                if(l->enabled && l->text[y][x] != '\0') {;
+                if(l->enabled && l->text[y][x] != '\0') {
                     fprintf(stdout, "%c", l->text[y][x]);
                     empty = false;
                     break;
