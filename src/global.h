@@ -25,7 +25,6 @@ extern Point screen_offset;
 extern int fps;
 extern int targetFPS;
 extern double sleepTime;
-extern bool useLegacyRendering;
 
 extern bool pausedByUser;
 

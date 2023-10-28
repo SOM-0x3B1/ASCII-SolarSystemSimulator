@@ -25,7 +25,6 @@ int main() {
     screen_height = 30;
     targetFPS = 30;
     solarMass = 333000;
-    useLegacyRendering = false;
 
     int loadSettingResult = settings_loadSettings();
     if(loadSettingResult != 0) {
@@ -75,8 +74,7 @@ int main() {
         }
         render_fullRender();
 
-        if(!useLegacyRendering)
-            econio_sleep(sleepTime);
+        econio_sleep(sleepTime);
 
         if(programState == TEXT_INPUT)
             bodyEditor_processTextInput();

@@ -20,20 +20,19 @@ static time_t frameCountReseted;
 static int frameCount = 0;
 
 
-bool render_init(){
-    if(!useLegacyRendering) {
-        buffSize = screen_width * screen_height * sizeof(char);
-        screenBuffer = (char *) malloc(buffSize);
+bool render_init() {
+    buffSize = screen_width * screen_height * sizeof(char);
+    screenBuffer = (char *) malloc(buffSize);
 
-        frameCountReseted = time(NULL);
+    frameCountReseted = time(NULL);
 
-        if (screenBuffer != NULL) {
-            memset(screenBuffer, '\0', buffSize);
-            if(setvbuf(stdout, screenBuffer, _IOFBF, screen_height * screen_width))
-                return false;
-        } else
+    if (screenBuffer != NULL) {
+        memset(screenBuffer, '\0', buffSize);
+        if (setvbuf(stdout, screenBuffer, _IOFBF, screen_height * screen_width))
             return false;
-    }
+    } else
+        return false;
+
     return true;
 }
 void render_dispose(){
@@ -41,22 +40,19 @@ void render_dispose(){
 }
 
 
-void render_handleFPS(){
+void render_handleFPS() {
     frameCount++;
-    if(time(NULL) - frameCountReseted > 0)
-    {
+    if (time(NULL) - frameCountReseted > 0) {
         fps = frameCount;
         frameCount = 0;
         frameCountReseted = time(NULL);
 
-        if(!useLegacyRendering) {
-            double adjust = 0.001 * ((double) fps / targetFPS);
+        double adjust = 0.001 * ((double) fps / targetFPS);
 
-            if (fps < targetFPS)
-                sleepTime -= adjust;
-            else if (fps > targetFPS)
-                sleepTime += adjust;
-        }
+        if (fps < targetFPS)
+            sleepTime -= adjust;
+        else if (fps > targetFPS)
+            sleepTime += adjust;
     }
 }
 
@@ -80,8 +76,7 @@ void render_refreshScreen(){
             fprintf(stdout, "\n");
     }
 
-    if(!useLegacyRendering)
-        econio_flush();
+    econio_flush();
     econio_gotoxy(0,0);
 
     render_handleFPS();

@@ -38,5 +38,7 @@ Point point_subtract(Point p, Point q);
 
 Point point_scalarDivide(Point p, int d);
 
+Vector point_ToVector(Point p);
+
 
 #endif //ASCII_SSS_VECTOR_H

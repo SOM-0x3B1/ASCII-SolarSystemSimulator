@@ -67,3 +67,8 @@ Point point_scalarDivide(Point p, int d){
     Point res = {p.x / d, p.y / d};
     return res;
 }
+
+Vector point_ToVector(Point p){
+    Vector v = (Vector){(double)p.x, (double)p.y};
+    return v;
+}
