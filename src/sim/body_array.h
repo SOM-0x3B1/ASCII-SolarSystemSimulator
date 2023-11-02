@@ -23,5 +23,7 @@ Body *bodyArray_add(Body *b);
 
 void bodyArray_removeAt(int i);
 
+void bodyArray_remove(Body *b);
+
 
 #endif //ASCII_SSS_BODY_ARRAY_H

@@ -12,6 +12,8 @@ Body *editedBody;
 
 double solarMass;
 
+double detectCollisionPercentage;
+
 /*bool showDeatils = true;
 bool showGRange = true;*/
 
@@ -55,6 +57,27 @@ void body_addGravityEffect(Body *dest, Body const *src){
 
 void body_move(Body *body){
     body->position = vector_add(body->position, body->velocity); // TODO: adaptive simulation speed regulation
+}
+
+
+static void swapBodyPointers(Body **a, Body **b){
+    Body *temp = *a;
+    *a = *b;
+    *b = temp;
+}
+
+static void collide(Body *a, Body *b){
+    if (b->mass > a->mass)
+        swapBodyPointers(&a, &b);
+    a->mass += b->mass;
+    a->r = sqrt((a->r * a->r) + (b->r + b->r) * 3.14);
+    bodyArray_remove(b);
+}
+
+void body_detectCollision(Body *a, Body *b) {
+    double d = vector_distance(a->position, b->position);
+    if (d < (a->r + b->r) * detectCollisionPercentage)
+        collide(a, b);
 }
 
 

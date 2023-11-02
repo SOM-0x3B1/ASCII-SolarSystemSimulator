@@ -28,6 +28,9 @@ extern Body *following;
 
 extern double solarMass;
 
+extern double detectCollisionPercentage;
+
+
 /*extern bool showDeatils;
 extern bool showGRange;*/
 
@@ -39,6 +42,8 @@ Body *body_new(char *name, Vector pos, Vector v, double r, double mass, char col
 void body_addGravityEffect(Body *dest, Body const *src);
 
 void body_move(Body *body);
+
+void body_detectCollision(Body *a, Body *b);
 
 // void body_draw(Body const *body);
 

@@ -21,10 +21,22 @@ void simulation_doMovements(){
         body_move(&bodyArray.data[i]);
 }
 
+
+void simulation_detectCollisions(){
+    for (int i = 0; i < bodyArray.length - 1; ++i) {
+        for (int j = i + 1; j < bodyArray.length; ++j) {
+            Body *a = &bodyArray.data[i];
+            Body *b = &bodyArray.data[j];
+            body_detectCollision(a, b);
+        }
+    }
+}
+
 void simulation_tick(){
     if(!pausedByUser) {
         simulation_doVectorCalculations();
         simulation_doMovements();
+        simulation_detectCollisions();
     }
 }
 

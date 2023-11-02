@@ -25,6 +25,7 @@ int main() {
     screen_height = 30;
     targetFPS = 30;
     solarMass = 333000;
+    detectCollisionPercentage = 0.8;
 
     int loadSettingResult = settings_loadSettings();
     if(loadSettingResult != 0) {

@@ -35,8 +35,18 @@ Body *bodyArray_add(Body *b){
 }
 
 void bodyArray_removeAt(int i){
+    if(following == &bodyArray.data[i])
+        following = NULL;
+
     for (int j = i; j < bodyArray.length - 1; ++j)
         bodyArray.data[j] = bodyArray.data[j + 1];
-
     bodyArray.length--;
+}
+
+void bodyArray_remove(Body *b){
+    int i = 0;
+    while (&bodyArray.data[i] != b && i < bodyArray.length)
+        i++;
+    if(i < bodyArray.length)
+        bodyArray_removeAt(i);
 }
