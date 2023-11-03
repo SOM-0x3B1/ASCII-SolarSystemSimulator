@@ -1,4 +1,5 @@
 #include <stdlib.h>
+#include <stdio.h>
 #include "body.h"
 #include "../global.h"
 #include <string.h>
@@ -37,6 +38,9 @@ int body_init() {
     if (sun == NULL)
         return 2; // failed to allocate memory for sun
 
+    econio_sleep(1);
+
+
     following = sun;
 
     return 0;
@@ -71,6 +75,7 @@ static void collide(Body *a, Body *b){
         swapBodyPointers(&a, &b);
     a->mass += b->mass;
     a->r = sqrt((a->r * a->r) + (b->r + b->r) * 3.14);
+    a->velocity = vector_add(a->velocity, vector_scalarMultiply(b->velocity, b->mass / a->mass));
     bodyArray_remove(b);
 }
 
