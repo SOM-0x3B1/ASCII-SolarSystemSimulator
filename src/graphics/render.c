@@ -47,12 +47,11 @@ void render_handleFPS() {
         frameCount = 0;
         frameCountReseted = time(NULL);
 
-        double adjust = 0.001 * ((double) fps / targetFPS);
-
+        double adjustment = 0.001 * ((double) fps / targetFPS);
         if (fps < targetFPS)
-            sleepTime -= adjust;
+            sleepTime -= adjustment;
         else if (fps > targetFPS)
-            sleepTime += adjust;
+            sleepTime += adjustment;
     }
 }
 

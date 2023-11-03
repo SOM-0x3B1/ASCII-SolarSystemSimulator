@@ -52,9 +52,9 @@ int main() {
     overlay_init();
 
 
-    following = body_new("Mars", (Vector) {-50, 0}, (Vector) {0, -0.15}, 3, 0.15, '+');
-    following = body_new("Venus", (Vector) {13, 0}, (Vector) {0, 0.3}, 4, 0.815, '#');
-    following = body_new("Earth", (Vector) {30, 0}, (Vector) {0, 0.2}, 4, 1, '#');
+    body_new("Mars", (Vector) {-50, 0}, (Vector) {0, -0.15}, 3, 0.15, '+');
+    body_new("Venus", (Vector) {13, 0}, (Vector) {0, 0.3}, 4, 0.815, '#');
+    body_new("Earth", (Vector) {30, 0}, (Vector) {0, 0.2}, 4, 1, '#');
 
 
     while (!exiting){
@@ -70,7 +70,7 @@ int main() {
             case PLACING_BODY:
                 bodyEditor_processPlacementInput();
                 break;
-            case TEXT_INPUT:
+            case TEXT_INPUT: // input processing will occur after render
                 break;
         }
         render_fullRender();

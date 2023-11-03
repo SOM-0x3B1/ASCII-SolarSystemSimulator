@@ -19,10 +19,16 @@ void bodyArray_dispose(){
 
 Body *bodyArray_add(Body *b){
     if(bodyArray.length + 1 > bodyArray.capacity) {
-        Body *newArray = realloc(bodyArray.data, bodyArray.capacity * 2 * sizeof(Body));
+        //Body *newArray = realloc(bodyArray.data, bodyArray.capacity * 2 * sizeof(Body));
+        Body *newArray = (Body *) malloc(bodyArray.capacity * 2 * sizeof(Body));
         if(newArray == NULL)
             return NULL;  // failed to allocate memory for body
         else {
+            for (int i = 0; i < bodyArray.length; ++i) {
+                newArray[i] = bodyArray.data[i];
+                if(&bodyArray.data[i] == following)
+                    following = &newArray[i];
+            }
             bodyArray.data = newArray;
             bodyArray.capacity *= 2;
         }
