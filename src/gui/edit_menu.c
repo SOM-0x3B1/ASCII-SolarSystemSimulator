@@ -217,6 +217,8 @@ void editMenu_selectDeleteOption(){
         if(following == &bodyArray.data[cursorPos])
             following = NULL;
         bodyArray_removeAt(cursorPos);
+        if(cursorPos == bodyArray.length && cursorPos > 0)
+            cursorPos--;
     }
 }
 
