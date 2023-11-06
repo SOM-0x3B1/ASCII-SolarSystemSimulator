@@ -40,12 +40,15 @@ Body *bodyArray_add(Body *b){
     return &bodyArray.data[bodyArray.length - 1];
 }
 
-void bodyArray_removeAt(int i){
-    if(following == &bodyArray.data[i])
+void bodyArray_removeAt(int i) {
+    if (following == &bodyArray.data[i])
         following = NULL;
 
-    for (int j = i; j < bodyArray.length - 1; ++j)
+    for (int j = i; j < bodyArray.length - 1; ++j) {
         bodyArray.data[j] = bodyArray.data[j + 1];
+        if (following == &bodyArray.data[j + 1])
+            following = &bodyArray.data[j];
+    }
     bodyArray.length--;
 }
 

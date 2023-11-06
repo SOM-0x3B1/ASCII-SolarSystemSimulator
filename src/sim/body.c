@@ -73,6 +73,8 @@ static void swapBodyPointers(Body **a, Body **b){
 static void collide(Body *a, Body *b){
     if (b->mass > a->mass)
         swapBodyPointers(&a, &b);
+    if(following == b)
+        following = a;
     a->mass += b->mass;
     a->r = sqrt((a->r * a->r) + (b->r + b->r) * 3.14);
     a->velocity = vector_add(a->velocity, vector_scalarMultiply(b->velocity, b->mass / a->mass));
