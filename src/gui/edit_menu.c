@@ -140,6 +140,8 @@ void editMenu_render(){
         case STATE_EDIT_BODY_SET:
             editMenu_renderEditSettings();
             break;
+        default:
+            break;
     }
 }
 

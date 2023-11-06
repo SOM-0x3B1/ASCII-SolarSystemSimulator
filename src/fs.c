@@ -6,7 +6,7 @@
 #include "graphics/drawing.h"
 
 
-#define MAX_FILENAME_LENGTH 251
+#define MAX_FILENAME_LENGTH 250
 
 
 static Point textPos;
@@ -84,26 +84,47 @@ void export_render(){
 
 
 static int checkFilename(char *fn){
-    for (int i = 0; fn[i] != '\0' && i < MAX_FILENAME_LENGTH; ++i) {
+    int i = 0;
+    for (; fn[i] != '\0' && i < MAX_FILENAME_LENGTH; ++i) {
         char c = fn[i];
         if(c != '-' && c != '_' && c !='.' && (c < '0' || (c > '9' && c < 'A') || (c > 'Z' && c < 'a') || (c > 'z')))
             return 1; // invalid character
     }
+    if(fn[i] != '\0')
+        return 2; // invalid length
 
     return 0;
 }
 
-void export_export(char *filename){
+int export_export(char *filename) {
+    FILE *f;
+    f = fopen(strcat(filename, ".tsv"), "w");
+    if (f != NULL) {
+        fprintf(f, "solar-mass\n%lf\n\n", solarMass);
 
+        fprintf(f, "name\tmass\tpos-x\tpos-y\tradius\tvel-x\tvel-y\tcolor");
+        for (int i = 0; i < bodyArray.length; ++i) {
+            Body *b = &bodyArray.data[i];
+            fprintf(f, "\n%s\t%lf\t%lf\t%lf\t%lf\t%lf\t%lf\t%c",
+                    b->name, b->mass, b->position.x, b->position.y,
+                    b->r, b->velocity.x, b->velocity.y, b->color);
+        }
+        fclose(f);
+    } else
+        return 1; // unable to create file
+
+    return 0;
 }
 
 void export_processTextInput() {
     econio_gotoxy((int) textPos.x, (int) textPos.y);
     econio_normalmode();
 
-    char filename[MAX_FILENAME_LENGTH];
+    char filename[MAX_FILENAME_LENGTH + 5];
     scanf("%s", filename);
 
+    if(checkFilename(filename) == 0)
+        export_export(filename);
 
     econio_rawmode();
     econio_gotoxy(0, 0);
