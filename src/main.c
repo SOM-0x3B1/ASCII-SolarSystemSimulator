@@ -52,7 +52,7 @@ int main() {
     overlay_init();
 
 
-    body_new("Mars", (Vector) {-50, 0}, (Vector) {0, -0.15}, 3, 0.15, '+');
+    body_new("Mars", (Vector) {-50, 0}, (Vector) {0, -0.15}, 3, 0.15, '#');
     body_new("Venus", (Vector) {13, 0}, (Vector) {0, 0.3}, 4, 0.815, '#');
     body_new("Earth", (Vector) {30, 0}, (Vector) {0, 0.2}, 4, 1, '#');
 
@@ -75,7 +75,7 @@ int main() {
         }
         render_fullRender();
 
-        //econio_sleep(sleepTime);
+        econio_sleep(sleepTime);
 
         if(programState == TEXT_INPUT) {
             switch (textInputDest) {
