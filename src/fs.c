@@ -1,8 +1,15 @@
 #include <stdio.h>
 #include <string.h>
-#include "file_manager.h"
+#include "fs.h"
 #include "global.h"
 #include "sim/body.h"
+#include "graphics/drawing.h"
+
+
+#define MAX_FILENAME_LENGTH 251
+
+
+static Point textPos;
 
 
 int getINIParam(char* dest, const char* src) {
@@ -63,4 +70,43 @@ int settings_loadSettings() {
         return 1; // unable to open
 
     return 0;
+}
+
+
+void export_setState(){
+    programState = TEXT_INPUT;
+    textInputDest = TEXT_INPUT_EXPORT;
+}
+
+void export_render(){
+    textPos = drawing_drawInputPrompt(&menuLayer, screen_height / 2 - 2, "Export system", "Name:");
+}
+
+
+static int checkFilename(char *fn){
+    for (int i = 0; fn[i] != '\0' && i < MAX_FILENAME_LENGTH; ++i) {
+        char c = fn[i];
+        if(c != '-' && c != '_' && c !='.' && (c < '0' || (c > '9' && c < 'A') || (c > 'Z' && c < 'a') || (c > 'z')))
+            return 1; // invalid character
+    }
+
+    return 0;
+}
+
+void export_export(char *filename){
+
+}
+
+void export_processTextInput() {
+    econio_gotoxy((int) textPos.x, (int) textPos.y);
+    econio_normalmode();
+
+    char filename[MAX_FILENAME_LENGTH];
+    scanf("%s", filename);
+
+
+    econio_rawmode();
+    econio_gotoxy(0, 0);
+
+    programState = EDIT_MENU;
 }

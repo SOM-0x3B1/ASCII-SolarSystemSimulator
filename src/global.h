@@ -15,8 +15,15 @@ typedef enum {
     PLACING_BODY,
 } ProgramState;
 
+typedef enum {
+    TEXT_INPUT_BODY_EDITOR,
+    TEXT_INPUT_EXPORT,
+    TEXT_INPUT_IMPORT,
+} TextInputDest;
+
 
 extern ProgramState programState;
+extern TextInputDest textInputDest;
 
 extern int screen_width;
 extern int screen_height;

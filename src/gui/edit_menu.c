@@ -4,6 +4,7 @@
 #include "../sim/body.h"
 #include "body_editor.h"
 #include "stdio.h"
+#include "../fs.h"
 
 
 #define MAIN_OPTION_COUNT 10
@@ -130,6 +131,7 @@ void editMenu_render(){
         case STATE_MAIN:
             editMenu_renderMain();
             break;
+        case STATE_ADD_BODY:
         case STATE_EDIT_BODY:
         case STATE_DELETE_BODY:
         case STATE_FOLLOW_BODY:
@@ -148,7 +150,7 @@ void editMenu_selectMainOption(){
         case OPTION_ADD_BODY:
             editMenu_state = STATE_ADD_BODY;
             bodyEditor_state = BODY_SET_NAME;
-            programState = TEXT_INPUT;
+            bodyEditor_setStates();
             editedBody = body_new("", (Vector) {
                                           (double) screen_offset.x + (double) (screen_width) / 2 - 16,
                                           ((double) screen_offset.y + (double) screen_height / 2) * 2},
@@ -172,6 +174,9 @@ void editMenu_selectMainOption(){
             break;
         case OPTION_TOGGLE_TRAILS:
             trailLayer.enabled = !trailLayer.enabled;
+            break;
+        case OPTION_EXPORT_SYSTEM:
+            export_setState();
             break;
         case OPTION_EXIT:
             exiting = true;
@@ -203,7 +208,7 @@ void editMenu_selectEditSettingsOption(){
     } else {
         bodyEditor_state = cursorPos;
         if(cursorPos != BODY_SET_POS)
-            programState = TEXT_INPUT;
+            bodyEditor_setStates();
         else
             programState = PLACING_BODY;
     }

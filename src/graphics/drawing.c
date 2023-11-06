@@ -42,7 +42,7 @@ void drawing_drawRectangle(Layer *l, int x1, int y1, int x2, int y2, char c){
     }
 }
 
-int drawing_drawBox(Layer *l, int x1, int y1, int x2, int y2, char* title){
+int drawing_drawBox(Layer *l, int x1, int y1, int x2, int y2, const char* title){
     sortPoints(x1, y1, x2, y2);
 
     int xCenter = x1 + (x2 - x1) / 2;
@@ -58,4 +58,20 @@ int drawing_drawBox(Layer *l, int x1, int y1, int x2, int y2, char* title){
     drawing_drawLine(l, x2, y1 + 1, y2 - y1 - 1, true, '|');
 
     return xCenter;
+}
+
+
+Point drawing_drawInputPrompt(Layer *l, int yCenter, const char *title, const char *text){
+    Point textPos;
+    int margin = screen_width / 4;
+    int xCentrer = drawing_drawBox(l, margin - 16, yCenter - 4,
+                                   screen_width - margin - 16, yCenter + 4,
+                                   title);
+
+    drawing_drawText(l, margin - 16 + 3, yCenter + 1, text);
+    textPos = (Point){margin + 3 - 16 + (int)strlen(text) + 2, yCenter + 1};
+
+    drawing_drawText(l, xCentrer - 12, yCenter + 3, "Press 'ENTER' to accept");
+
+    return textPos;
 }

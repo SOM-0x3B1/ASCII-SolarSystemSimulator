@@ -2,6 +2,8 @@
 
 
 ProgramState programState;
+TextInputDest textInputDest;
+
 
 int screen_width;
 int screen_height;

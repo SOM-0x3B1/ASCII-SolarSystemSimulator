@@ -11,6 +11,7 @@
 #include "../gui/edit_menu.h"
 #include "../lib/debugmalloc.h"
 #include "../gui/body_editor.h"
+#include "../fs.h"
 
 
 static char *screenBuffer;
@@ -87,7 +88,11 @@ void render_fullRender(){
     overlay_render();
     if(menuLayer.enabled)
         editMenu_render();
-    if(programState == TEXT_INPUT || programState == PLACING_BODY)
+
+    if(textInputDest == TEXT_INPUT_BODY_EDITOR && (programState == TEXT_INPUT || programState == PLACING_BODY))
         bodyEditor_render();
+    else if(textInputDest == TEXT_INPUT_EXPORT && programState == TEXT_INPUT)
+        export_render();
+
     render_refreshScreen();
 }

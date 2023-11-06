@@ -28,6 +28,6 @@ add_executable(ASCII_SSS src/main.c
         src/sim/body_array.h
         src/gui/body_editor.c
         src/gui/body_editor.h
-        src/file_manager.c
-        src/file_manager.h
+        src/fs.c
+        src/fs.h
 )

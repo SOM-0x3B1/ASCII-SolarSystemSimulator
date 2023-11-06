@@ -28,19 +28,16 @@ void bodyEditor_init(){
     ml = &menuLayer;
 }
 
-void bodyEditor_render(){
-    if(programState == TEXT_INPUT) {
-        int yCenter = screen_height / 4;
-        int margin = screen_width / 4;
-        int xCentrer = drawing_drawBox(ml, margin - 16, yCenter - 4,
-                                       screen_width - margin - 16, yCenter + 4,
-                                       "Body editor");
+void bodyEditor_setStates(){
+    programState = TEXT_INPUT;
+    textInputDest = TEXT_INPUT_BODY_EDITOR;
+}
 
-        drawing_drawText(ml, margin - 16 + 3, yCenter + 1, prompts[bodyEditor_state]);
-        textPos = (Point){margin + 3 - 16 + (int)strlen(prompts[bodyEditor_state]) + 2, yCenter + 1};
-
-        drawing_drawText(ml, xCentrer - 12, yCenter + 3, "Press 'ENTER' to accept");
-    } else{
+void bodyEditor_render() {
+    if (programState == TEXT_INPUT)
+        textPos = drawing_drawInputPrompt(ml, screen_height / 4,
+                                          "Body editor", prompts[bodyEditor_state]);
+    else {
         int xCentrer = drawing_drawBox(ml, 2, 2, 43, 8, "Placing body");
         drawing_drawText(ml, xCentrer - 14, 6, "Use 'WASD' to move the body");
         drawing_drawText(ml, xCentrer - 12, 7, "Press 'ENTER' to accept");

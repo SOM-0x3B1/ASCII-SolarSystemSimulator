@@ -11,7 +11,7 @@
 #include "sim/body_array.h"
 #include "lib/debugmalloc.h"
 #include "gui/body_editor.h"
-#include "file_manager.h"
+#include "fs.h"
 
 
 void exitProgram();
@@ -75,10 +75,19 @@ int main() {
         }
         render_fullRender();
 
-        econio_sleep(sleepTime);
+        //econio_sleep(sleepTime);
 
-        if(programState == TEXT_INPUT)
-            bodyEditor_processTextInput();
+        if(programState == TEXT_INPUT) {
+            switch (textInputDest) {
+                case TEXT_INPUT_BODY_EDITOR:
+                    bodyEditor_processTextInput();
+                    break;
+                case TEXT_INPUT_EXPORT:
+                    export_processTextInput();
+                    break;
+            }
+
+        }
     }
 
     exitProgram();
