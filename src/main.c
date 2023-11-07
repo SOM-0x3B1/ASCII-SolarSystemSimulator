@@ -86,7 +86,6 @@ int main() {
                     export_processTextInput();
                     break;
             }
-
         }
     }
 

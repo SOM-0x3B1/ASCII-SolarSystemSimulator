@@ -83,7 +83,7 @@ void export_render(){
 }
 
 
-static int checkFilename(char *fn){
+static int checkFilename(const char *fn){
     int i = 0;
     for (; fn[i] != '\0' && i < MAX_FILENAME_LENGTH; ++i) {
         char c = fn[i];

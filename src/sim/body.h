@@ -6,6 +6,19 @@
 #include "../vector.h"
 #include "../graphics/layer.h"
 
+
+typedef struct Trail{
+    Point position;
+    struct Trail *next;
+} Trail;
+
+typedef struct TrailQueue{
+    Trail *head;
+    int length;
+    int capacity;
+} TrailQueue;
+
+
 typedef struct Body{
     char name[13];
     Vector position;
@@ -13,11 +26,8 @@ typedef struct Body{
     double r;
     double mass;
     char color;
+    TrailQueue *trail;
 } Body;
-
-typedef struct Trail{
-    Point position;
-} Trail;
 
 
 #include "body_array.h"
@@ -29,6 +39,8 @@ extern Body *following;
 extern double solarMass;
 
 extern double detectCollisionPercentage;
+
+extern int trail_spacing_counter;
 
 
 /*extern bool showDeatils;
@@ -48,6 +60,11 @@ void body_detectCollision(Body *a, Body *b);
 // void body_draw(Body const *body);
 
 void body_render();
+
+
+void trailQueue_init(TrailQueue *tq, Body *b);
+
+void trail_enqueue(TrailQueue *tq, Vector v);
 
 
 #endif //ASCII_SSS_BODY_H

@@ -6,6 +6,8 @@
 #include "../graphics/drawing.h"
 #include "math.h"
 
+#define TRAIL_LENGTH 15
+
 
 Body *sun;
 Body *following;
@@ -15,8 +17,12 @@ double solarMass;
 
 double detectCollisionPercentage;
 
+
+int trail_spacing_counter = 0;
+
 /*bool showDeatils = true;
 bool showGRange = true;*/
+
 
 Body *body_new(char *name, Vector pos, Vector v, double r, double mass, char color){
     Body b;
@@ -26,6 +32,9 @@ Body *body_new(char *name, Vector pos, Vector v, double r, double mass, char col
     b.mass = mass;
     b.position = pos;
     b.velocity = v;
+
+    b.trail = (TrailQueue*) malloc(sizeof(TrailQueue));
+    trailQueue_init(b.trail, &b);
 
     return bodyArray_add(&b);
 }
@@ -37,9 +46,6 @@ int body_init() {
     sun = body_new("Sun", (Vector) {0, 0}, (Vector) {0, 0}, 7, solarMass, '@');
     if (sun == NULL)
         return 2; // failed to allocate memory for sun
-
-    econio_sleep(1);
-
 
     following = sun;
 
@@ -58,6 +64,40 @@ void body_addGravityEffect(Body *dest, Body const *src){
 
     dest->velocity = vector_add(dest->velocity, v);
 }
+
+
+void trailQueue_init(TrailQueue *tq, Body *b) {
+    tq->head = (Trail *) malloc(sizeof(Trail));
+    tq->head->position = vector_toPoint(b->position);
+    tq->head->next = NULL;
+
+    tq->capacity = TRAIL_LENGTH;
+    tq->length = 1;
+}
+
+Trail *trail_dequeue(TrailQueue *tq){
+    Trail *ct = tq->head;
+    for (int i = 0; i < tq->length - 2; ++i)
+        ct = ct->next;
+
+    Trail *res = ct->next;
+    ct->next = NULL;
+    tq->length--;
+    return res;
+}
+
+void trail_enqueue(TrailQueue *tq, Vector v) {
+    Point p = vector_toPoint(v);
+    Trail *newT = (Trail *) malloc(sizeof(Trail));
+    newT->position = p;
+    newT->next = tq->head;
+    tq->head = newT;
+    tq->length++;
+
+    if(tq->length > tq->capacity)
+        free(trail_dequeue(tq));
+}
+
 
 void body_move(Body *body){
     body->position = vector_add(body->position, body->velocity); // TODO: adaptive simulation speed regulation
@@ -97,6 +137,22 @@ void body_drawInfo(Body const *body) {
     }
 }
 
+void body_drawTrail(Body const *body) {
+    Trail *t = body->trail->head;
+    int i = 1;
+    do {
+        Point p = t->position;
+        p.y /= 2;
+        p = point_subtract(p, screen_offset);
+
+        char c = i < TRAIL_LENGTH / 1.5 ? '+' : '.';
+        i++;
+
+        layer_writeAtXY(&trailLayer, (int) p.x, (int) p.y, c);
+        t = t->next;
+    } while (t != NULL);
+}
+
 void body_draw(Body const *body){
     Point p = vector_toPoint(body->position);
     p.y /= 2;
@@ -118,12 +174,14 @@ void body_draw(Body const *body){
         }
     }
     body_drawInfo(body);
+    body_drawTrail(body);
 }
 
 void body_render(){
     layer_clear(&bodyLayer);
     layer_clear(&rangeLayer);
     layer_clear(&infoLayer);
+    layer_clear(&trailLayer);
 
     for (int i = 0; i < bodyArray.length; ++i) {
         Body *b = &bodyArray.data[i];
