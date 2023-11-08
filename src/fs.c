@@ -12,7 +12,7 @@
 static Point textPos;
 
 
-int getINIParam(char* dest, const char* src) {
+static int getINIParam(char* dest, const char* src) {
     int i;
     for (i = 0; src[i] != '='; ++i)
         dest[i] = src[i];
@@ -21,7 +21,7 @@ int getINIParam(char* dest, const char* src) {
     return i;
 }
 
-int settings_getIntValue(const char* src, int start, int *value) {
+static int settings_getIntValue(const char* src, int start, int *value) {
     *value = 0;
     int i;
     for (i = start + 1; src[i] != '\0'; ++i) {
@@ -39,7 +39,7 @@ int settings_loadSettings() {
     if(f != NULL) {
         char line[32];
         while (fscanf(f, "%s", line) != EOF) {
-            char param[16];
+            char param[32];
             int valueStart = getINIParam(param, line);
 
             int value;
@@ -55,14 +55,17 @@ int settings_loadSettings() {
                     targetFPS = value;
                 else
                     return 4; // target fps must be higher than 0
-            }
-            else if (strcmp(param, "solarMass") == 0) {
+            } else if (strcmp(param, "solarMass") == 0) {
                 if(value > 0)
                     solarMass = value;
                 else
                     return 5; // sunmass must be higher than 0
-            }
-            else
+            } else if (strcmp(param, "detectCollisionPercentage") == 0) {
+                if(value > 0)
+                    detectCollisionPercentage = (double)value / 100;
+                else
+                    return 6; // sunmass must be higher than 0
+            } else
                 return 2; // invalid parameter
         }
         fclose(f);

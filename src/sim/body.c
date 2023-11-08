@@ -1,10 +1,10 @@
 #include <stdlib.h>
-#include <stdio.h>
 #include "body.h"
 #include "../global.h"
 #include <string.h>
 #include "../graphics/drawing.h"
 #include "math.h"
+#include "../gui/edit_menu.h"
 
 #define TRAIL_LENGTH 15
 
@@ -130,9 +130,11 @@ static void collide(Body *a, Body *b){
 }
 
 void body_detectCollision(Body *a, Body *b) {
-    double d = vector_distance(a->position, b->position);
-    if (d < (a->r + b->r) * detectCollisionPercentage)
-        collide(a, b);
+    if(detectCollisionPercentage > 0) {
+        double d = vector_distance(a->position, b->position);
+        if (d < (a->r + b->r) * detectCollisionPercentage)
+            collide(a, b);
+    }
 }
 
 
@@ -222,7 +224,7 @@ void body_render(){
             Point screenSize = {screen_width / 2, screen_height / 2};
             p = point_subtract(p, screenSize);
             if(menuLayer.enabled)
-                p.x += 16;
+                p.x += EDIT_MENU_WIDTH / 2;
             screen_offset = p;
         }
 
