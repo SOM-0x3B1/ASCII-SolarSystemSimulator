@@ -31,10 +31,14 @@ double vector_length(Vector a);
 
 double vector_angle(Vector u, Vector v);
 
+Vector vector_unitVector(Vector u, Vector v);
+
 Point vector_toPoint(Vector u);
 
 
 Point point_subtract(Point p, Point q);
+
+Point point_scalarMultiply(Point p, int m);
 
 Point point_scalarDivide(Point p, int d);
 

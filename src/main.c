@@ -14,6 +14,9 @@
 #include "fs.h"
 
 
+/**
+ * Frees all memory allocations
+ */
 void exitProgram();
 
 
@@ -21,12 +24,14 @@ int main() {
     econio_set_title("ASCII Solar System Simulator");
     econio_rawmode();
 
+    // Default settings
     screen_width = 119;
     screen_height = 30;
     targetFPS = 30;
     solarMass = 333000;
     detectCollisionPercentage = 0.8;
 
+    // Attept to load settings.ini
     int loadSettingResult = settings_loadSettings();
     if(loadSettingResult != 0) {
         // ERR: unable to load settings from settings.ini
@@ -52,11 +57,13 @@ int main() {
     overlay_init();
 
 
+    // Adds some default bodies to the simulation
     body_new("Mars", (Vector) {-50, 0}, (Vector) {0, -0.15}, 3, 0.15, '#');
     body_new("Venus", (Vector) {13, 0}, (Vector) {0, 0.3}, 4, 0.815, '#');
     body_new("Earth", (Vector) {30, 0}, (Vector) {0, 0.2}, 5, 1, '#');
 
 
+    // Main program loop
     while (!exiting){
         switch (programState) {
             case EDIT_MENU:
@@ -70,13 +77,19 @@ int main() {
             case PLACING_BODY:
                 bodyEditor_processPlacementInput();
                 break;
-            case TEXT_INPUT: // input processing will occur after render
+            case TEXT_INPUT:
+                // empty, because input processing will occur after render
                 break;
         }
+
         render_fullRender();
 
+
+        // Speed & FPS regulator
         econio_sleep(sleepTime);
 
+
+        // For scanf inputs
         if(programState == TEXT_INPUT) {
             switch (textInputDest) {
                 case TEXT_INPUT_BODY_EDITOR:
@@ -84,6 +97,8 @@ int main() {
                     break;
                 case TEXT_INPUT_EXPORT:
                     export_processTextInput();
+                    break;
+                case TEXT_INPUT_IMPORT:
                     break;
             }
         }

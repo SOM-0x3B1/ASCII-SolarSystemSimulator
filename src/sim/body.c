@@ -165,18 +165,40 @@ void body_draw(Body const *body){
     Point p = vector_toPoint(body->position);
     p.y /= 2;
     p = point_subtract(p, screen_offset);
+
+    Point pLight;
+    bool drawShadows = !infoLayer.enabled && body != sun;
+    if(drawShadows) {
+        pLight = vector_toPoint(body->position);
+        Point pLightUnit = vector_toPoint(vector_unitVector(body->position, sun->position));
+        pLight = point_subtract(pLight, point_scalarMultiply(pLightUnit, (int) body->r / 2));
+        pLight.y /= 2;
+        pLight = point_subtract(pLight, screen_offset);
+    }
+
     for (int y = 0; y < screen_height; y++) {
         for (int x = 0; x < screen_width; x++) {
             long long int dX = x - p.x;
             long long int dY = (y - p.y) * 2;
-
             long long int dx2dy2 = (dX * dX) + (dY * dY);
+
+            long long int dx2dy2Light;
+            if(drawShadows) {
+                long long int ldX = x - pLight.x;
+                long long int ldY = (y - pLight.y) * 2;
+                dx2dy2Light = (ldX * ldX) + (ldY * ldY);
+            }
+
             double er = sqrt(body->mass * 100);
 
             long long int drange = llabs((dx2dy2 / 2) - (long long int)(er * er));
 
-            if (dx2dy2 <= (int)(body->r * body->r))
-                layer_writeAtXY(&bodyLayer, x, y, body->color);
+            if (dx2dy2 <= (int)(body->r * body->r)) {
+                if(!drawShadows || dx2dy2Light <= (int)(body->r * body->r))
+                    layer_writeAtXY(&bodyLayer, x, y, body->color);
+                else
+                    layer_writeAtXY(&bodyLayer, x, y, ':');
+            }
             else if(rangeLayer.enabled && drange < (long long int)(er * 0.8))
                 layer_writeAtXY(&rangeLayer, x, y, '.');
         }

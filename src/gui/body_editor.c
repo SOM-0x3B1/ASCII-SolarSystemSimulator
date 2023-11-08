@@ -122,6 +122,9 @@ void bodyEditor_processPlacementInput(){
                 programState = EDIT_MENU;
         }
         else
-            bodyEditor_moveBody(key);
+            if(bodyEditor_moveBody(key)) {
+                if (editMenu_state == STATE_ADD_BODY)
+                    editedBody->trail->head->position = vector_toPoint(editedBody->position);
+            }
     }
 }
