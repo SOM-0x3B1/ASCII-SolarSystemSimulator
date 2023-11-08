@@ -19,6 +19,15 @@ void bodyArray_dispose(){
     free(bodyArray.data);
 }
 
+static void updatePointers(Body *newArray, int origin, int newIndex){
+    if(&bodyArray.data[origin] == following)
+        following = &newArray[newIndex];
+    if(&bodyArray.data[origin] == sun)
+        sun = &newArray[newIndex];
+    if(&bodyArray.data[origin] == editedBody)
+        editedBody = &newArray[newIndex];
+}
+
 Body *bodyArray_add(Body *b){
     if(bodyArray.length + 1 > bodyArray.capacity) {
         //Body *newArray = realloc(bodyArray.data, bodyArray.capacity * 2 * sizeof(Body));
@@ -28,8 +37,7 @@ Body *bodyArray_add(Body *b){
         else {
             for (int i = 0; i < bodyArray.length; ++i) {
                 newArray[i] = bodyArray.data[i];
-                if(&bodyArray.data[i] == following)
-                    following = &newArray[i];
+                updatePointers(newArray, i , i);
             }
             bodyArray.data = newArray;
             bodyArray.capacity *= 2;
@@ -50,8 +58,7 @@ void bodyArray_removeAt(int i) {
 
     for (int j = i; j < bodyArray.length - 1; ++j) {
         bodyArray.data[j] = bodyArray.data[j + 1];
-        if (following == &bodyArray.data[j + 1])
-            following = &bodyArray.data[j];
+        updatePointers(bodyArray.data, j+1, j);
     }
     bodyArray.length--;
 }

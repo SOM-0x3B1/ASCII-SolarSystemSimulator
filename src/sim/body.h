@@ -35,6 +35,7 @@ typedef struct Body{
 
 extern Body *sun;
 extern Body *following;
+extern Body *editedBody;
 
 extern double solarMass;
 
