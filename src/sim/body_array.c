@@ -14,6 +14,8 @@ int bodyArray_init(){
     return 0;
 }
 void bodyArray_dispose(){
+    for (int i = 0; i < bodyArray.length; ++i)
+        trailQueue_clear(bodyArray.data[i].trail);
     free(bodyArray.data);
 }
 
@@ -43,6 +45,8 @@ Body *bodyArray_add(Body *b){
 void bodyArray_removeAt(int i) {
     if (following == &bodyArray.data[i])
         following = NULL;
+
+    trailQueue_clear(bodyArray.data[i].trail);
 
     for (int j = i; j < bodyArray.length - 1; ++j) {
         bodyArray.data[j] = bodyArray.data[j + 1];

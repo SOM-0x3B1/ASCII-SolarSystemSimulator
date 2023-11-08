@@ -81,6 +81,7 @@ Trail *trail_dequeue(TrailQueue *tq){
         ct = ct->next;
 
     Trail *res = ct->next;
+    free(ct->next);
     ct->next = NULL;
     tq->length--;
     return res;
@@ -95,7 +96,12 @@ void trail_enqueue(TrailQueue *tq, Vector v) {
     tq->length++;
 
     if(tq->length > tq->capacity)
-        free(trail_dequeue(tq));
+        trail_dequeue(tq);
+}
+
+void trailQueue_clear(TrailQueue *tq){
+    for (int i = 0; i < tq->length; ++i)
+        trail_dequeue(tq);
 }
 
 

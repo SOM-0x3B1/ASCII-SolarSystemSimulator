@@ -66,5 +66,7 @@ void trailQueue_init(TrailQueue *tq, Body *b);
 
 void trail_enqueue(TrailQueue *tq, Vector v);
 
+void trailQueue_clear(TrailQueue *tq);
+
 
 #endif //ASCII_SSS_BODY_H
