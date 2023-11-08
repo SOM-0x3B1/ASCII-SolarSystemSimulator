@@ -33,35 +33,38 @@ static int cursorPos = 0;
 
 static Layer *ml;
 
-char *sMainOptions[MAIN_OPTION_COUNT] = {"Add body", "Edit body", "Delete body",
-                                         "Follow body", "Toggle details", "Toggle G range", "Toggle trails",
-                                         "Import system", "Export system",
-                                         "Exit"};
+char *sMainOptions[MAIN_OPTION_COUNT] = {"Add body", "Edit body", "Delete body","Follow body",
+                                         "Toggle details", "Toggle G range", "Toggle trails",
+                                         "Import system", "Export system","Exit"};
 
 int stateOptionCounts[STATE_COUNT] = {MAIN_OPTION_COUNT, BODY_PROPERTY_COUNT + 1, -1, BODY_PROPERTY_COUNT + 1,
-                                      -1, -1,}; // 1: count of bodies
+                                      -1, -1,}; // -1: count of bodies
 
-char *sBodySettingOptions[BODY_PROPERTY_COUNT] = {"Set name", "Set mass", "Set size", "Set position", "Set velocity"};
+char *sBodySettingOptions[BODY_PROPERTY_COUNT] = {"Set name", "Set mass", "Set size",
+                                                  "Set position", "Set velocity"};
 
 
 void editMenu_init(){
     ml = &menuLayer;
 }
 
+
 void editMenu_switchTo(EconioKey key){
     programState = EDIT_MENU;
     editMenu_state = STATE_MAIN;
 
     menuLayer.enabled = true;
-    screen_offset.x += 16;
+    screen_offset.x += EDIT_MENU_WIDTH / 2;
 
     if(key == KEY_ESCAPE)
         cursorPos = OPTION_EXIT;
 }
 
-void editMenu_renderToggleSTATE(int y, bool stat){
+
+void editMenu_renderToggleOptionSTATE(int y, bool stat){
     drawing_drawText(ml, screen_width - 13, y, stat ? "[ON] " : "[OFF]");
 }
+
 
 void editMenu_renderSelection(int i, int y){
     if(i == cursorPos)
@@ -69,6 +72,7 @@ void editMenu_renderSelection(int i, int y){
     else
         drawing_drawText(ml, screen_width - 30, y, " ");
 }
+
 
 void editMenu_renderMain(){
     int yOffset = 0;
@@ -86,13 +90,14 @@ void editMenu_renderMain(){
         editMenu_renderSelection(i, y);
 
         if(i == OPTION_TOGGLE_DETAILS)
-            editMenu_renderToggleSTATE(y, infoLayer.enabled);
+            editMenu_renderToggleOptionSTATE(y, infoLayer.enabled);
         else if(i == OPTION_TOGGLE_G_RANGE)
-            editMenu_renderToggleSTATE(y, rangeLayer.enabled);
+            editMenu_renderToggleOptionSTATE(y, rangeLayer.enabled);
         else if (i == OPTION_TOGGLE_TRAILS)
-            editMenu_renderToggleSTATE(y, trailLayer.enabled);
+            editMenu_renderToggleOptionSTATE(y, trailLayer.enabled);
     }
 }
+
 
 void editMenu_renderBodyList(){
     for (int i = 0; i < bodyArray.length; ++i) {
@@ -105,6 +110,7 @@ void editMenu_renderBodyList(){
     drawing_drawText(ml, screen_width - 28, 5 + bodyArray.length + 1, "Back");
     editMenu_renderSelection(bodyArray.length, 5 + bodyArray.length + 1);
 }
+
 
 void editMenu_renderEditSettings(){
     drawing_drawText(ml, screen_width - 30, 5, editedBody->name);
@@ -119,6 +125,7 @@ void editMenu_renderEditSettings(){
     drawing_drawText(ml, screen_width - 28, 6 + BODY_PROPERTY_COUNT + 1, "Accept");
     editMenu_renderSelection(BODY_PROPERTY_COUNT, 6 + BODY_PROPERTY_COUNT + 1);
 }
+
 
 void editMenu_render(){
     layer_clear(ml);
@@ -145,6 +152,7 @@ void editMenu_render(){
     }
 }
 
+
 void editMenu_selectMainOption(){
     EditMenuSTATE lastState = editMenu_state;
 
@@ -154,7 +162,7 @@ void editMenu_selectMainOption(){
             bodyEditor_state = BODY_SET_NAME;
             bodyEditor_setStates();
             editedBody = body_new("", (Vector) {
-                                          (double) screen_offset.x + (double) (screen_width) / 2 - 16,
+                                          (double) screen_offset.x + (double) (screen_width) / 2 - (double)EDIT_MENU_WIDTH / 2,
                                           ((double) screen_offset.y + (double) screen_height / 2) * 2},
                                   (Vector) {0, 0}, 0.0, 0.0, '#');
             following = editedBody;
@@ -191,6 +199,7 @@ void editMenu_selectMainOption(){
         cursorPos = 0;
 }
 
+
 void editMenu_selectEditOption(){
     if(cursorPos == bodyArray.length){
         editMenu_state = STATE_MAIN;
@@ -202,6 +211,7 @@ void editMenu_selectEditOption(){
         cursorPos = 0;
     }
 }
+
 
 void editMenu_selectEditSettingsOption(){
     if(cursorPos == BODY_PROPERTY_COUNT){
@@ -216,6 +226,7 @@ void editMenu_selectEditSettingsOption(){
     }
 }
 
+
 void editMenu_selectDeleteOption(){
     if(cursorPos == bodyArray.length){
         editMenu_state = STATE_MAIN;
@@ -229,6 +240,7 @@ void editMenu_selectDeleteOption(){
     }
 }
 
+
 void editMenu_selectFollowOption(){
     if(cursorPos == bodyArray.length){
         editMenu_state = STATE_MAIN;
@@ -237,6 +249,7 @@ void editMenu_selectFollowOption(){
         following = &bodyArray.data[cursorPos];
 }
 
+
 static void editMenu_close(){
     programState = SIMULATION;
     editMenu_state = STATE_MAIN;
@@ -244,8 +257,9 @@ static void editMenu_close(){
     cursorPos = 0;
     editMenu_render();
 
-    screen_offset.x -= 16;
+    screen_offset.x -= EDIT_MENU_WIDTH / 2;
 }
+
 
 void editMenu_processInput(){
     if (econio_kbhit()) {

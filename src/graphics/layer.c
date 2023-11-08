@@ -13,6 +13,7 @@ Layer trailLayer;
 const int layerCount = LAYER_COUNT;
 Layer *layers[LAYER_COUNT];
 
+
 bool layer_init(){
     overlayLayer.enabled = true;
     menuLayer.enabled = false;
@@ -38,13 +39,11 @@ bool layer_init(){
         if(layers[i]->text == NULL || layers[i]->text[0] == NULL)
             return false;
 
-        //layers[i]->bgColor = (EconioColor **) malloc(screenSize * sizeof(EconioColor *));
         layer_clear(layers[i]);
     }
 
     return true;
 }
-
 void layer_dispose(){
     for (int i = 0; i < layerCount; ++i) {
         free(layers[i]->text[0]);
@@ -52,10 +51,12 @@ void layer_dispose(){
     }
 }
 
+
 void layer_writeAtXY(Layer *l, int x, int y, char c){
     if(x >= 0 && y >= 0 && x < screen_width && y < screen_height)
         l->text[y][x] = c;
 }
+
 
 void layer_clear(Layer *l){
     for (int y = 0; y < screen_height; ++y) {

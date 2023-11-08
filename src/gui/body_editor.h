@@ -13,8 +13,6 @@ typedef enum BodyEditorOptions {
 } BodyEditorOptions;
 
 
-extern Body *editedBody;
-
 extern BodyEditorOptions bodyEditor_state;
 
 

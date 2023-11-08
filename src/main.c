@@ -14,9 +14,7 @@
 #include "fs.h"
 
 
-/**
- * Frees all memory allocations
- */
+/** Disposes allocated memory, and clears the screen. */
 void exitProgram();
 
 

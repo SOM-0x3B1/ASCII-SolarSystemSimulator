@@ -5,6 +5,9 @@
 #include "../lib/econio.h"
 
 
+#define EDIT_MENU_WIDTH 32
+
+
 typedef enum EditMenuSTATE {
     STATE_MAIN,
     STATE_ADD_BODY,

@@ -3,26 +3,20 @@
 #include "body_editor.h"
 #include "../graphics/drawing.h"
 #include "../global.h"
-#include <string.h>
 #include "edit_menu.h"
 
 
 BodyEditorOptions bodyEditor_state = BODY_SET_NAME;
 
 
-//bool bodyEditor_enabled = false;
 static Point textPos;
 
 static Layer *ml;
 
-static char *prompts[5] = {"Name:", "Mass (relative to Earth):",
+static const char *prompts[5] = {"Name:", "Mass (relative to Earth):",
                            "Size (in character radius):", "Position:",
                            "Velocity (format: \"x y\"):"};
 
-
-/*static bool isStateTextInput(){
-    return bodyEditor_state == BODY_SET_NAME || bodyEditor_state == BODY_SET_MASS || bodyEditor_state == BODY_SET_SIZE || bodyEditor_state == BODY_SET_V;
-}*/
 
 void bodyEditor_init(){
     ml = &menuLayer;
