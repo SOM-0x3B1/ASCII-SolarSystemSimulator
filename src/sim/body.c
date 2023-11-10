@@ -5,6 +5,7 @@
 #include "../graphics/drawing.h"
 #include "math.h"
 #include "../gui/edit_menu.h"
+#include "../lib/debugmalloc.h"
 
 #define TRAIL_LENGTH 15
 
@@ -33,8 +34,8 @@ Body *body_new(char *name, Vector pos, Vector v, double r, double mass, char col
     b.position = pos;
     b.velocity = v;
 
-    b.trail = (TrailQueue*) malloc(sizeof(TrailQueue));
-    trailQueue_init(b.trail, &b);
+    b.trail = (TrailQueue){};
+    trailQueue_init(&b.trail, &b);
 
     return bodyArray_add(&b);
 }
@@ -100,8 +101,12 @@ void trail_enqueue(TrailQueue *tq, Vector v) {
 }
 
 void trailQueue_clear(TrailQueue *tq){
-    for (int i = 0; i < tq->length; ++i)
-        trail_dequeue(tq);
+    Trail *cNode = tq->head;
+    while (cNode != NULL){
+        Trail *next = cNode->next;
+        free(cNode);
+        cNode = next;
+    }
 }
 
 
@@ -148,7 +153,7 @@ void body_drawInfo(Body const *body) {
 }
 
 void body_drawTrail(Body const *body) {
-    Trail *t = body->trail->head;
+    Trail *t = body->trail.head;
     int i = 1;
     do {
         Point p = t->position;

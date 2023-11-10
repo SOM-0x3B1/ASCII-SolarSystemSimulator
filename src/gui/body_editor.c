@@ -118,7 +118,7 @@ void bodyEditor_processPlacementInput(){
         else
             if(bodyEditor_moveBody(key)) {
                 if (editMenu_state == STATE_ADD_BODY)
-                    editedBody->trail->head->position = vector_toPoint(editedBody->position);
+                    editedBody->trail.head->position = vector_toPoint(editedBody->position);
             }
     }
 }

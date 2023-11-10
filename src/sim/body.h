@@ -26,7 +26,7 @@ typedef struct Body{
     double r;
     double mass;
     char color;
-    TrailQueue *trail;
+    TrailQueue trail;
 } Body;
 
 

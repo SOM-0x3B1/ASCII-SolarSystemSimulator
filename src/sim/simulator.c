@@ -20,7 +20,7 @@ void simulation_doMovements(){
     for (int i = 0; i < bodyArray.length; ++i) {
         body_move(&bodyArray.data[i]);
         if (trail_spacing_counter > targetFPS / 2)
-            trail_enqueue(bodyArray.data[i].trail, bodyArray.data[i].position);
+            trail_enqueue(&bodyArray.data[i].trail, bodyArray.data[i].position);
     }
     if (trail_spacing_counter > targetFPS / 2)
         trail_spacing_counter = 0;

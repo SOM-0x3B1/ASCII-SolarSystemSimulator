@@ -1,5 +1,6 @@
 #include <stdlib.h>
 #include "body_array.h"
+#include "../lib/debugmalloc.h"
 
 
 BodyArray bodyArray;
@@ -15,7 +16,7 @@ int bodyArray_init(){
 }
 void bodyArray_dispose(){
     for (int i = 0; i < bodyArray.length; ++i)
-        trailQueue_clear(bodyArray.data[i].trail);
+        trailQueue_clear(&bodyArray.data[i].trail);
     free(bodyArray.data);
 }
 
@@ -39,6 +40,7 @@ Body *bodyArray_add(Body *b){
                 newArray[i] = bodyArray.data[i];
                 updatePointers(newArray, i , i);
             }
+            free(bodyArray.data);
             bodyArray.data = newArray;
             bodyArray.capacity *= 2;
         }
@@ -54,7 +56,7 @@ void bodyArray_removeAt(int i) {
     if (following == &bodyArray.data[i])
         following = NULL;
 
-    trailQueue_clear(bodyArray.data[i].trail);
+    trailQueue_clear(&bodyArray.data[i].trail);
 
     for (int j = i; j < bodyArray.length - 1; ++j) {
         bodyArray.data[j] = bodyArray.data[j + 1];
