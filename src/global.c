@@ -1,7 +1,7 @@
 #include "global.h"
 
 
-ProgramState programState;
+ProgramState programState; //
 TextInputDest textInputDest;
 
 

@@ -14,18 +14,17 @@
 #include "../fs.h"
 
 
-static char *screenBuffer;
-static size_t buffSize;
+static char *screenBuffer; // Used as the buffer of the console
 
-static time_t frameCountReseted;
-static int frameCount = 0;
+static time_t frameCountResetedTime; // The last time the FPS was evaluated
+static int frameCount = 0; // Frames since last reset (~1s)
 
 
 bool render_init() {
-    buffSize = screen_width * screen_height * sizeof(char);
+    size_t buffSize = screen_width * screen_height * sizeof(char);
     screenBuffer = (char *) malloc(buffSize);
 
-    frameCountReseted = time(NULL);
+    frameCountResetedTime = time(NULL);
 
     if (screenBuffer != NULL) {
         memset(screenBuffer, '\0', buffSize);
@@ -41,12 +40,13 @@ void render_dispose(){
 }
 
 
-void render_handleFPS() {
+/** Updates the current FPS value and regulates simulation speed. */
+static void render_handleFPS() {
     frameCount++;
-    if (time(NULL) - frameCountReseted > 0) {
+    if (time(NULL) - frameCountResetedTime > 0) {
         fps = frameCount;
         frameCount = 0;
-        frameCountReseted = time(NULL);
+        frameCountResetedTime = time(NULL);
 
         if(pausedByUser || !fullSpeed) {
             double adjustment = 0.001 * ((double) fps / targetFPS);
@@ -64,9 +64,8 @@ void render_refreshScreen(){
         for (int x = 0; x < screen_width; ++x) {
             bool empty = true;
             for (int i = 0; i < LAYER_COUNT; ++i) {
-                Layer *l = layers[i];
-                if(l->enabled && l->text[y][x] != '\0') {
-                    fprintf(stdout, "%c", l->text[y][x]);
+                if(layers[i]->enabled && layers[i]->text[y][x] != '\0') {
+                    fprintf(stdout, "%c", layers[i]->text[y][x]);
                     empty = false;
                     break;
                 }

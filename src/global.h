@@ -23,16 +23,16 @@ typedef enum {
 
 
 extern ProgramState programState;
-extern TextInputDest textInputDest;
+extern TextInputDest textInputDest; // Which module requested the text input.
 
 extern int screen_width;
 extern int screen_height;
-extern Point screen_offset;
+extern Point screen_offset; // The top-left position of the camera.
 
-extern int fps;
-extern int targetFPS;
-extern double sleepTime;
-extern bool fullSpeed;
+extern int fps; // Current FPS
+extern int targetFPS; // The program will try to maintain this value by adjusting the sleepTime variable.
+extern double sleepTime; // Maintains the speed (and FPS) of the simulation.
+extern bool fullSpeed; // Overrides the sleepTime -> speed and FPS will become unlimited.
 
 
 extern bool pausedByUser;

@@ -10,7 +10,6 @@ Layer bodyLayer;
 Layer rangeLayer;
 Layer trailLayer;
 
-const int layerCount = LAYER_COUNT;
 Layer *layers[LAYER_COUNT];
 
 
@@ -30,7 +29,7 @@ bool layer_init(){
     layers[5] = &trailLayer;
 
     int screenSize = screen_width * screen_height;
-    for (int i = 0; i < layerCount; ++i) {
+    for (int i = 0; i < LAYER_COUNT; ++i) {
         layers[i]->text = (char **) malloc(screen_height * sizeof(char *));
         layers[i]->text[0] = (char *) malloc(screenSize * sizeof(char));
         for (int y = 1; y < screen_height; ++y)
@@ -45,7 +44,7 @@ bool layer_init(){
     return true;
 }
 void layer_dispose(){
-    for (int i = 0; i < layerCount; ++i) {
+    for (int i = 0; i < LAYER_COUNT; ++i) {
         free(layers[i]->text[0]);
         free(layers[i]->text);
     }
