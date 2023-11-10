@@ -12,6 +12,7 @@ Point screen_offset = {0, 0};
 int fps;
 int targetFPS;
 double sleepTime = 0.02;
+bool fullSpeed = false;
 
 bool pausedByUser = false;
 

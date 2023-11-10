@@ -62,13 +62,7 @@ bool simulation_moveCam(EconioKey key){
     else if (key == 'd' || key == KEY_RIGHT) {
         screen_offset.x += 2;
         return true;
-    } else if(key == ' ') {
-        if(pausedByUser)
-            pausedByUser = false;
-        else
-            pausedByUser = true;
     }
-
     return false;
 }
 
@@ -80,6 +74,13 @@ void simulation_processInput() {
 
         if (key == KEY_ESCAPE || key == 'e')
             editMenu_switchTo(key);
+        else if(key == ' ') {
+            if(pausedByUser)
+                pausedByUser = false;
+            else
+                pausedByUser = true;
+        } else if(key == 'q')
+            fullSpeed = !fullSpeed;
         else if(simulation_moveCam(key))
             following = NULL;
     }

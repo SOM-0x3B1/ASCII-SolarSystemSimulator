@@ -84,7 +84,8 @@ int main() {
 
 
         // Speed & FPS regulator
-        econio_sleep(sleepTime);
+        if(pausedByUser || !fullSpeed)
+            econio_sleep(sleepTime);
 
 
         // For scanf inputs

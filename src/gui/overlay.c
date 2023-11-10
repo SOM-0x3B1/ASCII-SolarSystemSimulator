@@ -37,8 +37,12 @@ static void overlay_renderFooter(){
     drawing_drawLine(ol, 0, screen_height - 3, screen_width, false, '_');
     drawing_drawLine(ol, 0, screen_height - 2, screen_width, false, ' ');
     drawing_drawText(ol, 2, screen_height - 2, "Status:");
-    if(!pausedByUser || (programState != SIMULATION && programState != EDIT_MENU))
-        drawing_drawText(ol, 10, screen_height - 2, sStates[programState]);
+    if(!pausedByUser || (programState != SIMULATION && programState != EDIT_MENU)) {
+        if (fullSpeed && programState==SIMULATION)
+            drawing_drawText(ol, 10, screen_height - 2, "RUNNING (FULL SPEED)");
+        else
+            drawing_drawText(ol, 10, screen_height - 2, sStates[programState]);
+    }
     else
         drawing_drawText(ol, 10, screen_height - 2, "PAUSED (BY USER)");
 
