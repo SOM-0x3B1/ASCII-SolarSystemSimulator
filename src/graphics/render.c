@@ -40,6 +40,12 @@ void render_dispose(){
 }
 
 
+void render_resetFPSMeasurement(){
+    fps = targetFPS;
+    frameCount = 0;
+    frameCountResetedTime = time(NULL);
+}
+
 /** Updates the current FPS value and regulates simulation speed. */
 static void render_handleFPS() {
     frameCount++;

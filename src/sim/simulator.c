@@ -5,6 +5,7 @@
 #include "../gui/edit_menu.h"
 #include "body.h"
 #include "body_array.h"
+#include "../graphics/render.h"
 
 
 /** Processes the gravitatinal interactions of the bodies, and updates their velocity. */
@@ -83,14 +84,16 @@ void simulation_processInput() {
 
         if (key == KEY_ESCAPE || key == 'e')
             editMenu_switchTo(key);
-        else if(key == ' ') {
-            if(pausedByUser)
+        else if (key == ' ') {
+            if (pausedByUser)
                 pausedByUser = false;
             else
                 pausedByUser = true;
-        } else if(key == 'q')
+        } else if (key == 'q') {
             fullSpeed = !fullSpeed;
-        else if(simulation_moveCam(key))
+            if (!fullSpeed)
+                render_resetFPSMeasurement();
+        } else if (simulation_moveCam(key))
             following = NULL;
     }
 }

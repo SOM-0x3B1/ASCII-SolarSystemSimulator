@@ -9,6 +9,9 @@ bool render_init();
 /** Frees the memory of the screenbuffer. */
 void render_dispose();
 
+/** Resets the FPS counters after disabling fullspeed mode. */
+void render_resetFPSMeasurement();
+
 /** Prints the content of the layers on the console. */
 void render_refreshScreen();
 
