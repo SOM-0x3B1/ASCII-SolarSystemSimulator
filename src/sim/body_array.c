@@ -20,13 +20,20 @@ void bodyArray_dispose(){
     free(bodyArray.data);
 }
 
-static void updatePointers(Body *newArray, int origin, int newIndex){
+/**
+ * If the body array shifts or gets relocated, the global body variables must be updated to their new pointers.
+ * This function checks and updates a single body pointer.
+ * @param array The new/shifted body array
+ * @param origin Original index of the body.
+ * @param newIndex The new index of the body.
+ */
+static void updatePointers(Body *array, int origin, int newIndex){
     if(&bodyArray.data[origin] == following)
-        following = &newArray[newIndex];
+        following = &array[newIndex];
     if(&bodyArray.data[origin] == sun)
-        sun = &newArray[newIndex];
+        sun = &array[newIndex];
     if(&bodyArray.data[origin] == editedBody)
-        editedBody = &newArray[newIndex];
+        editedBody = &array[newIndex];
 }
 
 Body *bodyArray_add(Body *b){

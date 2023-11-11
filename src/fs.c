@@ -12,6 +12,7 @@
 static Point textPos;
 
 
+/** Copies the string name of the parameter into the destination from the source. */
 static int getINIParam(char* dest, const char* src) {
     int i;
     for (i = 0; src[i] != '='; ++i)
@@ -21,6 +22,8 @@ static int getINIParam(char* dest, const char* src) {
     return i;
 }
 
+/** Reads and converts the value from a line. */
+// TODO: replace with built-in function
 static int settings_getIntValue(const char* src, int start, int *value) {
     *value = 0;
     int i;
@@ -31,6 +34,7 @@ static int settings_getIntValue(const char* src, int start, int *value) {
     }
     return 0;
 }
+
 
 int settings_loadSettings() {
     FILE *f;
@@ -76,16 +80,18 @@ int settings_loadSettings() {
 }
 
 
-void export_setState(){
+void export_switchTo(){
     programState = TEXT_INPUT;
     textInputDest = TEXT_INPUT_EXPORT;
 }
+
 
 void export_render(){
     textPos = drawing_drawInputPrompt(&menuLayer, screen_height / 2 - 2, "Export system", "Name:");
 }
 
 
+/** Scans the input file name for illegal characters. */
 static int checkFilename(const char *fn){
     int i = 0;
     for (; fn[i] != '\0' && i < MAX_FILENAME_LENGTH; ++i) {
@@ -98,6 +104,7 @@ static int checkFilename(const char *fn){
 
     return 0;
 }
+
 
 int export_export(char *filename) {
     FILE *f;
@@ -118,6 +125,7 @@ int export_export(char *filename) {
 
     return 0;
 }
+
 
 void export_processTextInput() {
     econio_gotoxy((int) textPos.x, (int) textPos.y);

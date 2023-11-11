@@ -9,32 +9,27 @@
 BodyEditorOptions bodyEditor_state = BODY_SET_NAME;
 
 
-static Point textPos;
+static Point textPos; // The position of the cursor on an input text prompt
 
-static Layer *ml;
-
+// The prompt strings stored for each state
 static const char *prompts[5] = {"Name:", "Mass (relative to Earth):",
                            "Size (in character radius):", "Position:",
                            "Velocity (format: \"x y\"):"};
 
 
-void bodyEditor_init(){
-    ml = &menuLayer;
-}
-
-void bodyEditor_setStates(){
+void bodyEditor_switchTo(){
     programState = TEXT_INPUT;
     textInputDest = TEXT_INPUT_BODY_EDITOR;
 }
 
 void bodyEditor_render() {
     if (programState == TEXT_INPUT)
-        textPos = drawing_drawInputPrompt(ml, screen_height / 4,
+        textPos = drawing_drawInputPrompt(&menuLayer, screen_height / 4,
                                           "Body editor", prompts[bodyEditor_state]);
     else {
-        int xCentrer = drawing_drawBox(ml, 2, 2, 43, 8, "Placing body");
-        drawing_drawText(ml, xCentrer - 14, 6, "Use 'WASD' to move the body");
-        drawing_drawText(ml, xCentrer - 12, 7, "Press 'ENTER' to accept");
+        int xCentrer = drawing_drawBox(&menuLayer, 2, 2, 43, 8, "Placing body");
+        drawing_drawText(&menuLayer, xCentrer - 14, 6, "Use 'WASD' to move the body");
+        drawing_drawText(&menuLayer, xCentrer - 12, 7, "Press 'ENTER' to accept");
     }
 }
 

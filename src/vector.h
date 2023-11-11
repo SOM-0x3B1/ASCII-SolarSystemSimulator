@@ -13,34 +13,18 @@ typedef struct Point{
 } Point;
 
 
-/**
- * Adds two vectors together.
- * @return vector1 + vector2
- */
+/** Adds two vectors together. */
 Vector vector_add(Vector u, Vector v);
 
-/**
- * Subracts two vectors from each other.
- * @return vector1 - vector2
- */
+/** Subracts two vectors from each other. */
 Vector vector_subtract(Vector u, Vector v);
 
 //double vector_multiply(Vector u, Vector v);
 
-/**
- * Multiplies a vector with a skalar.
- * @param u vector
- * @param m skalar
- * @return vector * skalar
- */
+/** Multiplies a vector with a skalar. */
 Vector vector_scalarMultiply(Vector u, double m);
 
-/**
- * Divides a vector with a skalar.
- * @param u vector
- * @param m skalar
- * @return vector / skalar
- */
+/** Divides a vector with a skalar. */
 Vector vector_scalarDivide(Vector u, double d);
 
 /**
@@ -49,38 +33,24 @@ Vector vector_scalarDivide(Vector u, double d);
  */
 Vector vector_invert(Vector a);
 
-/**
- * Measures the distance between two coord. vectors.
- * @return distance
- */
+/** Measures the distance between two coord. vectors. */
 double vector_distance(Vector u, Vector v);
 
 //double vector_length(Vector a);
 
 //double vector_angle(Vector u, Vector v);
 
-/**
- * Returns the unit vector of a vector between two coord. vectors.
- * @return unit vector
- */
+/** Returns the unit vector of a vector between two coord. vectors. */
 Vector vector_unitVector(Vector u, Vector v);
 
 /** Converts a Vector to a Point. */
 Point vector_toPoint(Vector a);
 
 
-/**
- * Subracts two vectors from each other.
- * @return point1 - point2
- */
+/** Subracts two vectors from each other. */
 Point point_subtract(Point p, Point q);
 
-/**
- * Multiplies a vector with a skalar.
- * @param p point
- * @param m skalar
- * @return point * skalar
- */
+/** Multiplies a vector with a skalar. */
 Point point_scalarMultiply(Point p, int m);
 
 //Point point_scalarDivide(Point p, int d);

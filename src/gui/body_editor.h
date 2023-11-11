@@ -16,14 +16,16 @@ typedef enum BodyEditorOptions {
 extern BodyEditorOptions bodyEditor_state;
 
 
-void bodyEditor_init();
+/** Set the proper states to read text input for the body editor. */
+void bodyEditor_switchTo();
 
-void bodyEditor_setStates();
-
+/** Renders the current body editor GUI element.*/
 void bodyEditor_render();
 
+/** Processes the input text after pressing enter.*/
 void bodyEditor_processTextInput();
 
+/** Moves and places the edited body on the simulation window. */
 void bodyEditor_processPlacementInput();
 
 

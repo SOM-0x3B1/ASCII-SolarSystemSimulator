@@ -34,7 +34,6 @@ extern int targetFPS; // The program will try to maintain this value by adjustin
 extern double sleepTime; // Maintains the speed (and FPS) of the simulation.
 extern bool fullSpeed; // Overrides the sleepTime -> speed and FPS will become unlimited.
 
-
 extern bool pausedByUser;
 
 extern bool exiting;

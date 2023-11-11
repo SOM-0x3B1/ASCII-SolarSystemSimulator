@@ -50,9 +50,6 @@ int main() {
     {   // ERR: failed to allocate body array
         exiting = true;
     }
-    bodyEditor_init();
-    editMenu_init();
-    overlay_init();
 
 
     // Adds some default bodies to the simulation

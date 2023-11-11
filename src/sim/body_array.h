@@ -12,17 +12,26 @@ typedef struct BodyArray{
 } BodyArray;
 
 
+/** The dynamic array that holds all bodies. */
 extern BodyArray bodyArray;
 
 
+/** Allocates memory for the body array. */
 int bodyArray_init();
 
+/** Frees the memory of the body array. */
 void bodyArray_dispose();
 
+/** Adds a new body to the array. */
 Body *bodyArray_add(Body *b);
 
+/** Remove a body at a given index. */
 void bodyArray_removeAt(int i);
 
+/**
+ * Removes a body.
+ * @param b The pointer of the body.
+ */
 void bodyArray_remove(Body *b);
 
 

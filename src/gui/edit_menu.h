@@ -21,12 +21,16 @@ typedef enum EditMenuSTATE {
 extern EditMenuSTATE editMenu_state;
 
 
-void editMenu_init();
-
+/**
+ * Set the proper states and display parameters for edit menu.
+ * @param key if it's Esc, the cursor jumps to the Exit function
+ */
 void editMenu_switchTo(EconioKey key);
 
+/** Renders all edit menu components. */
 void editMenu_render();
 
+/** Reads raw input. */
 void editMenu_processInput();
 
 

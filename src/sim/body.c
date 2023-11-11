@@ -14,15 +14,12 @@ Body *sun;
 Body *following;
 Body *editedBody;
 
+
 double solarMass;
 
 double detectCollisionPercentage;
 
-
 int trail_spacing_counter = 0;
-
-/*bool showDeatils = true;
-bool showGRange = true;*/
 
 
 Body *body_new(char *name, Vector pos, Vector v, double r, double mass, char color){
@@ -121,6 +118,10 @@ static void swapBodyPointers(Body **a, Body **b){
     *b = temp;
 }
 
+/**
+ *  Collides a lighter body into a heavier one.
+ *  The order of parameters is arbitrary.
+ */
 static void collide(Body *a, Body *b){
     if (b->mass > a->mass)
         swapBodyPointers(&a, &b);
@@ -143,7 +144,8 @@ void body_detectCollision(Body *a, Body *b) {
 }
 
 
-void body_drawInfo(Body const *body) {
+/** Draws the info part of a body. */
+static void body_drawInfo(Body const *body) {
     if(infoLayer.enabled) {
         Point p = vector_toPoint(body->position);
         p.y /= 2;
@@ -152,7 +154,8 @@ void body_drawInfo(Body const *body) {
     }
 }
 
-void body_drawTrail(Body const *body) {
+/** Draws the trail part of a body. */
+static void body_drawTrail(Body const *body) {
     Trail *t = body->trail.head;
     int i = 1;
     do {
@@ -168,7 +171,8 @@ void body_drawTrail(Body const *body) {
     } while (t != NULL);
 }
 
-void body_draw(Body const *body){
+/** Draws the body part of a body. */
+static void body_draw(Body const *body){
     Point p = vector_toPoint(body->position);
     p.y /= 2;
     p = point_subtract(p, screen_offset);
@@ -214,6 +218,19 @@ void body_draw(Body const *body){
     body_drawTrail(body);
 }
 
+
+/** Sets the camera position so the followed body is in the center of the screen. */
+static void moveCameraToBody(Body *b){
+    Point p = vector_toPoint(b->position);
+    p.y /= 2;
+    Point screenSize = {screen_width / 2, screen_height / 2};
+    p = point_subtract(p, screenSize);
+    if(menuLayer.enabled)
+        p.x += EDIT_MENU_WIDTH / 2;
+    screen_offset = p;
+}
+
+
 void body_render(){
     layer_clear(&bodyLayer);
     layer_clear(&rangeLayer);
@@ -223,15 +240,8 @@ void body_render(){
     for (int i = 0; i < bodyArray.length; ++i) {
         Body *b = &bodyArray.data[i];
 
-        if(following == &bodyArray.data[i]) {
-            Point p = vector_toPoint(b->position);
-            p.y /= 2;
-            Point screenSize = {screen_width / 2, screen_height / 2};
-            p = point_subtract(p, screenSize);
-            if(menuLayer.enabled)
-                p.x += EDIT_MENU_WIDTH / 2;
-            screen_offset = p;
-        }
+        if(following == &bodyArray.data[i])
+            moveCameraToBody(&bodyArray.data[i]);
 
         body_draw(b);
     }

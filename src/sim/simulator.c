@@ -7,7 +7,8 @@
 #include "body_array.h"
 
 
-void simulation_doVectorCalculations(){
+/** Processes the gravitatinal interactions of the bodies, and updates their velocity. */
+static void simulation_doGravityCalculations(){
     for (int i = 0; i < bodyArray.length; ++i){
         for (int j = 0; j < bodyArray.length; ++j) {
             if(i != j)
@@ -16,7 +17,9 @@ void simulation_doVectorCalculations(){
     }
 }
 
-void simulation_doMovements(){
+
+/** Moves the bodies. */
+static void simulation_doMovements(){
     for (int i = 0; i < bodyArray.length; ++i) {
         body_move(&bodyArray.data[i]);
         if (trail_spacing_counter > targetFPS / 2)
@@ -28,7 +31,8 @@ void simulation_doMovements(){
 }
 
 
-void simulation_detectCollisions(){
+/** Checks if any of the bodies is colliding with another body.  */
+static void simulation_detectCollisions(){
     for (int i = 0; i < bodyArray.length - 1; ++i) {
         for (int j = i + 1; j < bodyArray.length; ++j) {
             Body *a = &bodyArray.data[i];
@@ -40,13 +44,18 @@ void simulation_detectCollisions(){
 
 void simulation_tick(){
     if(!pausedByUser) {
-        simulation_doVectorCalculations();
+        simulation_doGravityCalculations();
         simulation_doMovements();
         simulation_detectCollisions();
     }
 }
 
-bool simulation_moveCam(EconioKey key){
+
+/**
+ * Moves the camera in accordance to the input key.
+ * @return Has the camare been moved
+ */
+static bool simulation_moveCam(EconioKey key){
     if (key == 's' || key == KEY_DOWN) {
         screen_offset.y++;
         return true;
