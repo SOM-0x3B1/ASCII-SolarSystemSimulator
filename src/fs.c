@@ -1,15 +1,11 @@
 #include <stdio.h>
 #include <string.h>
 #include "fs.h"
-#include "global.h"
 #include "sim/body.h"
 #include "graphics/drawing.h"
 
 
 #define MAX_FILENAME_LENGTH 250
-
-
-static Point textPos;
 
 
 /** Copies the string name of the parameter into the destination from the source. */
@@ -36,7 +32,7 @@ static int settings_getIntValue(const char* src, int start, int *value) {
 }
 
 
-int settings_loadSettings() {
+int settings_loadSettings(Simulation *sim, Screen *screen) {
     FILE *f;
     f = fopen("settings.ini", "r");
 
@@ -51,22 +47,22 @@ int settings_loadSettings() {
                 return 3; // invalid value
 
             if (strcmp(param, "screen_width") == 0)
-                screen_width = value;
+                screen->screen_width = value;
             else if (strcmp(param, "screen_height") == 0)
-                screen_height = value;
+                screen->screen_height = value;
             else if (strcmp(param, "targetFPS") == 0) {
                 if(value > 0)
-                    targetFPS = value;
+                    screen->targetFPS = value;
                 else
                     return 4; // target fps must be higher than 0
             } else if (strcmp(param, "solarMass") == 0) {
                 if(value > 0)
-                    solarMass = value;
+                    sim->solarMass = value;
                 else
                     return 5; // sunmass must be higher than 0
             } else if (strcmp(param, "detectCollisionPercentage") == 0) {
                 if(value > 0)
-                    detectCollisionPercentage = (double)value / 100;
+                    sim->detectCollisionPercentage = (double)value / 100;
                 else
                     return 6; // sunmass must be higher than 0
             } else
@@ -80,14 +76,14 @@ int settings_loadSettings() {
 }
 
 
-void export_switchTo(){
-    programState = TEXT_INPUT;
-    textInputDest = TEXT_INPUT_EXPORT;
+void export_switchTo(Program *program){
+    program->programState = TEXT_INPUT;
+    program->textInputDest = TEXT_INPUT_EXPORT;
 }
 
 
-void export_render(){
-    textPos = drawing_drawInputPrompt(&menuLayer, screen_height / 2 - 2, "Export system", "Name:");
+void export_render(GUI *gui, LayerInstances *li, Screen *screen){
+    gui->textPos = drawing_drawInputPrompt(&li->menuLayer, screen->screen_height / 2 - 2, "Export system", "Name:", screen);
 }
 
 
@@ -106,15 +102,15 @@ static int checkFilename(const char *fn){
 }
 
 
-int export_export(char *filename) {
+int export_export(char *filename, Simulation *sim) {
     FILE *f;
     f = fopen(strcat(filename, ".tsv"), "w");
     if (f != NULL) {
-        fprintf(f, "solar-mass\n%lf\n\n", solarMass);
+        fprintf(f, "solar-mass\n%lf\n\n", sim->solarMass);
 
         fprintf(f, "name\tmass\tpos-x\tpos-y\tradius\tvel-x\tvel-y\tcolor");
-        for (int i = 0; i < bodyArray.length; ++i) {
-            Body *b = &bodyArray.data[i];
+        for (int i = 0; i < sim->bodyArray.length; ++i) {
+            Body *b = &sim->bodyArray.data[i];
             fprintf(f, "\n%s\t%lf\t%lf\t%lf\t%lf\t%lf\t%lf\t%c",
                     b->name, b->mass, b->position.x, b->position.y,
                     b->r, b->velocity.x, b->velocity.y, b->color);
@@ -127,18 +123,18 @@ int export_export(char *filename) {
 }
 
 
-void export_processTextInput() {
-    econio_gotoxy((int) textPos.x, (int) textPos.y);
+void export_processTextInput(GUI *gui, Program *program, Simulation *sim) {
+    econio_gotoxy((int) gui->textPos.x, (int) gui->textPos.y);
     econio_normalmode();
 
     char filename[MAX_FILENAME_LENGTH + 5];
     scanf("%s", filename);
 
     if(checkFilename(filename) == 0)
-        export_export(filename);
+        export_export(filename, sim);
 
     econio_rawmode();
     econio_gotoxy(0, 0);
 
-    programState = EDIT_MENU;
+    program->programState = EDIT_MENU;
 }

@@ -15,8 +15,6 @@ add_executable(ASCII_SSS src/main.c
         src/graphics/layer.c
         src/graphics/layer.h
         src/lib/econio.c
-        src/global.c
-        src/global.h
         src/sim/simulator.c
         src/sim/simulator.h
         src/graphics/drawing.c
@@ -30,4 +28,5 @@ add_executable(ASCII_SSS src/main.c
         src/gui/body_editor.h
         src/fs.c
         src/fs.h
+        src/structs.h
 )

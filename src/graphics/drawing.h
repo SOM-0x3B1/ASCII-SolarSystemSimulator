@@ -2,9 +2,11 @@
 #define ASCII_SSS_DRAWING_H
 
 
+#include "../structs.h"
 #include "layer.h"
 #include "../lib/econio.h"
 #include "../vector.h"
+#include "render.h"
 
 
 /**
@@ -12,7 +14,7 @@
  * @param l Layer
  * @param s string
  */
-void drawing_drawText(Layer *l, int x, int y, char const *s);
+void drawing_drawText(Layer *l, int x, int y, const char *s, Screen *screen);
 
 /**
  * Draws a line.
@@ -21,7 +23,7 @@ void drawing_drawText(Layer *l, int x, int y, char const *s);
  * @param vertical Is the line vertical
  * @param c The characters of which the line should be built of
  */
-void drawing_drawLine(Layer *l, int x, int y, int length, bool vertical, char c);
+void drawing_drawLine(Layer *l, int x, int y, int length, bool vertical, char c, Screen *screen);
 
 
 /**
@@ -33,7 +35,7 @@ void drawing_drawLine(Layer *l, int x, int y, int length, bool vertical, char c)
  * @param y2 Bottom right (y)
  * @param c Fill character
  */
-void drawing_drawRectangle(Layer *l, int x1, int y1, int x2, int y2, char c);
+void drawing_drawRectangle(Layer *l, int x1, int y1, int x2, int y2, char c, Screen *screen);
 
 /**
  * Draws a window (box) with a title.
@@ -44,7 +46,7 @@ void drawing_drawRectangle(Layer *l, int x1, int y1, int x2, int y2, char c);
  * @param y2 Bottom right (y)
  * @return The horizontal (x) position of the center of the box
  */
-int drawing_drawBox(Layer *l, int x1, int y1, int x2, int y2, const char* title);
+int drawing_drawBox(Layer *l, int x1, int y1, int x2, int y2, const char* title, Screen *screen);
 
 /**
  * Draws a text input box.
@@ -54,7 +56,7 @@ int drawing_drawBox(Layer *l, int x1, int y1, int x2, int y2, const char* title)
  * @param text The prompt text
  * @return The coords of the cursor (next to the prompt text)
  */
-Point drawing_drawInputPrompt(Layer *l, int yCenter, const char *title, const char *text);
+Point drawing_drawInputPrompt(Layer *l, int yCenter, const char *title, const char *text, Screen *screen);
 
 
 #endif //ASCII_SSS_DRAWING_H

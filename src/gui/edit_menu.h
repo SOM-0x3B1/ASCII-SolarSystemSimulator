@@ -2,36 +2,25 @@
 #define ASCII_SSS_EDIT_MENU_H
 
 
+#include "../structs.h"
 #include "../lib/econio.h"
+#include "../sim/body.h"
 
 
 #define EDIT_MENU_WIDTH 32
-
-
-typedef enum EditMenuSTATE {
-    STATE_MAIN,
-    STATE_ADD_BODY,
-    STATE_EDIT_BODY,
-    STATE_EDIT_BODY_SET,
-    STATE_DELETE_BODY,
-    STATE_FOLLOW_BODY,
-} EditMenuSTATE;
-
-
-extern EditMenuSTATE editMenu_state;
 
 
 /**
  * Set the proper states and display parameters for edit menu.
  * @param key if it's Esc, the cursor jumps to the Exit function
  */
-void editMenu_switchTo(EconioKey key);
+void editMenu_switchTo(EconioKey key, Program *program, GUI *gui, Screen *screen, LayerInstances *li);
 
 /** Renders all edit menu components. */
-void editMenu_render();
+void editMenu_render(LayerInstances *li, Screen *screen, GUI *gui, Simulation *sim);
 
 /** Reads raw input. */
-void editMenu_processInput();
+void editMenu_processInput(Program *program, Simulation *sim, Screen *screen, GUI *gui, LayerInstances *li);
 
 
 #endif //ASCII_SSS_EDIT_MENU_H

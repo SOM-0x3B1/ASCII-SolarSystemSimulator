@@ -1,28 +1,15 @@
 #include <stdlib.h>
 #include "body.h"
-#include "../global.h"
 #include <string.h>
 #include "../graphics/drawing.h"
 #include "math.h"
-#include "../gui/edit_menu.h"
 #include "../lib/debugmalloc.h"
+
 
 #define TRAIL_LENGTH 15
 
 
-Body *sun;
-Body *following;
-Body *editedBody;
-
-
-double solarMass;
-
-double detectCollisionPercentage;
-
-int trail_spacing_counter = 0;
-
-
-Body *body_new(char *name, Vector pos, Vector v, double r, double mass, char color){
+Body *body_new(char *name, Vector pos, Vector v, double r, double mass, char color, Simulation *sim){
     Body b;
     strcpy(b.name, name);
     b.color = color;
@@ -34,26 +21,26 @@ Body *body_new(char *name, Vector pos, Vector v, double r, double mass, char col
     b.trail = (TrailQueue){};
     trailQueue_init(&b.trail, &b);
 
-    return bodyArray_add(&b);
+    return bodyArray_add(&sim->bodyArray, &b, sim);
 }
 
-int body_init() {
-    if (bodyArray_init() != 0)
+int body_init(Simulation *sim) {
+    if (bodyArray_init(&sim->bodyArray) != 0)
         return 1; // failed to allocate memory for body array
 
-    sun = body_new("Sun", (Vector) {0, 0}, (Vector) {0, 0}, 7, solarMass, '@');
-    if (sun == NULL)
+    sim->sun = body_new("Sun", (Vector) {0, 0}, (Vector) {0, 0}, 7, sim->solarMass, '@', sim);
+    if (sim->sun == NULL)
         return 2; // failed to allocate memory for sun
 
-    following = sun;
+    sim->following = sim->sun;
 
     return 0;
 }
 
 
-void body_addGravityEffect(Body *dest, Body const *src){
+void body_addGravityEffect(Body *dest, Body const *src, Simulation *sim){
     double d = vector_distance(dest->position, src->position);
-    double d2 = d * d * solarMass;
+    double d2 = d * d * sim->solarMass;
     double force = src->mass / d2; // TODO: adaptive simulation speed regulation
 
     Vector v = vector_subtract(dest->position, src->position);
@@ -122,73 +109,73 @@ static void swapBodyPointers(Body **a, Body **b){
  *  Collides a lighter body into a heavier one.
  *  The order of parameters is arbitrary.
  */
-static void collide(Body *a, Body *b){
+static void collide(Body *a, Body *b, Simulation *sim){
     if (b->mass > a->mass)
         swapBodyPointers(&a, &b);
-    if(following == b)
-        following = a;
-    if(editedBody == b)
-        editedBody = a;
+    if(sim->following == b)
+        sim->following = a;
+    if(sim->editedBody == b)
+        sim->editedBody = a;
     a->mass += b->mass;
     a->r = sqrt((a->r * a->r) + (b->r + b->r) * 3.14);
     a->velocity = vector_add(a->velocity, vector_scalarMultiply(b->velocity, b->mass / a->mass));
-    bodyArray_remove(b);
+    bodyArray_remove(&sim->bodyArray, b, sim);
 }
 
-void body_detectCollision(Body *a, Body *b) {
-    if(detectCollisionPercentage > 0) {
+void body_detectCollision(Body *a, Body *b, Simulation *sim) {
+    if(sim->detectCollisionPercentage > 0) {
         double d = vector_distance(a->position, b->position);
-        if (d < (a->r + b->r) * detectCollisionPercentage)
-            collide(a, b);
+        if (d < (a->r + b->r) * sim->detectCollisionPercentage)
+            collide(a, b, sim);
     }
 }
 
 
 /** Draws the info part of a body. */
-static void body_drawInfo(Body const *body) {
-    if(infoLayer.enabled) {
+static void body_drawInfo(Body const *body, LayerInstances *li, Screen *screen) {
+    if(li->infoLayer.enabled) {
         Point p = vector_toPoint(body->position);
         p.y /= 2;
-        p = point_subtract(p, screen_offset);
-        drawing_drawText(&infoLayer, (int)(p.x - strlen(body->name) / 2), (int)p.y, body->name);
+        p = point_subtract(p, screen->screen_offset);
+        drawing_drawText(&li->infoLayer, (int)(p.x - strlen(body->name) / 2), (int)p.y, body->name, screen);
     }
 }
 
 /** Draws the trail part of a body. */
-static void body_drawTrail(Body const *body) {
+static void body_drawTrail(Body const *body, LayerInstances *li, Screen *screen) {
     Trail *t = body->trail.head;
     int i = 1;
     do {
         Point p = t->position;
         p.y /= 2;
-        p = point_subtract(p, screen_offset);
+        p = point_subtract(p, screen->screen_offset);
 
         char c = i < TRAIL_LENGTH / 1.5 ? '+' : '.';
         i++;
 
-        layer_writeAtXY(&trailLayer, (int) p.x, (int) p.y, c);
+        layer_writeAtXY(&li->trailLayer, (int) p.x, (int) p.y, c, screen);
         t = t->next;
     } while (t != NULL);
 }
 
 /** Draws the body part of a body. */
-static void body_draw(Body const *body){
+static void body_draw(Body const *body, Simulation *sim, LayerInstances *li, Screen *screen){
     Point p = vector_toPoint(body->position);
     p.y /= 2;
-    p = point_subtract(p, screen_offset);
+    p = point_subtract(p, screen->screen_offset);
 
     Point pLight;
-    bool drawShadows = !infoLayer.enabled && body != sun;
+    bool drawShadows = !li->infoLayer.enabled && body != sim->sun;
     if(drawShadows) {
         pLight = vector_toPoint(body->position);
-        Point pLightUnit = vector_toPoint(vector_unitVector(body->position, sun->position));
+        Point pLightUnit = vector_toPoint(vector_unitVector(body->position, sim->sun->position));
         pLight = point_subtract(pLight, point_scalarMultiply(pLightUnit, (int) body->r / 2));
         pLight.y /= 2;
-        pLight = point_subtract(pLight, screen_offset);
+        pLight = point_subtract(pLight, screen->screen_offset);
     }
 
-    for (int y = 0; y < screen_height; y++) {
-        for (int x = 0; x < screen_width; x++) {
+    for (int y = 0; y < screen->screen_height; y++) {
+        for (int x = 0; x < screen->screen_width; x++) {
             long long int dX = x - p.x;
             long long int dY = (y - p.y) * 2;
             long long int dx2dy2 = (dX * dX) + (dY * dY);
@@ -206,43 +193,43 @@ static void body_draw(Body const *body){
 
             if (dx2dy2 <= (int)(body->r * body->r)) {
                 if(!drawShadows || dx2dy2Light <= (int)(body->r * body->r))
-                    layer_writeAtXY(&bodyLayer, x, y, body->color);
+                    layer_writeAtXY(&li->bodyLayer, x, y, body->color, screen);
                 else
-                    layer_writeAtXY(&bodyLayer, x, y, ':');
+                    layer_writeAtXY(&li->bodyLayer, x, y, ':', screen);
             }
-            else if(rangeLayer.enabled && drange < (long long int)(er * 0.8))
-                layer_writeAtXY(&rangeLayer, x, y, '.');
+            else if(li->rangeLayer.enabled && drange < (long long int)(er * 0.8))
+                layer_writeAtXY(&li->rangeLayer, x, y, '.', screen);
         }
     }
-    body_drawInfo(body);
-    body_drawTrail(body);
+    body_drawInfo(body, li, screen);
+    body_drawTrail(body, li, screen);
 }
 
 
 /** Sets the camera position so the followed body is in the center of the screen. */
-static void moveCameraToBody(Body *b){
+static void moveCameraToBody(Body *b, Screen *screen, LayerInstances *li){
     Point p = vector_toPoint(b->position);
     p.y /= 2;
-    Point screenSize = {screen_width / 2, screen_height / 2};
+    Point screenSize = {screen->screen_width / 2, screen->screen_height / 2};
     p = point_subtract(p, screenSize);
-    if(menuLayer.enabled)
-        p.x += EDIT_MENU_WIDTH / 2;
-    screen_offset = p;
+    if(li->menuLayer.enabled)
+        p.x += 16;
+    screen->screen_offset = p;
 }
 
 
-void body_render(){
-    layer_clear(&bodyLayer);
-    layer_clear(&rangeLayer);
-    layer_clear(&infoLayer);
-    layer_clear(&trailLayer);
+void body_render(LayerInstances *li, Simulation *sim, Screen *screen){
+    layer_clear(&li->bodyLayer, screen);
+    layer_clear(&li->rangeLayer, screen);
+    layer_clear(&li->infoLayer, screen);
+    layer_clear(&li->trailLayer, screen);
 
-    for (int i = 0; i < bodyArray.length; ++i) {
-        Body *b = &bodyArray.data[i];
+    for (int i = 0; i < sim->bodyArray.length; ++i) {
+        Body *b = &sim->bodyArray.data[i];
 
-        if(following == &bodyArray.data[i])
-            moveCameraToBody(&bodyArray.data[i]);
+        if(sim->following == &sim->bodyArray.data[i])
+            moveCameraToBody(&sim->bodyArray.data[i], screen, li);
 
-        body_draw(b);
+        body_draw(b, sim, li, screen);
     }
 }

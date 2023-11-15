@@ -4,7 +4,6 @@
 #include <stdbool.h>
 #include "../lib/econio.h"
 #include "render.h"
-#include "../global.h"
 #include "../sim/body.h"
 #include "drawing.h"
 #include "../gui/overlay.h"
@@ -14,64 +13,58 @@
 #include "../fs.h"
 
 
-static char *screenBuffer; // Used as the buffer of the console
+bool render_init(Screen *screen) {
+    size_t buffSize = screen->screen_width * screen->screen_height * sizeof(char);
+    screen->screenBuffer = (char *) malloc(buffSize);
 
-static time_t frameCountResetedTime; // The last time the FPS was evaluated
-static int frameCount = 0; // Frames since last reset (~1s)
+    screen->frameCountResetedTime = time(NULL);
 
-
-bool render_init() {
-    size_t buffSize = screen_width * screen_height * sizeof(char);
-    screenBuffer = (char *) malloc(buffSize);
-
-    frameCountResetedTime = time(NULL);
-
-    if (screenBuffer != NULL) {
-        memset(screenBuffer, '\0', buffSize);
-        if (setvbuf(stdout, screenBuffer, _IOFBF, screen_height * screen_width))
+    if (screen->screenBuffer != NULL) {
+        memset(screen->screenBuffer, '\0', buffSize);
+        if (setvbuf(stdout, screen->screenBuffer, _IOFBF, screen->screen_height * screen->screen_width))
             return false;
     } else
         return false;
 
     return true;
 }
-void render_dispose(){
-    free(screenBuffer);
+void render_dispose(Screen *screen){
+    free(screen->screenBuffer);
 }
 
 
-void render_resetFPSMeasurement(){
-    fps = targetFPS;
-    frameCount = 0;
-    frameCountResetedTime = time(NULL);
+void render_resetFPSMeasurement(Screen *screen){
+    screen->fps = screen->targetFPS;
+    screen->frameCount = 0;
+    screen->frameCountResetedTime = time(NULL);
 }
 
 /** Updates the current FPS value and regulates simulation speed. */
-static void render_handleFPS() {
-    frameCount++;
-    if (time(NULL) - frameCountResetedTime > 0) {
-        fps = frameCount;
-        frameCount = 0;
-        frameCountResetedTime = time(NULL);
+static void render_handleFPS(Program *program, Simulation *sim, Screen *screen) {
+    screen->frameCount++;
+    if (time(NULL) - screen->frameCountResetedTime > 0) {
+        screen->fps = screen->frameCount;
+        screen->frameCount = 0;
+        screen->frameCountResetedTime = time(NULL);
 
-        if(pausedByUser || !fullSpeed) {
-            double adjustment = 0.001 * ((double) fps / targetFPS);
-            if (fps < targetFPS)
-                sleepTime -= adjustment;
-            else if (fps > targetFPS)
-                sleepTime += adjustment;
+        if(sim->pausedByUser || !sim->fullSpeed) {
+            double adjustment = 0.001 * ((double) screen->fps / screen->targetFPS);
+            if (screen->fps < screen->targetFPS)
+                program->sleepTime -= adjustment;
+            else if (screen->fps > screen->targetFPS)
+                program->sleepTime += adjustment;
         }
     }
 }
 
 
-void render_refreshScreen(){
-    for (int y = 0; y < screen_height; ++y) {
-        for (int x = 0; x < screen_width; ++x) {
+void render_refreshScreen(Program *program, Simulation *sim, Screen *screen, LayerProperties *lp){
+    for (int y = 0; y < screen->screen_height; ++y) {
+        for (int x = 0; x < screen->screen_width; ++x) {
             bool empty = true;
             for (int i = 0; i < LAYER_COUNT; ++i) {
-                if(layers[i]->enabled && layers[i]->text[y][x] != '\0') {
-                    fprintf(stdout, "%c", layers[i]->text[y][x]);
+                if(lp->layers[i]->enabled && lp->layers[i]->text[y][x] != '\0') {
+                    fprintf(stdout, "%c", lp->layers[i]->text[y][x]);
                     empty = false;
                     break;
                 }
@@ -79,27 +72,27 @@ void render_refreshScreen(){
             if(empty)
                 fprintf(stdout, " ");
         }
-        if(y < screen_height - 1)
+        if(y < screen->screen_height - 1)
             fprintf(stdout, "\n");
     }
 
     econio_flush();
     econio_gotoxy(0,0);
 
-    render_handleFPS();
+    render_handleFPS(program, sim, screen);
 }
 
 
-void render_fullRender(){
-    body_render();
-    overlay_render();
-    if(menuLayer.enabled)
-        editMenu_render();
+void render_fullRender(Program *program, Simulation *sim, Screen *screen, LayerProperties *lp, GUI *gui){
+    body_render(&lp->layerInstances, sim, screen);
+    overlay_render(program, sim, screen, &lp->layerInstances);
+    if(lp->layerInstances.menuLayer.enabled)
+        editMenu_render(&lp->layerInstances, screen, gui, sim);
 
-    if(textInputDest == TEXT_INPUT_BODY_EDITOR && (programState == TEXT_INPUT || programState == PLACING_BODY))
-        bodyEditor_render();
-    else if(textInputDest == TEXT_INPUT_EXPORT && programState == TEXT_INPUT)
-        export_render();
+    if(program->textInputDest == TEXT_INPUT_BODY_EDITOR && (program->programState == TEXT_INPUT || program->programState == PLACING_BODY))
+        bodyEditor_render(program, &lp->layerInstances, screen, gui);
+    else if(program->textInputDest == TEXT_INPUT_EXPORT && program->programState == TEXT_INPUT)
+        export_render(gui, &lp->layerInstances, screen);
 
-    render_refreshScreen();
+    render_refreshScreen(program, sim, screen, lp);
 }

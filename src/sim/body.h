@@ -2,53 +2,27 @@
 #define ASCII_SSS_BODY_H
 
 
+#include "../structs.h"
 #include "../lib/econio.h"
 #include "../vector.h"
 #include "../graphics/layer.h"
-
-
-/** A point of a trail; a queue element. */
-typedef struct Trail{
-    Point position;
-    struct Trail *next;
-} Trail;
-
-/** A queue of trail points. */
-typedef struct TrailQueue{
-    Trail *head;
-    int length;
-    int capacity;
-} TrailQueue;
-
-
-/** A celestial body. */
-typedef struct Body{
-    char name[13];
-    Vector position;
-    Vector velocity;
-    double r;
-    double mass;
-    char color;
-    TrailQueue trail;
-} Body;
-
-
+#include "simulator.h"
 #include "body_array.h"
 
 
-extern Body *sun;
-extern Body *following;  // The body that the camera follows (NULL, if the camera is free).
-extern Body *editedBody; // The body that is currently being edited by the body editor.
+typedef enum BodyEditableProperty {
+    BODY_PROPERTY_NAME,
+    BODY_PROPERTY_MASS,
+    BODY_PROPERTY_R,
+    BODY_PROPERTY_POS,
+    BODY_PROPERTY_VEL,
+    bodyEditableProperty_MAX
+} BodyEditableProperty;
 
-extern double solarMass; // The mass of the sun; every gravitational effect is relative to this!
-
-extern double detectCollisionPercentage; // The percentage of the minimum radius overlap that triggers a collision event.
-
-extern int trail_spacing_counter; // Measures the time passed since the last trail point.
 
 
 /** Allocates the body array, and creates a sun.*/
-int body_init();
+int body_init(Simulation *sim);
 
 /**
  * Creates a new body.
@@ -57,19 +31,19 @@ int body_init();
  * @param mass relative to Earth's mass (1: Earth's mass)
  * @return The pointer to the new body
  */
-Body *body_new(char *name, Vector pos, Vector v, double r, double mass, char color);
+Body *body_new(char *name, Vector pos, Vector v, double r, double mass, char color, Simulation *sim);
 
 /** Adds the gravitational effect of the src body to the destination body. */
-void body_addGravityEffect(Body *dest, Body const *src);
+void body_addGravityEffect(Body *dest, Body const *src, Simulation *sim);
 
 /** Move a body by its velocity. */
 void body_move(Body *body);
 
 /** Detect if two bodies collide. */
-void body_detectCollision(Body *a, Body *b);
+void body_detectCollision(Body *a, Body *b, Simulation *sim);
 
 /** Renders all bodies. */
-void body_render();
+void body_render(LayerInstances *li, Simulation *sim, Screen *screen);
 
 
 /** Initializes a trail queue for a body. */

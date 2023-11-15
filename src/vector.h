@@ -2,15 +2,7 @@
 #define ASCII_SSS_VECTOR_H
 
 
-typedef struct Vector{
-    double x;
-    double y;
-} Vector;
-
-typedef struct Point{
-    long long int x;
-    long long int y;
-} Point;
+#include "structs.h"
 
 
 /** Adds two vectors together. */

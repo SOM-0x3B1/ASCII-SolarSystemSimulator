@@ -3,21 +3,18 @@
 #include "../lib/debugmalloc.h"
 
 
-BodyArray bodyArray;
-
-
-int bodyArray_init(){
-    bodyArray.length = 0;
-    bodyArray.capacity = 1;
-    bodyArray.data = (Body*) malloc(sizeof(Body));
-    if(bodyArray.data == NULL)
+int bodyArray_init(BodyArray *ba){
+    ba->length = 0;
+    ba->capacity = 1;
+    ba->data = (Body*) malloc(sizeof(Body));
+    if(ba->data == NULL)
         return 1;
     return 0;
 }
-void bodyArray_dispose(){
-    for (int i = 0; i < bodyArray.length; ++i)
-        trailQueue_clear(&bodyArray.data[i].trail);
-    free(bodyArray.data);
+void bodyArray_dispose(BodyArray *ba){
+    for (int i = 0; i < ba->length; ++i)
+        trailQueue_clear(&ba->data[i].trail);
+    free(ba->data);
 }
 
 /**
@@ -27,55 +24,55 @@ void bodyArray_dispose(){
  * @param origin Original index of the body.
  * @param newIndex The new index of the body.
  */
-static void updatePointers(Body *array, int origin, int newIndex){
-    if(&bodyArray.data[origin] == following)
-        following = &array[newIndex];
-    if(&bodyArray.data[origin] == sun)
-        sun = &array[newIndex];
-    if(&bodyArray.data[origin] == editedBody)
-        editedBody = &array[newIndex];
+static void updatePointers(Body *array, int origin, int newIndex, Simulation *sim){
+    if(&sim->bodyArray.data[origin] == sim->following)
+        sim->following = &array[newIndex];
+    if(&sim->bodyArray.data[origin] == sim->sun)
+        sim->sun = &array[newIndex];
+    if(&sim->bodyArray.data[origin] == sim->editedBody)
+        sim->editedBody = &array[newIndex];
 }
 
-Body *bodyArray_add(Body *b){
-    if(bodyArray.length + 1 > bodyArray.capacity) {
+Body *bodyArray_add(BodyArray *ba, Body *b, Simulation *sim){
+    if(sim->bodyArray.length + 1 > sim->bodyArray.capacity) {
         //Body *newArray = realloc(bodyArray.data, bodyArray.capacity * 2 * sizeof(Body));
-        Body *newArray = (Body *) malloc(bodyArray.capacity * 2 * sizeof(Body));
+        Body *newArray = (Body *) malloc(sim->bodyArray.capacity * 2 * sizeof(Body));
         if(newArray == NULL)
             return NULL;  // failed to allocate memory for body
         else {
-            for (int i = 0; i < bodyArray.length; ++i) {
-                newArray[i] = bodyArray.data[i];
-                updatePointers(newArray, i , i);
+            for (int i = 0; i < sim->bodyArray.length; ++i) {
+                newArray[i] = sim->bodyArray.data[i];
+                updatePointers(newArray, i , i, sim);
             }
-            free(bodyArray.data);
-            bodyArray.data = newArray;
-            bodyArray.capacity *= 2;
+            free(sim->bodyArray.data);
+            sim->bodyArray.data = newArray;
+            sim->bodyArray.capacity *= 2;
         }
     }
 
-    bodyArray.data[bodyArray.length] = *b;
-    bodyArray.length++;
+    ba->data[ba->length] = *b;
+    ba->length++;
 
-    return &bodyArray.data[bodyArray.length - 1];
+    return &ba->data[ba->length - 1];
 }
 
-void bodyArray_removeAt(int i) {
-    if (following == &bodyArray.data[i])
-        following = NULL;
+void bodyArray_removeAt(BodyArray *ba, int i, Simulation *sim) {
+    if (sim->following == &ba->data[i])
+        sim->following = NULL;
 
-    trailQueue_clear(&bodyArray.data[i].trail);
+    trailQueue_clear(&ba->data[i].trail);
 
-    for (int j = i; j < bodyArray.length - 1; ++j) {
-        bodyArray.data[j] = bodyArray.data[j + 1];
-        updatePointers(bodyArray.data, j+1, j);
+    for (int j = i; j < ba->length - 1; ++j) {
+        ba->data[j] = ba->data[j + 1];
+        updatePointers(ba->data, j+1, j, sim);
     }
-    bodyArray.length--;
+    ba->length--;
 }
 
-void bodyArray_remove(Body *b){
+void bodyArray_remove(BodyArray *ba, Body *b, Simulation *sim){
     int i = 0;
-    while (&bodyArray.data[i] != b && i < bodyArray.length)
+    while (&ba->data[i] != b && i < ba->length)
         i++;
-    if(i < bodyArray.length)
-        bodyArray_removeAt(i);
+    if(i < ba->length)
+        bodyArray_removeAt(ba, i, sim);
 }

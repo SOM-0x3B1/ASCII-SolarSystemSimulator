@@ -1,53 +1,51 @@
 #include <stdlib.h>
 #include "simulator.h"
 #include "../lib/econio.h"
-#include "../global.h"
 #include "../gui/edit_menu.h"
 #include "body.h"
 #include "body_array.h"
-#include "../graphics/render.h"
 
 
 /** Processes the gravitatinal interactions of the bodies, and updates their velocity. */
-static void simulation_doGravityCalculations(){
-    for (int i = 0; i < bodyArray.length; ++i){
-        for (int j = 0; j < bodyArray.length; ++j) {
+static void simulation_doGravityCalculations(BodyArray *ba, Simulation *sim){
+    for (int i = 0; i < ba->length; ++i){
+        for (int j = 0; j < ba->length; ++j) {
             if(i != j)
-                body_addGravityEffect(&bodyArray.data[i], &bodyArray.data[j]);
+                body_addGravityEffect(&ba->data[i], &ba->data[j], sim);
         }
     }
 }
 
 
 /** Moves the bodies. */
-static void simulation_doMovements(){
-    for (int i = 0; i < bodyArray.length; ++i) {
-        body_move(&bodyArray.data[i]);
-        if (trail_spacing_counter > targetFPS / 2)
-            trail_enqueue(&bodyArray.data[i].trail, bodyArray.data[i].position);
+static void simulation_doMovements(Simulation *sim, Screen *screen){
+    for (int i = 0; i < sim->bodyArray.length; ++i) {
+        body_move(& sim->bodyArray.data[i]);
+        if (sim->trail_spacing_counter > screen->targetFPS / 2)
+            trail_enqueue(& sim->bodyArray.data[i].trail,  sim->bodyArray.data[i].position);
     }
-    if (trail_spacing_counter > targetFPS / 2)
-        trail_spacing_counter = 0;
-    trail_spacing_counter++;
+    if (sim->trail_spacing_counter > screen->targetFPS / 2)
+        sim->trail_spacing_counter = 0;
+    sim->trail_spacing_counter++;
 }
 
 
 /** Checks if any of the bodies is colliding with another body.  */
-static void simulation_detectCollisions(){
-    for (int i = 0; i < bodyArray.length - 1; ++i) {
-        for (int j = i + 1; j < bodyArray.length; ++j) {
-            Body *a = &bodyArray.data[i];
-            Body *b = &bodyArray.data[j];
-            body_detectCollision(a, b);
+static void simulation_detectCollisions(BodyArray *ba, Simulation *sim){
+    for (int i = 0; i < ba->length - 1; ++i) {
+        for (int j = i + 1; j < ba->length; ++j) {
+            Body *a = &ba->data[i];
+            Body *b = &ba->data[j];
+            body_detectCollision(a, b, sim);
         }
     }
 }
 
-void simulation_tick(){
-    if(!pausedByUser) {
-        simulation_doGravityCalculations();
-        simulation_doMovements();
-        simulation_detectCollisions();
+void simulation_tick(Simulation *sim, Screen *screen){
+    if(!sim->pausedByUser) {
+        simulation_doGravityCalculations(&sim->bodyArray, sim);
+        simulation_doMovements(sim, screen);
+        simulation_detectCollisions(&sim->bodyArray, sim);
     }
 }
 
@@ -56,44 +54,41 @@ void simulation_tick(){
  * Moves the camera in accordance to the input key.
  * @return Has the camare been moved
  */
-static bool simulation_moveCam(EconioKey key){
+static bool simulation_moveCam(EconioKey key, Screen *screen){
     if (key == 's' || key == KEY_DOWN) {
-        screen_offset.y++;
+        screen->screen_offset.y++;
         return true;
     }
     else if (key == 'w' || key == KEY_UP) {
-        screen_offset.y--;
+        screen->screen_offset.y--;
         return true;
     }
     else if (key == 'a' || key == KEY_LEFT) {
-        screen_offset.x -= 2;
+        screen->screen_offset.x -= 2;
         return true;
     }
     else if (key == 'd' || key == KEY_RIGHT) {
-        screen_offset.x += 2;
+        screen->screen_offset.x += 2;
         return true;
     }
     return false;
 }
 
-void simulation_processInput() {
+void simulation_processInput(Simulation *sim, Screen *screen, Program *program, GUI *gui, LayerInstances *li) {
     if (econio_kbhit()) {
         int key;
         while (econio_kbhit())
             key = econio_getch();
 
         if (key == KEY_ESCAPE || key == 'e')
-            editMenu_switchTo(key);
+            editMenu_switchTo(key, program, gui, screen, li);
         else if (key == ' ') {
-            if (pausedByUser)
-                pausedByUser = false;
-            else
-                pausedByUser = true;
+            sim->pausedByUser = !sim->pausedByUser;
         } else if (key == 'q') {
-            fullSpeed = !fullSpeed;
-            if (!fullSpeed)
-                render_resetFPSMeasurement();
-        } else if (simulation_moveCam(key))
-            following = NULL;
+            sim->fullSpeed = !sim->fullSpeed;
+            if (!sim->fullSpeed)
+                render_resetFPSMeasurement(screen);
+        } else if (simulation_moveCam(key, screen))
+            sim->following = NULL;
     }
 }
