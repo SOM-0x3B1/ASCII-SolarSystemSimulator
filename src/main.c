@@ -13,10 +13,10 @@
 #include "fs.h"
 
 
-void init_modulesWithDMM(bool *exiting, LayerProperties *lp, Simulation *sim, Screen *screen);
+void init_modulesWithDMM(bool *exiting, LayerStatic *ls, Simulation *sim, Screen *screen);
 
 /** Disposes allocated memory, and clears the screen. */
-void exitProgram(LayerProperties *lp, Simulation sim, Screen *screen);
+void exitProgram(LayerStatic *ls, Simulation sim, Screen *screen);
 
 
 int main() {
@@ -27,12 +27,12 @@ int main() {
     Program program;
     program.sleepTime = 0.02;
     program.exiting = false;
-    program.programState = SIMULATION;
+    program.state = PROGRAM_STATE_SIMULATION;
 
     Screen screen;
-    screen.screen_width = 119;
-    screen.screen_height = 30;
-    screen.screen_offset = (Point){0, 0};
+    screen.width = 119;
+    screen.height = 30;
+    screen.offset = (Point){0, 0};
     screen.fps = 0;
     screen.targetFPS = 30;
     screen.frameCount = 0; // Frames since last reset (~1s)
@@ -42,13 +42,13 @@ int main() {
     sim.detectCollisionPercentage = 0.8;
     sim.fullSpeed = false;
     sim.pausedByUser = false;
-    sim.trail_spacing_counter = 0;
+    sim.trailSpacingCounter = 0;
 
-    GUI gui;
+    Gui gui;
     gui.editMenu_state = EDIT_MENU_STATE_MAIN;
     gui.cursorPos = 0;
 
-    LayerProperties layerProperties;
+    LayerStatic layerStatic;
 
 
     // Attept to load settings.ini
@@ -58,7 +58,9 @@ int main() {
     }
 
 
-    init_modulesWithDMM(&program.exiting, &layerProperties, &sim, &screen);
+    screen.bufferSize = screen.height * screen.width * sizeof(char);
+
+    init_modulesWithDMM(&program.exiting, &layerStatic, &sim, &screen);
 
 
     // Adds some default bodies to the sim
@@ -69,25 +71,25 @@ int main() {
 
     // Main program loop
     while (!program.exiting){
-        switch (program.programState) {
-            case EDIT_MENU:
+        switch (program.state) {
+            case PROGRAM_STATE_EDIT_MENU:
                 simulation_tick(&sim, &screen);
-                editMenu_processInput(&program, &sim, &screen, &gui, &layerProperties.layerInstances);
+                editMenu_processInput(&program, &sim, &screen, &gui, &layerStatic.layerInstances);
                 break;
-            case SIMULATION:
+            case PROGRAM_STATE_SIMULATION:
                 simulation_tick(&sim, &screen);
-                simulation_processInput(&sim, &screen, &program, &gui, &layerProperties.layerInstances);
+                simulation_processInput(&sim, &screen, &program, &gui, &layerStatic.layerInstances);
                 break;
-            case PLACING_BODY:
+            case PROGRAM_STATE_PLACING_BODY:
                 bodyEditor_processPlacementInput(&program, &gui, &sim);
                 break;
-            case TEXT_INPUT:
+            case PROGRAM_STATE_TEXT_INPUT:
                 // empty, because input processing will occur after render
                 break;
         }
 
 
-        render_fullRender(&program, &sim, &screen, &layerProperties, &gui);
+        render_fullRender(&program, &sim, &screen, &layerStatic, &gui);
 
 
         // Speed & FPS regulator
@@ -96,7 +98,7 @@ int main() {
 
 
         // For scanf inputs
-        if(program.programState == TEXT_INPUT) {
+        if(program.state == PROGRAM_STATE_TEXT_INPUT) {
             switch (program.textInputDest) {
                 case TEXT_INPUT_BODY_EDITOR:
                     bodyEditor_processTextInput(&program, &gui, &sim);
@@ -110,14 +112,14 @@ int main() {
         }
     }
 
-    exitProgram(&layerProperties, sim, &screen);
+    exitProgram(&layerStatic, sim, &screen);
 
     return 0;
 }
 
 
-void init_modulesWithDMM(bool *exiting, LayerProperties *lp, Simulation *sim, Screen *screen){
-    if(!layer_init(&lp->layerInstances, lp->layers, screen)){
+void init_modulesWithDMM(bool *exiting, LayerStatic *ls, Simulation *sim, Screen *screen){
+    if(!layer_init(&ls->layerInstances, ls->layers, screen)){
         // ERR: failed to allocate layer buffer(s)
         *exiting = true;
     }
@@ -132,12 +134,12 @@ void init_modulesWithDMM(bool *exiting, LayerProperties *lp, Simulation *sim, Sc
 }
 
 
-void exitProgram(LayerProperties *lp, Simulation sim, Screen *screen){
+void exitProgram(LayerStatic *ls, Simulation sim, Screen *screen){
     econio_clrscr();
     econio_gotoxy(0, 0);
     printf("Exiting...\n\n");
 
-    layer_dispose(lp->layers);
+    layer_dispose(ls->layers);
     render_dispose(screen);
     bodyArray_dispose(&sim.bodyArray);
 

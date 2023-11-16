@@ -24,6 +24,7 @@ Body *body_new(char *name, Vector pos, Vector v, double r, double mass, char col
     return bodyArray_add(&sim->bodyArray, &b, sim);
 }
 
+
 int body_init(Simulation *sim) {
     if (bodyArray_init(&sim->bodyArray) != 0)
         return 1; // failed to allocate memory for body array
@@ -60,6 +61,7 @@ void trailQueue_init(TrailQueue *tq, Body *b) {
     tq->length = 1;
 }
 
+
 Trail *trail_dequeue(TrailQueue *tq){
     Trail *ct = tq->head;
     for (int i = 0; i < tq->length - 2; ++i)
@@ -71,6 +73,7 @@ Trail *trail_dequeue(TrailQueue *tq){
     tq->length--;
     return res;
 }
+
 
 void trail_enqueue(TrailQueue *tq, Vector v) {
     Point p = vector_toPoint(v);
@@ -122,6 +125,7 @@ static void collide(Body *a, Body *b, Simulation *sim){
     bodyArray_remove(&sim->bodyArray, b, sim);
 }
 
+
 void body_detectCollision(Body *a, Body *b, Simulation *sim) {
     if(sim->detectCollisionPercentage > 0) {
         double d = vector_distance(a->position, b->position);
@@ -136,10 +140,11 @@ static void body_drawInfo(Body const *body, LayerInstances *li, Screen *screen) 
     if(li->infoLayer.enabled) {
         Point p = vector_toPoint(body->position);
         p.y /= 2;
-        p = point_subtract(p, screen->screen_offset);
+        p = point_subtract(p, screen->offset);
         drawing_drawText(&li->infoLayer, (int)(p.x - strlen(body->name) / 2), (int)p.y, body->name, screen);
     }
 }
+
 
 /** Draws the trail part of a body. */
 static void body_drawTrail(Body const *body, LayerInstances *li, Screen *screen) {
@@ -148,7 +153,7 @@ static void body_drawTrail(Body const *body, LayerInstances *li, Screen *screen)
     do {
         Point p = t->position;
         p.y /= 2;
-        p = point_subtract(p, screen->screen_offset);
+        p = point_subtract(p, screen->offset);
 
         char c = i < TRAIL_LENGTH / 1.5 ? '+' : '.';
         i++;
@@ -158,11 +163,12 @@ static void body_drawTrail(Body const *body, LayerInstances *li, Screen *screen)
     } while (t != NULL);
 }
 
+
 /** Draws the body part of a body. */
 static void body_draw(Body const *body, Simulation *sim, LayerInstances *li, Screen *screen){
     Point p = vector_toPoint(body->position);
     p.y /= 2;
-    p = point_subtract(p, screen->screen_offset);
+    p = point_subtract(p, screen->offset);
 
     Point pLight;
     bool drawShadows = !li->infoLayer.enabled && body != sim->sun;
@@ -171,11 +177,11 @@ static void body_draw(Body const *body, Simulation *sim, LayerInstances *li, Scr
         Point pLightUnit = vector_toPoint(vector_unitVector(body->position, sim->sun->position));
         pLight = point_subtract(pLight, point_scalarMultiply(pLightUnit, (int) body->r / 2));
         pLight.y /= 2;
-        pLight = point_subtract(pLight, screen->screen_offset);
+        pLight = point_subtract(pLight, screen->offset);
     }
 
-    for (int y = 0; y < screen->screen_height; y++) {
-        for (int x = 0; x < screen->screen_width; x++) {
+    for (int y = 0; y < screen->height; y++) {
+        for (int x = 0; x < screen->width; x++) {
             long long int dX = x - p.x;
             long long int dY = (y - p.y) * 2;
             long long int dx2dy2 = (dX * dX) + (dY * dY);
@@ -210,20 +216,15 @@ static void body_draw(Body const *body, Simulation *sim, LayerInstances *li, Scr
 static void moveCameraToBody(Body *b, Screen *screen, LayerInstances *li){
     Point p = vector_toPoint(b->position);
     p.y /= 2;
-    Point screenSize = {screen->screen_width / 2, screen->screen_height / 2};
+    Point screenSize = {screen->width / 2, screen->height / 2};
     p = point_subtract(p, screenSize);
     if(li->menuLayer.enabled)
         p.x += 16;
-    screen->screen_offset = p;
+    screen->offset = p;
 }
 
 
 void body_render(LayerInstances *li, Simulation *sim, Screen *screen){
-    layer_clear(&li->bodyLayer, screen);
-    layer_clear(&li->rangeLayer, screen);
-    layer_clear(&li->infoLayer, screen);
-    layer_clear(&li->trailLayer, screen);
-
     for (int i = 0; i < sim->bodyArray.length; ++i) {
         Body *b = &sim->bodyArray.data[i];
 

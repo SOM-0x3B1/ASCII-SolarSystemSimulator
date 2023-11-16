@@ -10,17 +10,6 @@
 #include "body_array.h"
 
 
-typedef enum BodyEditableProperty {
-    BODY_PROPERTY_NAME,
-    BODY_PROPERTY_MASS,
-    BODY_PROPERTY_R,
-    BODY_PROPERTY_POS,
-    BODY_PROPERTY_VEL,
-    bodyEditableProperty_MAX
-} BodyEditableProperty;
-
-
-
 /** Allocates the body array, and creates a sun.*/
 int body_init(Simulation *sim);
 

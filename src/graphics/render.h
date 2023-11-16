@@ -19,10 +19,10 @@ void render_dispose(Screen *screen);
 void render_resetFPSMeasurement(Screen *screen);
 
 /** Prints the content of the layers on the console. */
-void render_refreshScreen(Program *program, Simulation *sim, Screen *screen, LayerProperties *lp);
+void render_refreshScreen(Program *program, Simulation *sim, Screen *screen, LayerStatic *lp);
 
 /** Updates all the layers. */
-void render_fullRender(Program *program, Simulation *sim, Screen *screen, LayerProperties *lp, GUI *gui);
+void render_fullRender(Program *program, Simulation *sim, Screen *screen, LayerStatic *lp, Gui *gui);
 
 
 #endif //ASCII_SSS_RENDER_H

@@ -21,11 +21,12 @@ void layer_dispose(Layer **layers);
  */
 void layer_writeAtXY(Layer *l, int x, int y, char c, Screen *screen);
 
+
 /**
- * Replaces every character in the layer with \0-s
+ * Replaces every character in all of the layers with \0-s
  * @param l Layer
  */
-void layer_clear(Layer *l, Screen *screen);
+void layer_clearAll(Layer **l, Screen *screen);
 
 
 #endif //ASCII_SSS_LAYER_H

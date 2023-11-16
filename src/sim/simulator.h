@@ -12,7 +12,7 @@
 void simulation_tick(Simulation *sim, Screen *screen);
 
 /** Processes the raw input. */
-void simulation_processInput(Simulation *sim, Screen *screen, Program *program, GUI *gui, LayerInstances *li);
+void simulation_processInput(Simulation *sim, Screen *screen, Program *program, Gui *gui, LayerInstances *li);
 
 
 #endif //ASCII_SSS_SIMULATOR_H

@@ -46,10 +46,10 @@ int settings_loadSettings(Simulation *sim, Screen *screen) {
             if (settings_getIntValue(line, valueStart, &value) != 0)
                 return 3; // invalid value
 
-            if (strcmp(param, "screen_width") == 0)
-                screen->screen_width = value;
-            else if (strcmp(param, "screen_height") == 0)
-                screen->screen_height = value;
+            if (strcmp(param, "width") == 0)
+                screen->width = value;
+            else if (strcmp(param, "height") == 0)
+                screen->height = value;
             else if (strcmp(param, "targetFPS") == 0) {
                 if(value > 0)
                     screen->targetFPS = value;
@@ -77,13 +77,13 @@ int settings_loadSettings(Simulation *sim, Screen *screen) {
 
 
 void export_switchTo(Program *program){
-    program->programState = TEXT_INPUT;
+    program->state = PROGRAM_STATE_TEXT_INPUT;
     program->textInputDest = TEXT_INPUT_EXPORT;
 }
 
 
-void export_render(GUI *gui, LayerInstances *li, Screen *screen){
-    gui->textPos = drawing_drawInputPrompt(&li->menuLayer, screen->screen_height / 2 - 2, "Export system", "Name:", screen);
+void export_render(Gui *gui, LayerInstances *li, Screen *screen){
+    gui->textPos = drawing_drawInputPrompt(&li->menuLayer, screen->height / 2 - 2, "Export system", "Name:", screen);
 }
 
 
@@ -123,7 +123,7 @@ int export_export(char *filename, Simulation *sim) {
 }
 
 
-void export_processTextInput(GUI *gui, Program *program, Simulation *sim) {
+void export_processTextInput(Gui *gui, Program *program, Simulation *sim) {
     econio_gotoxy((int) gui->textPos.x, (int) gui->textPos.y);
     econio_normalmode();
 
@@ -136,5 +136,5 @@ void export_processTextInput(GUI *gui, Program *program, Simulation *sim) {
     econio_rawmode();
     econio_gotoxy(0, 0);
 
-    program->programState = EDIT_MENU;
+    program->state = PROGRAM_STATE_EDIT_MENU;
 }

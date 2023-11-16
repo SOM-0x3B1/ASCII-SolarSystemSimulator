@@ -15,10 +15,10 @@ int settings_loadSettings(Simulation *sim, Screen *screen);
 void export_switchTo(Program *program);
 
 /** Renders the input prompt. */
-void export_render(GUI *gui, LayerInstances *li, Screen *screen);
+void export_render(Gui *gui, LayerInstances *li, Screen *screen);
 
 /** Reads the name of the export file. */
-void export_processTextInput(GUI *gui, Program *program, Simulation *sim);
+void export_processTextInput(Gui *gui, Program *program, Simulation *sim);
 
 
 #endif //ASCII_SSS_FS_H

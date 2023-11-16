@@ -2,18 +2,7 @@
 #include <stdio.h>
 #include "body_editor.h"
 #include "../graphics/drawing.h"
-#include "edit_menu.h"
 
-
-//BodyEditorState bodyEditor_state = BODY_SET_NAME;
-
-
-/*static Point textPos; // The position of the cursor on an input text prompt
-
-// The prompt strings stored for each state
-static const char *prompts[5] = {, "Mass (relative to Earth):",
-                           "Size (in character radius):", "Position:",
-                           "Velocity (format: \"x y\"):"};*/
 
 static char *getPropt(BodyEditorState s){
     switch (s) {
@@ -21,7 +10,7 @@ static char *getPropt(BodyEditorState s){
             return "Name:";
         case BODY_SET_MASS:
             return "Mass (relative to Earth):";
-        case BODY_SET_SIZE:
+        case BODY_SET_R:
             return "Radius:";
         default:
             return "Velocity:";
@@ -30,13 +19,13 @@ static char *getPropt(BodyEditorState s){
 
 
 void bodyEditor_switchTo(Program *p){
-    p->programState = TEXT_INPUT;
+    p->state = PROGRAM_STATE_TEXT_INPUT;
     p->textInputDest = TEXT_INPUT_BODY_EDITOR;
 }
 
-void bodyEditor_render(Program *program, LayerInstances *li, Screen *screen, GUI *gui) {
-    if (program->programState == TEXT_INPUT)
-        gui->textPos = drawing_drawInputPrompt(&li->menuLayer, screen->screen_height / 4,
+void bodyEditor_render(Program *program, LayerInstances *li, Screen *screen, Gui *gui) {
+    if (program->state == PROGRAM_STATE_TEXT_INPUT)
+        gui->textPos = drawing_drawInputPrompt(&li->menuLayer, screen->height / 4,
                                           "Body editor", getPropt(gui->bodyEditor_state), screen);
     else {
         int xCentrer = drawing_drawBox(&li->menuLayer, 2, 2, 43, 8, "Placing body", screen);
@@ -45,7 +34,7 @@ void bodyEditor_render(Program *program, LayerInstances *li, Screen *screen, GUI
     }
 }
 
-void bodyEditor_processTextInput(Program *program, GUI *gui, Simulation *sim) {
+void bodyEditor_processTextInput(Program *program, Gui *gui, Simulation *sim) {
     econio_gotoxy((int) gui->textPos.x, (int)gui->textPos.y);
     econio_normalmode();
     switch (gui->bodyEditor_state) {
@@ -54,31 +43,31 @@ void bodyEditor_processTextInput(Program *program, GUI *gui, Simulation *sim) {
             if (gui->editMenu_state == EDIT_MENU_STATE_ADD_BODY)
                 gui->bodyEditor_state = BODY_SET_MASS;
             else
-                program->programState = EDIT_MENU;
+                program->state = PROGRAM_STATE_EDIT_MENU;
             break;
         case BODY_SET_MASS:
             scanf("%lf", &sim->editedBody->mass);
             if (gui->editMenu_state == EDIT_MENU_STATE_ADD_BODY)
-                gui->bodyEditor_state = BODY_SET_SIZE;
+                gui->bodyEditor_state = BODY_SET_R;
             else
-                program->programState = EDIT_MENU;
+                program->state = PROGRAM_STATE_EDIT_MENU;
             break;
-        case BODY_SET_SIZE:
+        case BODY_SET_R:
             scanf("%lf", &sim->editedBody->r);
             if (gui->editMenu_state == EDIT_MENU_STATE_ADD_BODY) {
-                program->programState = PLACING_BODY;
+                program->state = PROGRAM_STATE_PLACING_BODY;
                 gui->bodyEditor_state = BODY_SET_POS;
             } else
-                program->programState = EDIT_MENU;
+                program->state = PROGRAM_STATE_EDIT_MENU;
             break;
         case BODY_SET_V:
             scanf("%lf %lf", &sim->editedBody->velocity.x, &sim->editedBody->velocity.y);
             sim->editedBody->velocity.y = -sim->editedBody->velocity.y;
             if (gui->editMenu_state == EDIT_MENU_STATE_ADD_BODY) {
-                program->programState = EDIT_MENU;
+                program->state = PROGRAM_STATE_EDIT_MENU;
                 gui->editMenu_state = EDIT_MENU_STATE_EDIT_BODY_SET;
             } else
-                program->programState = EDIT_MENU;
+                program->state = PROGRAM_STATE_EDIT_MENU;
             break;
         default:
             break;
@@ -108,7 +97,7 @@ bool bodyEditor_moveBody(EconioKey key, Simulation *sim){
     return false;
 }
 
-void bodyEditor_processPlacementInput(Program *program, GUI *gui, Simulation *sim){
+void bodyEditor_processPlacementInput(Program *program, Gui *gui, Simulation *sim){
     if (econio_kbhit()) {
         int key;
         while (econio_kbhit())
@@ -117,10 +106,10 @@ void bodyEditor_processPlacementInput(Program *program, GUI *gui, Simulation *si
         if (key == KEY_ENTER)
         {
             if(gui->editMenu_state == EDIT_MENU_STATE_ADD_BODY) {
-                program->programState = TEXT_INPUT;
+                program->state = PROGRAM_STATE_TEXT_INPUT;
                 gui->bodyEditor_state = BODY_SET_V;
             } else
-                program->programState = EDIT_MENU;
+                program->state = PROGRAM_STATE_EDIT_MENU;
         }
         else
             if(bodyEditor_moveBody(key, sim)) {

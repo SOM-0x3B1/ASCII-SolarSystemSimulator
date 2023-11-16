@@ -18,18 +18,18 @@ static void sortPoints(int x1, int y1, int x2, int y2){
 
 
 void drawing_drawText(Layer *l, int x, int y, const char *s, Screen *screen) {
-    for (int i = 0; s[i] != '\0' && x + i < screen->screen_width; ++i)
+    for (int i = 0; s[i] != '\0' && x + i < screen->width; ++i)
         layer_writeAtXY(l, x + i, y, s[i], screen);
 }
 
 
 void drawing_drawLine(Layer *l, int x, int y, int length, bool vertical, char c, Screen *screen) {
     if (vertical) {
-        for (int i = y; i <= y + length && i < screen->screen_height; ++i)
+        for (int i = y; i <= y + length && i < screen->height; ++i)
             layer_writeAtXY(l, x, i, c, screen);
     }
     else {
-        for (int i = x; i <= x + length && i < screen->screen_width; ++i)
+        for (int i = x; i <= x + length && i < screen->width; ++i)
             layer_writeAtXY(l, i, y, c, screen);
     }
 }
@@ -37,8 +37,8 @@ void drawing_drawLine(Layer *l, int x, int y, int length, bool vertical, char c,
 
 void drawing_drawRectangle(Layer *l, int x1, int y1, int x2, int y2, char c, Screen *screen){
     sortPoints(x1, y1, x2, y2);
-    for (int y = y1; y <= y2 && y < screen->screen_height; ++y) {
-        for (int x = x1; x <= x2 && x < screen->screen_width; ++x)
+    for (int y = y1; y <= y2 && y < screen->height; ++y) {
+        for (int x = x1; x <= x2 && x < screen->width; ++x)
             layer_writeAtXY(l, x, y, c, screen);
     }
 }
@@ -65,9 +65,9 @@ int drawing_drawBox(Layer *l, int x1, int y1, int x2, int y2, const char* title,
 
 Point drawing_drawInputPrompt(Layer *l, int yCenter, const char *title, const char *text, Screen *screen){
     Point textPos;
-    int margin = screen->screen_width / 4;
+    int margin = screen->width / 4;
     int xCentrer = drawing_drawBox(l, margin - EDIT_MENU_WIDTH / 2, yCenter - 4,
-                                   screen->screen_width - margin - EDIT_MENU_WIDTH / 2, yCenter + 4,
+                                   screen->width - margin - EDIT_MENU_WIDTH / 2, yCenter + 4,
                                    title, screen);
 
     drawing_drawText(l, margin - EDIT_MENU_WIDTH / 2 + 3, yCenter + 1, text, screen);

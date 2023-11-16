@@ -4,8 +4,6 @@
 #include <stdbool.h>
 #include "../lib/econio.h"
 #include "render.h"
-#include "../sim/body.h"
-#include "drawing.h"
 #include "../gui/overlay.h"
 #include "../gui/edit_menu.h"
 #include "../lib/debugmalloc.h"
@@ -14,14 +12,14 @@
 
 
 bool render_init(Screen *screen) {
-    size_t buffSize = screen->screen_width * screen->screen_height * sizeof(char);
-    screen->screenBuffer = (char *) malloc(buffSize);
+    size_t buffSize = screen->width * screen->height * sizeof(char);
+    screen->buffer = (char *) malloc(buffSize);
 
     screen->frameCountResetedTime = time(NULL);
 
-    if (screen->screenBuffer != NULL) {
-        memset(screen->screenBuffer, '\0', buffSize);
-        if (setvbuf(stdout, screen->screenBuffer, _IOFBF, screen->screen_height * screen->screen_width))
+    if (screen->buffer != NULL) {
+        memset(screen->buffer, '\0', buffSize);
+        if (setvbuf(stdout, screen->buffer, _IOFBF, screen->height * screen->width))
             return false;
     } else
         return false;
@@ -29,7 +27,7 @@ bool render_init(Screen *screen) {
     return true;
 }
 void render_dispose(Screen *screen){
-    free(screen->screenBuffer);
+    free(screen->buffer);
 }
 
 
@@ -38,6 +36,7 @@ void render_resetFPSMeasurement(Screen *screen){
     screen->frameCount = 0;
     screen->frameCountResetedTime = time(NULL);
 }
+
 
 /** Updates the current FPS value and regulates simulation speed. */
 static void render_handleFPS(Program *program, Simulation *sim, Screen *screen) {
@@ -58,13 +57,13 @@ static void render_handleFPS(Program *program, Simulation *sim, Screen *screen) 
 }
 
 
-void render_refreshScreen(Program *program, Simulation *sim, Screen *screen, LayerProperties *lp){
-    for (int y = 0; y < screen->screen_height; ++y) {
-        for (int x = 0; x < screen->screen_width; ++x) {
+void render_refreshScreen(Program *program, Simulation *sim, Screen *screen, LayerStatic *ls){
+    for (int y = 0; y < screen->height; ++y) {
+        for (int x = 0; x < screen->width; ++x) {
             bool empty = true;
             for (int i = 0; i < LAYER_COUNT; ++i) {
-                if(lp->layers[i]->enabled && lp->layers[i]->text[y][x] != '\0') {
-                    fprintf(stdout, "%c", lp->layers[i]->text[y][x]);
+                if(ls->layers[i]->enabled && ls->layers[i]->text[y][x] != '\0') {
+                    fprintf(stdout, "%c", ls->layers[i]->text[y][x]);
                     empty = false;
                     break;
                 }
@@ -72,7 +71,7 @@ void render_refreshScreen(Program *program, Simulation *sim, Screen *screen, Lay
             if(empty)
                 fprintf(stdout, " ");
         }
-        if(y < screen->screen_height - 1)
+        if(y < screen->height - 1)
             fprintf(stdout, "\n");
     }
 
@@ -83,16 +82,18 @@ void render_refreshScreen(Program *program, Simulation *sim, Screen *screen, Lay
 }
 
 
-void render_fullRender(Program *program, Simulation *sim, Screen *screen, LayerProperties *lp, GUI *gui){
-    body_render(&lp->layerInstances, sim, screen);
-    overlay_render(program, sim, screen, &lp->layerInstances);
-    if(lp->layerInstances.menuLayer.enabled)
-        editMenu_render(&lp->layerInstances, screen, gui, sim);
+void render_fullRender(Program *program, Simulation *sim, Screen *screen, LayerStatic *ls, Gui *gui){
+    layer_clearAll(ls->layers, screen);
 
-    if(program->textInputDest == TEXT_INPUT_BODY_EDITOR && (program->programState == TEXT_INPUT || program->programState == PLACING_BODY))
-        bodyEditor_render(program, &lp->layerInstances, screen, gui);
-    else if(program->textInputDest == TEXT_INPUT_EXPORT && program->programState == TEXT_INPUT)
-        export_render(gui, &lp->layerInstances, screen);
+    body_render(&ls->layerInstances, sim, screen);
+    overlay_render(program, sim, screen, &ls->layerInstances);
+    if(ls->layerInstances.menuLayer.enabled)
+        editMenu_render(&ls->layerInstances, screen, gui, sim);
 
-    render_refreshScreen(program, sim, screen, lp);
+    if(program->textInputDest == TEXT_INPUT_BODY_EDITOR && (program->state == PROGRAM_STATE_TEXT_INPUT || program->state == PROGRAM_STATE_PLACING_BODY))
+        bodyEditor_render(program, &ls->layerInstances, screen, gui);
+    else if(program->textInputDest == TEXT_INPUT_EXPORT && program->state == PROGRAM_STATE_TEXT_INPUT)
+        export_render(gui, &ls->layerInstances, screen);
+
+    render_refreshScreen(program, sim, screen, ls);
 }

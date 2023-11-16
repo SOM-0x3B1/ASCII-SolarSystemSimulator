@@ -1,4 +1,3 @@
-#include <stdlib.h>
 #include "body_array.h"
 #include "../lib/debugmalloc.h"
 
@@ -17,6 +16,7 @@ void bodyArray_dispose(BodyArray *ba){
     free(ba->data);
 }
 
+
 /**
  * If the body array shifts or gets relocated, the global body variables must be updated to their new pointers.
  * This function checks and updates a single body pointer.
@@ -32,6 +32,7 @@ static void updatePointers(Body *array, int origin, int newIndex, Simulation *si
     if(&sim->bodyArray.data[origin] == sim->editedBody)
         sim->editedBody = &array[newIndex];
 }
+
 
 Body *bodyArray_add(BodyArray *ba, Body *b, Simulation *sim){
     if(sim->bodyArray.length + 1 > sim->bodyArray.capacity) {
@@ -56,6 +57,7 @@ Body *bodyArray_add(BodyArray *ba, Body *b, Simulation *sim){
     return &ba->data[ba->length - 1];
 }
 
+
 void bodyArray_removeAt(BodyArray *ba, int i, Simulation *sim) {
     if (sim->following == &ba->data[i])
         sim->following = NULL;
@@ -68,6 +70,7 @@ void bodyArray_removeAt(BodyArray *ba, int i, Simulation *sim) {
     }
     ba->length--;
 }
+
 
 void bodyArray_remove(BodyArray *ba, Body *b, Simulation *sim){
     int i = 0;

@@ -1,9 +1,7 @@
 #include <stdlib.h>
 #include "simulator.h"
-#include "../lib/econio.h"
 #include "../gui/edit_menu.h"
 #include "body.h"
-#include "body_array.h"
 
 
 /** Processes the gravitatinal interactions of the bodies, and updates their velocity. */
@@ -21,12 +19,12 @@ static void simulation_doGravityCalculations(BodyArray *ba, Simulation *sim){
 static void simulation_doMovements(Simulation *sim, Screen *screen){
     for (int i = 0; i < sim->bodyArray.length; ++i) {
         body_move(& sim->bodyArray.data[i]);
-        if (sim->trail_spacing_counter > screen->targetFPS / 2)
+        if (sim->trailSpacingCounter > screen->targetFPS / 2)
             trail_enqueue(& sim->bodyArray.data[i].trail,  sim->bodyArray.data[i].position);
     }
-    if (sim->trail_spacing_counter > screen->targetFPS / 2)
-        sim->trail_spacing_counter = 0;
-    sim->trail_spacing_counter++;
+    if (sim->trailSpacingCounter > screen->targetFPS / 2)
+        sim->trailSpacingCounter = 0;
+    sim->trailSpacingCounter++;
 }
 
 
@@ -40,6 +38,7 @@ static void simulation_detectCollisions(BodyArray *ba, Simulation *sim){
         }
     }
 }
+
 
 void simulation_tick(Simulation *sim, Screen *screen){
     if(!sim->pausedByUser) {
@@ -56,25 +55,26 @@ void simulation_tick(Simulation *sim, Screen *screen){
  */
 static bool simulation_moveCam(EconioKey key, Screen *screen){
     if (key == 's' || key == KEY_DOWN) {
-        screen->screen_offset.y++;
+        screen->offset.y++;
         return true;
     }
     else if (key == 'w' || key == KEY_UP) {
-        screen->screen_offset.y--;
+        screen->offset.y--;
         return true;
     }
     else if (key == 'a' || key == KEY_LEFT) {
-        screen->screen_offset.x -= 2;
+        screen->offset.x -= 2;
         return true;
     }
     else if (key == 'd' || key == KEY_RIGHT) {
-        screen->screen_offset.x += 2;
+        screen->offset.x += 2;
         return true;
     }
     return false;
 }
 
-void simulation_processInput(Simulation *sim, Screen *screen, Program *program, GUI *gui, LayerInstances *li) {
+
+void simulation_processInput(Simulation *sim, Screen *screen, Program *program, Gui *gui, LayerInstances *li) {
     if (econio_kbhit()) {
         int key;
         while (econio_kbhit())
