@@ -14,13 +14,13 @@
  * Set the proper states and display parameters for edit menu.
  * @param key if it's Esc, the cursor jumps to the Exit function
  */
-void editMenu_switchTo(EconioKey key, Program *program, GUI *gui, Screen *screen, LayerInstances *li);
+void editMenu_switchTo(EconioKey key, Program *program, Gui *gui, Screen *screen, LayerInstances *li);
 
 /** Renders all edit menu components. */
-void editMenu_render(LayerInstances *li, Screen *screen, GUI *gui, Simulation *sim);
+void editMenu_render(LayerInstances *li, Screen *screen, Gui *gui, Simulation *sim);
 
 /** Reads raw input. */
-void editMenu_processInput(Program *program, Simulation *sim, Screen *screen, GUI *gui, LayerInstances *li);
+void editMenu_processInput(Program *program, Simulation *sim, Screen *screen, Gui *gui, LayerInstances *li);
 
 
 #endif //ASCII_SSS_EDIT_MENU_H
