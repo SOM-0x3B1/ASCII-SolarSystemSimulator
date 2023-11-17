@@ -46,9 +46,9 @@ int settings_loadSettings(Simulation *sim, Screen *screen) {
             if (settings_getIntValue(line, valueStart, &value) != 0)
                 return 3; // invalid value
 
-            if (strcmp(param, "width") == 0)
+            if (strcmp(param, "screen_width") == 0)
                 screen->width = value;
-            else if (strcmp(param, "height") == 0)
+            else if (strcmp(param, "screen_height") == 0)
                 screen->height = value;
             else if (strcmp(param, "targetFPS") == 0) {
                 if(value > 0)

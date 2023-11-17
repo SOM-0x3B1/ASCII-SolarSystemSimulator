@@ -2,6 +2,7 @@
 #include "../lib/debugmalloc.h"
 
 
+/** Replaces every character in a layers with \0. */
 static void layer_clear(Layer *l, Screen *screen);
 
 

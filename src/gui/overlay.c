@@ -24,6 +24,7 @@ static void overlay_renderHeader(Screen *screen, LayerInstances *li){
 }
 
 
+/** Returns a string describing the current state of the program. */
 static char *programStateToString(ProgramState s){
     switch (s) {
         case PROGRAM_STATE_SIMULATION:

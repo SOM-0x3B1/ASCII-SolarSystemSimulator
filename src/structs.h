@@ -6,7 +6,6 @@
 #include <time.h>
 
 
-
 //============= Program =================
 
 typedef enum ProgramState{
@@ -16,6 +15,7 @@ typedef enum ProgramState{
     PROGRAM_STATE_PLACING_BODY,
 } ProgramState;
 
+/** Which part of the program should process the text input. */
 typedef enum TextInputDest{
     TEXT_INPUT_BODY_EDITOR,
     TEXT_INPUT_EXPORT,
@@ -25,7 +25,7 @@ typedef enum TextInputDest{
 typedef struct Program{
     ProgramState state;
     TextInputDest textInputDest;
-    double sleepTime;
+    double sleepTime; // Regulates simulation speed (and FPS)
     bool exiting;
 } Program;
 
@@ -47,7 +47,7 @@ typedef struct Point{
 
 //============= Simulation =================
 
-/** A point of a trail; a queue element. */
+/** A node of a trail; a queue element. */
 typedef struct Trail{
     Point position;
     struct Trail *next;
@@ -57,7 +57,7 @@ typedef struct Trail{
 typedef struct TrailQueue{
     Trail *head;
     int length;
-    int capacity;
+    int capacity; // Max capacity of the queue, after it automatically dequeues the last element
 } TrailQueue;
 
 
@@ -76,7 +76,7 @@ typedef struct Body{
     char name[13];
     Vector position;
     Vector velocity;
-    double r;
+    double r; // Radius
     double mass;
     char color;
     TrailQueue trail;
@@ -85,7 +85,7 @@ typedef struct Body{
 typedef struct BodyArray{
     Body *data;
     int length;
-    int capacity;
+    int capacity; // Currently allocated size (will be doubled when exceeded)
 } BodyArray;
 
 typedef struct Simulation{
@@ -141,7 +141,7 @@ typedef struct Gui{
     EditMenuSTATE editMenu_state;
     BodyEditorState bodyEditor_state;
     int cursorPos; // The current position of the selection cursor
-    Point textPos;
+    Point textPos; // The position where the cursor should start after entering text input mode
 } Gui;
 
 
@@ -156,6 +156,7 @@ typedef struct Layer{
     bool enabled;
 } Layer;
 
+// All layers are declared here
 typedef struct LayerInstances{
     Layer overlayLayer;
     Layer menuLayer;
@@ -166,16 +167,16 @@ typedef struct LayerInstances{
 } LayerInstances;
 
 typedef struct LayerStatic{
-    LayerInstances layerInstances;
-    Layer *layers[LAYER_COUNT]; // The array of layers in order of priority (0. > 1. > ...)
+    LayerInstances layerInstances;  // All layers are declared here --> can be directly accessed here
+    Layer *layers[LAYER_COUNT];     // The array of layers in order of priority (0. > 1. > ...)
 } LayerStatic;
 
 typedef struct Screen{
     int width;
     int height;
-    char *buffer; // Used as the buffer of the console
-    size_t bufferSize;
-    Point offset;
+    char *buffer;       // Used as the buffer of the console
+    size_t bufferSize;  // height * width * sizeof(char)
+    Point offset;       // The top-left position of the camera
     int fps;
     int targetFPS;
     time_t frameCountResetedTime; // The last time the FPS was evaluated

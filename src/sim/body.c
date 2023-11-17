@@ -228,8 +228,8 @@ void body_render(LayerInstances *li, Simulation *sim, Screen *screen){
     for (int i = 0; i < sim->bodyArray.length; ++i) {
         Body *b = &sim->bodyArray.data[i];
 
-        if(sim->following == &sim->bodyArray.data[i])
-            moveCameraToBody(&sim->bodyArray.data[i], screen, li);
+        if(sim->following == b)
+            moveCameraToBody(b, screen, li);
 
         body_draw(b, sim, li, screen);
     }

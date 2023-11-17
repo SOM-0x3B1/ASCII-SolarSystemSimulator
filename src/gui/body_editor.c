@@ -4,7 +4,8 @@
 #include "../graphics/drawing.h"
 
 
-static char *getPropt(BodyEditorState s){
+/** Returns the input promt text based on the bodyeditor's current state. */
+static char *getPrompt(BodyEditorState s){
     switch (s) {
         case BODY_SET_NAME:
             return "Name:";
@@ -26,7 +27,7 @@ void bodyEditor_switchTo(Program *p){
 void bodyEditor_render(Program *program, LayerInstances *li, Screen *screen, Gui *gui) {
     if (program->state == PROGRAM_STATE_TEXT_INPUT)
         gui->textPos = drawing_drawInputPrompt(&li->menuLayer, screen->height / 4,
-                                          "Body editor", getPropt(gui->bodyEditor_state), screen);
+                                               "Body editor", getPrompt(gui->bodyEditor_state), screen);
     else {
         int xCentrer = drawing_drawBox(&li->menuLayer, 2, 2, 43, 8, "Placing body", screen);
         drawing_drawText(&li->menuLayer, xCentrer - 14, 6, "Use 'WASD' to move the body", screen);

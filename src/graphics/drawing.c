@@ -9,6 +9,7 @@ static void swapInts(int *a, int *b){
     *b = temp;
 }
 
+/** Swaps two points so that the second one becomes the greater one. */
 static void sortPoints(int x1, int y1, int x2, int y2){
     if(x1 > x2)
         swapInts(&x1, &x2);

@@ -13,9 +13,10 @@
 #include "fs.h"
 
 
+/** Initialize modules with dinamic memory management. */
 void init_modulesWithDMM(bool *exiting, LayerStatic *ls, Simulation *sim, Screen *screen);
 
-/** Disposes allocated memory, and clears the screen. */
+/** Frees allocated memory, and clears the screen. */
 void exitProgram(LayerStatic *ls, Simulation sim, Screen *screen);
 
 

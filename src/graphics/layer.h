@@ -23,7 +23,7 @@ void layer_writeAtXY(Layer *l, int x, int y, char c, Screen *screen);
 
 
 /**
- * Replaces every character in all of the layers with \0-s
+ * Replaces every character in all of the layers with \0.
  * @param l Layer
  */
 void layer_clearAll(Layer **l, Screen *screen);
