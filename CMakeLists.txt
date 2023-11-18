@@ -29,4 +29,6 @@ add_executable(ASCII_SSS src/main.c
         src/fs.c
         src/fs.h
         src/structs.h
+        src/gui/error.c
+        src/gui/error.h
 )

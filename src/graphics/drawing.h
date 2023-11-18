@@ -35,7 +35,17 @@ void drawing_drawLine(Layer *l, int x, int y, int length, bool vertical, char c,
  * @param y2 Bottom right (y)
  * @param c Fill character
  */
-void drawing_drawRectangle(Layer *l, int x1, int y1, int x2, int y2, char c, Screen *screen);
+void drawing_drawRectangleFill(Layer *l, int x1, int y1, int x2, int y2, char c, Screen *screen);
+
+/**
+ * Draws an unfilled rectangle (outline only).
+ * @param l Layer
+ * @param x1 Top left (x)
+ * @param y1 Top left (y)
+ * @param x2 Bottom right (x)
+ * @param y2 Bottom right (y)
+ */
+void drawing_drawRectangleOutline(Layer *l, int x1, int y1, int x2, int y2, Screen *screen);
 
 /**
  * Draws a window (box) with a title.

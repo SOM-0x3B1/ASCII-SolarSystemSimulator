@@ -2,13 +2,13 @@
 #include "../lib/debugmalloc.h"
 
 
-int bodyArray_init(BodyArray *ba){
+Error bodyArray_init(BodyArray *ba){
     ba->length = 0;
     ba->capacity = 1;
     ba->data = (Body*) malloc(sizeof(Body));
     if(ba->data == NULL)
-        return 1;
-    return 0;
+        return ERR_MEMORY;
+    return SUCCESS;
 }
 void bodyArray_dispose(BodyArray *ba){
     for (int i = 0; i < ba->length; ++i)

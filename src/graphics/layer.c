@@ -6,7 +6,7 @@
 static void layer_clear(Layer *l, Screen *screen);
 
 
-bool layer_init(LayerInstances *li, Layer **layers, Screen *screen){
+Error layer_init(LayerInstances *li, Layer **layers, Screen *screen){
     li->overlayLayer.enabled = true;
     li->menuLayer.enabled = false;
     li->infoLayer.enabled = true;
@@ -28,12 +28,12 @@ bool layer_init(LayerInstances *li, Layer **layers, Screen *screen){
             layers[i]->text[y] = layers[i]->text[0] + y * screen->width;
 
         if(layers[i]->text == NULL || layers[i]->text[0] == NULL)
-            return false;
+            return ERR_MEMORY;
 
         layer_clear(layers[i], screen);
     }
 
-    return true;
+    return SUCCESS;
 }
 void layer_dispose(Layer **layers){
     for (int i = 0; i < LAYER_COUNT; ++i) {

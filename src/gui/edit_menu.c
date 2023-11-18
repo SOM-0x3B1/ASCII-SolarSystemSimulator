@@ -134,8 +134,8 @@ static void editMenu_renderEditProperties(LayerInstances *li, Screen *screen, Si
 void editMenu_render(LayerInstances *li, Screen *screen, Gui *gui, Simulation *sim){
     drawing_drawLine(&li->menuLayer, screen->width - 32, 2,
                      screen->height - 4, true, '|', screen);
-    drawing_drawRectangle(&li->menuLayer, screen->width - 31, 2,
-                          screen->width - 1, screen->height - 2, ' ', screen);
+    drawing_drawRectangleFill(&li->menuLayer, screen->width - 31, 2,
+                              screen->width - 1, screen->height - 2, ' ', screen);
     drawing_drawText(&li->menuLayer, screen->width - 30, 3, "[EDIT MENU]", screen);
 
     switch (gui->editMenu_state) {
@@ -157,8 +157,8 @@ void editMenu_render(LayerInstances *li, Screen *screen, Gui *gui, Simulation *s
 }
 
 
-/** Enter on main menu option */
-static void editMenu_selectMainOption(Gui *gui, Simulation *sim, Screen *screen, LayerInstances *li, Program *program){
+/** Enter on main menu option. */
+static Error editMenu_selectMainOption(Gui *gui, Simulation *sim, Screen *screen, LayerInstances *li, Program *program){
     EditMenuSTATE lastState = gui->editMenu_state;
 
     switch (gui->cursorPos) {
@@ -171,6 +171,10 @@ static void editMenu_selectMainOption(Gui *gui, Simulation *sim, Screen *screen,
                              (Vector) {(double) screen->offset.x + (double) screen->width / 2 - (double)EDIT_MENU_WIDTH / 2,
                                        ((double) screen->offset.y + (double) screen->height / 2) * 2},
                                        (Vector) {0, 0}, 0.0, 0.0, '#', sim);
+            if(sim->editedBody == NULL) {
+                program->exiting = true;
+                return ERR_MEMORY;
+            }
             sim->following = sim->editedBody;
             break;
         case OPTION_DELETE_BODY:
@@ -203,6 +207,8 @@ static void editMenu_selectMainOption(Gui *gui, Simulation *sim, Screen *screen,
 
     if(lastState != gui->editMenu_state)
         gui->cursorPos = 0;
+
+    return SUCCESS;
 }
 
 
@@ -287,7 +293,7 @@ static int getOptionCount(EditMenuSTATE s){
 }
 
 
-void editMenu_processInput(Program *program, Simulation *sim, Screen *screen, Gui *gui, LayerInstances *li){
+Error editMenu_processInput(Program *program, Simulation *sim, Screen *screen, Gui *gui, LayerInstances *li){
     if (econio_kbhit()) {
         int key;
         while (econio_kbhit())
@@ -306,8 +312,7 @@ void editMenu_processInput(Program *program, Simulation *sim, Screen *screen, Gu
         else if (key == KEY_ENTER || key == ' ') {
             switch (gui->editMenu_state) {
                 case EDIT_MENU_STATE_MAIN:
-                    editMenu_selectMainOption(gui, sim, screen, li, program);
-                    break;
+                    return editMenu_selectMainOption(gui, sim, screen, li, program);
                 case EDIT_MENU_STATE_EDIT_BODY:
                     editMenu_selectEditOption(gui, sim);
                     break;
@@ -325,4 +330,5 @@ void editMenu_processInput(Program *program, Simulation *sim, Screen *screen, Gu
             }
         }
     }
+    return SUCCESS;
 }

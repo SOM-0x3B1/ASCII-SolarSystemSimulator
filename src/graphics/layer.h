@@ -8,8 +8,10 @@
 #include "render.h"
 
 
-/** Initializes the layer arrays. */
-bool layer_init(LayerInstances *li, Layer **layers, Screen *screen); //
+/** Initializes the layer arrays.
+ *  @return Successful / error
+ */
+Error layer_init(LayerInstances *li, Layer **layers, Screen *screen); //
 
 /** Frees the layer arrays. */
 void layer_dispose(Layer **layers);

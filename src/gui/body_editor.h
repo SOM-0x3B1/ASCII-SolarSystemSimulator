@@ -12,8 +12,10 @@ void bodyEditor_switchTo(Program *p);
 /** Renders the current body editor Gui element.*/
 void bodyEditor_render(Program *program, LayerInstances *li, Screen *screen, Gui *gui);
 
-/** Processes the input text after pressing enter.*/
-void bodyEditor_processTextInput(Program *program, Gui *gui, Simulation *sim);
+/** Processes the input text after pressing enter.
+ *  @return Success / error
+ */
+Error bodyEditor_processTextInput(Program *program, Gui *gui, Simulation *sim);
 
 /** Moves and places the edited body on the simulation window. */
 void bodyEditor_processPlacementInput(Program *program, Gui *gui, Simulation *sim);

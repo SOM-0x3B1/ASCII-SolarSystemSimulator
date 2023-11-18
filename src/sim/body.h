@@ -11,7 +11,7 @@
 
 
 /** Allocates the body array, and creates a sun.*/
-int body_init(Simulation *sim);
+Error body_init(Simulation *sim);
 
 /**
  * Creates a new body.

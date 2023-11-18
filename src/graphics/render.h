@@ -9,9 +9,9 @@
 
 /**
  * Allocates memory for the screenbuffer.
- * @return failure
+ * @return Successful / error
  */
-bool render_init(Screen *screen);
+Error render_init(Screen *screen);
 /** Frees the memory of the screenbuffer. */
 void render_dispose(Screen *screen);
 

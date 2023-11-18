@@ -6,8 +6,11 @@
 #include "body.h"
 
 
-/** Allocates memory for the body array. */
-int bodyArray_init(BodyArray *ba);
+/**
+ * Allocates memory for the body array.
+ * @return Is successful
+ */
+Error bodyArray_init(BodyArray *ba);
 
 /** Frees the memory of the body array. */
 void bodyArray_dispose(BodyArray *ba);

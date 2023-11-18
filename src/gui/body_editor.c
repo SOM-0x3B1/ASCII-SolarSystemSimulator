@@ -35,46 +35,69 @@ void bodyEditor_render(Program *program, LayerInstances *li, Screen *screen, Gui
     }
 }
 
-void bodyEditor_processTextInput(Program *program, Gui *gui, Simulation *sim) {
+Error bodyEditor_processTextInput(Program *program, Gui *gui, Simulation *sim) {
     econio_gotoxy((int) gui->textPos.x, (int)gui->textPos.y);
     econio_normalmode();
+
+    char sValue1[32];
+    char sValue2[32];
+    double value1;
+    double value2;
+
     switch (gui->bodyEditor_state) {
         case BODY_SET_NAME:
-            scanf("%s", sim->editedBody->name);
-            if (gui->editMenu_state == EDIT_MENU_STATE_ADD_BODY)
-                gui->bodyEditor_state = BODY_SET_MASS;
-            else
-                program->state = PROGRAM_STATE_EDIT_MENU;
+            if (scanf("%s", sim->editedBody->name) == 1) {
+                if (gui->editMenu_state == EDIT_MENU_STATE_ADD_BODY)
+                    gui->bodyEditor_state = BODY_SET_MASS;
+                else
+                    program->state = PROGRAM_STATE_EDIT_MENU;
+            } else
+                return ERR_ADDBODY_VALUE;
             break;
         case BODY_SET_MASS:
-            scanf("%lf", &sim->editedBody->mass);
-            if (gui->editMenu_state == EDIT_MENU_STATE_ADD_BODY)
-                gui->bodyEditor_state = BODY_SET_R;
-            else
-                program->state = PROGRAM_STATE_EDIT_MENU;
+            scanf("%s", sValue1);
+            if (sscanf(sValue1, "%lf", &value1) == 1 && value1 >= 0) {
+                sim->editedBody->mass = value1;
+                if (gui->editMenu_state == EDIT_MENU_STATE_ADD_BODY)
+                    gui->bodyEditor_state = BODY_SET_R;
+                else
+                    program->state = PROGRAM_STATE_EDIT_MENU;
+            } else
+                return ERR_ADDBODY_VALUE;
             break;
         case BODY_SET_R:
-            scanf("%lf", &sim->editedBody->r);
-            if (gui->editMenu_state == EDIT_MENU_STATE_ADD_BODY) {
-                program->state = PROGRAM_STATE_PLACING_BODY;
-                gui->bodyEditor_state = BODY_SET_POS;
+            scanf("%s", sValue1);
+            if (sscanf(sValue1, "%lf", &value1) == 1 && value1 > 0) {
+                sim->editedBody->r = value1;
+                if (gui->editMenu_state == EDIT_MENU_STATE_ADD_BODY) {
+                    program->state = PROGRAM_STATE_PLACING_BODY;
+                    gui->bodyEditor_state = BODY_SET_POS;
+                } else
+                    program->state = PROGRAM_STATE_EDIT_MENU;
             } else
-                program->state = PROGRAM_STATE_EDIT_MENU;
+                return ERR_ADDBODY_VALUE;
             break;
         case BODY_SET_V:
-            scanf("%lf %lf", &sim->editedBody->velocity.x, &sim->editedBody->velocity.y);
-            sim->editedBody->velocity.y = -sim->editedBody->velocity.y;
-            if (gui->editMenu_state == EDIT_MENU_STATE_ADD_BODY) {
-                program->state = PROGRAM_STATE_EDIT_MENU;
-                gui->editMenu_state = EDIT_MENU_STATE_EDIT_BODY_SET;
+            scanf("%s %s", sValue1, sValue2);
+            if (sscanf(sValue1, "%lf", &value1) == 1 && sscanf(sValue2, "%lf", &value2) == 1) {
+                sim->editedBody->velocity.x = value1;
+                sim->editedBody->velocity.y = value2;
+                sim->editedBody->velocity.y = -sim->editedBody->velocity.y;
+                if (gui->editMenu_state == EDIT_MENU_STATE_ADD_BODY) {
+                    program->state = PROGRAM_STATE_EDIT_MENU;
+                    gui->editMenu_state = EDIT_MENU_STATE_EDIT_BODY_SET;
+                } else
+                    program->state = PROGRAM_STATE_EDIT_MENU;
             } else
-                program->state = PROGRAM_STATE_EDIT_MENU;
+                return ERR_ADDBODY_VALUE;
             break;
         default:
             break;
     }
     econio_rawmode();
     econio_gotoxy(0, 0);
+
+    return SUCCESS;
 }
 
 

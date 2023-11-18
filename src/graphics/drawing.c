@@ -36,7 +36,7 @@ void drawing_drawLine(Layer *l, int x, int y, int length, bool vertical, char c,
 }
 
 
-void drawing_drawRectangle(Layer *l, int x1, int y1, int x2, int y2, char c, Screen *screen){
+void drawing_drawRectangleFill(Layer *l, int x1, int y1, int x2, int y2, char c, Screen *screen){
     sortPoints(x1, y1, x2, y2);
     for (int y = y1; y <= y2 && y < screen->height; ++y) {
         for (int x = x1; x <= x2 && x < screen->width; ++x)
@@ -44,21 +44,26 @@ void drawing_drawRectangle(Layer *l, int x1, int y1, int x2, int y2, char c, Scr
     }
 }
 
+void drawing_drawRectangleOutline(Layer *l, int x1, int y1, int x2, int y2, Screen *screen){
+    drawing_drawLine(l, x1 + 1, y1, x2-x1 - 2, false, '_', screen);
+    drawing_drawLine(l, x1, y2, x2- x1, false, '_', screen);
+    drawing_drawLine(l, x1, y1 + 1, y2 - y1 - 1, true, '|', screen);
+    drawing_drawLine(l, x2, y1 + 1, y2 - y1 - 1, true, '|', screen);
+}
 
-int drawing_drawBox(Layer *l, int x1, int y1, int x2, int y2, const char* title, Screen *screen){
+
+int drawing_drawBox(Layer *l, int x1, int y1, int x2, int y2, const char* title, Screen *screen) {
     sortPoints(x1, y1, x2, y2);
 
     int xCenter = x1 + (x2 - x1) / 2;
 
-    drawing_drawRectangle(l, x1 + 1, y1 + 1, x2 - 1, y2 - 1, ' ', screen);
+    //drawing_drawRectangleOutline(l, x1 - 1, y1 + 1, x2 + 1, y2+1, screen);
+    drawing_drawRectangleFill(l, x1 + 1, y1 + 1, x2 - 1, y2 - 1, ' ', screen);
+    drawing_drawRectangleOutline(l, x1, y1, x2, y2, screen);
 
-    drawing_drawLine(l, x1 + 1, y1, x2-x1 - 2, false, '_', screen);
-    drawing_drawText(l, xCenter - (int)strlen(title) / 2, y1 + 1, title, screen);
-    drawing_drawLine(l, x1 + 1, y1 + 2, x2 - x1 -2, false, '_', screen);
-    drawing_drawLine(l, x1, y2, x2- x1, false, '_', screen);
+    drawing_drawLine(l, x1 + 1, y1 + 2, x2 - x1 - 2, false, '_', screen);
 
-    drawing_drawLine(l, x1, y1 + 1, y2 - y1 - 1, true, '|', screen);
-    drawing_drawLine(l, x2, y1 + 1, y2 - y1 - 1, true, '|', screen);
+    drawing_drawText(l, xCenter - (int) strlen(title) / 2, y1 + 1, title, screen);
 
     return xCenter;
 }

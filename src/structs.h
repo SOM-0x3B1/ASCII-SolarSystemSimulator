@@ -6,30 +6,6 @@
 #include <time.h>
 
 
-//============= Program =================
-
-typedef enum ProgramState{
-    PROGRAM_STATE_EDIT_MENU,
-    PROGRAM_STATE_SIMULATION,
-    PROGRAM_STATE_TEXT_INPUT,
-    PROGRAM_STATE_PLACING_BODY,
-} ProgramState;
-
-/** Which part of the program should process the text input. */
-typedef enum TextInputDest{
-    TEXT_INPUT_BODY_EDITOR,
-    TEXT_INPUT_EXPORT,
-    TEXT_INPUT_IMPORT,
-} TextInputDest;
-
-typedef struct Program{
-    ProgramState state;
-    TextInputDest textInputDest;
-    double sleepTime; // Regulates simulation speed (and FPS)
-    bool exiting;
-} Program;
-
-
 
 //============= Vector geometry =================
 
@@ -182,6 +158,49 @@ typedef struct Screen{
     time_t frameCountResetedTime; // The last time the FPS was evaluated
     int frameCount; // Frames since last reset (~1s)
 } Screen;
+
+
+
+//============= Error =================
+
+typedef enum Error {
+    SUCCESS,
+    ERR_SETTINGS_OPEN_FILE,
+    ERR_SETTINGS_PARAMETER,
+    ERR_SETTIGNS_VALUE,
+    ERR_MEMORY,
+    ERR_ADDBODY_VALUE,
+    ERR_FS_FILENAME,
+    ERR_EXPORT_WRITE,
+    ERR_IMPORT_OPEN_FILE,
+    ERR_IMPORT_VALUE
+} Error;
+
+
+
+//============= Program =================
+
+typedef enum ProgramState{
+    PROGRAM_STATE_EDIT_MENU,
+    PROGRAM_STATE_SIMULATION,
+    PROGRAM_STATE_TEXT_INPUT,
+    PROGRAM_STATE_PLACING_BODY,
+} ProgramState;
+
+/** Which part of the program should process the text input. */
+typedef enum TextInputDest{
+    TEXT_INPUT_BODY_EDITOR,
+    TEXT_INPUT_EXPORT,
+    TEXT_INPUT_IMPORT,
+} TextInputDest;
+
+typedef struct Program{
+    ProgramState state;
+    TextInputDest textInputDest;
+    double sleepTime; // Regulates simulation speed (and FPS)
+    Error error;
+    bool exiting;
+} Program;
 
 
 #endif //ASCII_SSS_STRUCTS_H

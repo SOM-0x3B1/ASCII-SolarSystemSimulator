@@ -20,7 +20,7 @@ void editMenu_switchTo(EconioKey key, Program *program, Gui *gui, Screen *screen
 void editMenu_render(LayerInstances *li, Screen *screen, Gui *gui, Simulation *sim);
 
 /** Reads raw input. */
-void editMenu_processInput(Program *program, Simulation *sim, Screen *screen, Gui *gui, LayerInstances *li);
+Error editMenu_processInput(Program *program, Simulation *sim, Screen *screen, Gui *gui, LayerInstances *li);
 
 
 #endif //ASCII_SSS_EDIT_MENU_H

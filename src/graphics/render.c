@@ -11,7 +11,7 @@
 #include "../fs.h"
 
 
-bool render_init(Screen *screen) {
+Error render_init(Screen *screen) {
     size_t buffSize = screen->width * screen->height * sizeof(char);
     screen->buffer = (char *) malloc(buffSize);
 
@@ -19,12 +19,12 @@ bool render_init(Screen *screen) {
 
     if (screen->buffer != NULL) {
         memset(screen->buffer, '\0', buffSize);
-        if (setvbuf(stdout, screen->buffer, _IOFBF, screen->height * screen->width))
-            return false;
+        if (setvbuf(stdout, screen->buffer, _IOFBF, screen->height * screen->width) != 0)
+            return ERR_MEMORY;
     } else
-        return false;
+        return ERR_MEMORY;
 
-    return true;
+    return SUCCESS;
 }
 void render_dispose(Screen *screen){
     free(screen->buffer);
@@ -58,6 +58,8 @@ static void render_handleFPS(Program *program, Simulation *sim, Screen *screen) 
 
 
 void render_refreshScreen(Program *program, Simulation *sim, Screen *screen, LayerStatic *ls){
+    econio_gotoxy(0,0);
+
     for (int y = 0; y < screen->height; ++y) {
         for (int x = 0; x < screen->width; ++x) {
             bool empty = true;

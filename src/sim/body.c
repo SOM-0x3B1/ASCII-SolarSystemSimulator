@@ -25,17 +25,17 @@ Body *body_new(char *name, Vector pos, Vector v, double r, double mass, char col
 }
 
 
-int body_init(Simulation *sim) {
-    if (bodyArray_init(&sim->bodyArray) != 0)
-        return 1; // failed to allocate memory for body array
+Error body_init(Simulation *sim) {
+    if (bodyArray_init(&sim->bodyArray) != SUCCESS)
+        return ERR_MEMORY; // failed to allocate memory for body array
 
     sim->sun = body_new("Sun", (Vector) {0, 0}, (Vector) {0, 0}, 7, sim->solarMass, '@', sim);
     if (sim->sun == NULL)
-        return 2; // failed to allocate memory for sun
+        return ERR_MEMORY;
 
     sim->following = sim->sun;
 
-    return 0;
+    return SUCCESS;
 }
 
 

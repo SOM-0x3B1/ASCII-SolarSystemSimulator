@@ -7,32 +7,26 @@
 
 #define MAX_FILENAME_LENGTH 250
 
-
 /** Copies the string name of the parameter into the destination from the source. */
-static int getINIParam(char* dest, const char* src) {
-    int i;
-    for (i = 0; src[i] != '='; ++i)
-        dest[i] = src[i];
-    dest[i] = '\0';
-
-    return i;
+static void getParam(char *dest, const char *src){
+    int i = 0, j = 0;
+    for (; src[i] != '\0' && src[i] != '=' ; ++i)
+        dest[j++] = src[i];
+    dest[j] = '\0';
 }
 
-/** Reads and converts the value from a line. */
-// TODO: replace with built-in function
-static int settings_getIntValue(const char* src, int start, int *value) {
-    *value = 0;
-    int i;
-    for (i = start + 1; src[i] != '\0'; ++i) {
-        if(src[i] < '0' || src[i] > '9')
-            return 1;
-        *value = *value * 10 + (src[i] - '0');
-    }
-    return 0;
+/** Copies the value string into the destination from the source. */
+static void getSValue(char *dest, const char *src){
+    int i = 0, j = 0;
+    while (src[i] != '\0' && src[i] != '=')
+        i++;
+    i++;
+    for (; src[i] != '\0'; ++i)
+        dest[j++] = src[i];
+    dest[j] = '\0';
 }
 
-
-int settings_loadSettings(Simulation *sim, Screen *screen) {
+Error settings_loadSettings(Simulation *sim, Screen *screen) {
     FILE *f;
     f = fopen("settings.ini", "r");
 
@@ -40,39 +34,38 @@ int settings_loadSettings(Simulation *sim, Screen *screen) {
         char line[32];
         while (fscanf(f, "%s", line) != EOF) {
             char param[32];
-            int valueStart = getINIParam(param, line);
+            char sValue[32];
 
-            int value;
-            if (settings_getIntValue(line, valueStart, &value) != 0)
-                return 3; // invalid value
+            getParam(param, line);
+            getSValue(sValue, line);
 
-            if (strcmp(param, "screen_width") == 0)
-                screen->width = value;
-            else if (strcmp(param, "screen_height") == 0)
-                screen->height = value;
-            else if (strcmp(param, "targetFPS") == 0) {
-                if(value > 0)
-                    screen->targetFPS = value;
-                else
-                    return 4; // target fps must be higher than 0
+            double value = 0;
+            if (sscanf(sValue, "%lf", &value) != 1)
+                return ERR_SETTIGNS_VALUE; // invalid value
+
+            if (strcmp(param, "screen_width") == 0) {
+                if (value > 0) screen->width = (int) value;
+                else return ERR_SETTIGNS_VALUE;
+            } else if (strcmp(param, "screen_height") == 0) {
+                if (value > 0) screen->height = (int) value;
+                else return ERR_SETTIGNS_VALUE;
+            } else if (strcmp(param, "targetFPS") == 0) {
+                if (value > 0) screen->targetFPS = (int) value;
+                else return ERR_SETTIGNS_VALUE;
             } else if (strcmp(param, "solarMass") == 0) {
-                if(value > 0)
-                    sim->solarMass = value;
-                else
-                    return 5; // sunmass must be higher than 0
+                if (value > 0) sim->solarMass = value;
+                else return ERR_SETTIGNS_VALUE;
             } else if (strcmp(param, "detectCollisionPercentage") == 0) {
-                if(value > 0)
-                    sim->detectCollisionPercentage = (double)value / 100;
-                else
-                    return 6; // sunmass must be higher than 0
+                if (value > 0) sim->detectCollisionPercentage = (double) value / 100;
+                else return ERR_SETTIGNS_VALUE;
             } else
-                return 2; // invalid parameter
+                return ERR_SETTINGS_PARAMETER; // invalid parameter
         }
         fclose(f);
     } else
-        return 1; // unable to open
+        return ERR_SETTINGS_OPEN_FILE; // unable to open
 
-    return 0;
+    return SUCCESS;
 }
 
 
@@ -102,7 +95,11 @@ static int checkFilename(const char *fn){
 }
 
 
-int export_export(char *filename, Simulation *sim) {
+/**
+ * Creates a new file, and writes the content of the body array into it.
+ * @return Success / error
+ */
+static Error export_export(char *filename, Simulation *sim) {
     FILE *f;
     f = fopen(strcat(filename, ".tsv"), "w");
     if (f != NULL) {
@@ -117,24 +114,26 @@ int export_export(char *filename, Simulation *sim) {
         }
         fclose(f);
     } else
-        return 1; // unable to create file
+        return ERR_EXPORT_WRITE; // unable to create file
 
-    return 0;
+    return SUCCESS;
 }
 
 
-void export_processTextInput(Gui *gui, Program *program, Simulation *sim) {
+Error export_processTextInput(Gui *gui, Program *program, Simulation *sim) {
     econio_gotoxy((int) gui->textPos.x, (int) gui->textPos.y);
     econio_normalmode();
 
     char filename[MAX_FILENAME_LENGTH + 5];
     scanf("%s", filename);
 
-    if(checkFilename(filename) == 0)
-        export_export(filename, sim);
-
     econio_rawmode();
     econio_gotoxy(0, 0);
 
     program->state = PROGRAM_STATE_EDIT_MENU;
+
+    if(checkFilename(filename) == 0)
+        return export_export(filename, sim);
+    else
+        return ERR_FS_FILENAME;
 }
