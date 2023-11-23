@@ -138,7 +138,7 @@ void bodyEditor_processPlacementInput(Program *program, Gui *gui, Simulation *si
         else
             if(bodyEditor_moveBody(key, sim)) {
                 if (gui->editMenu_state == EDIT_MENU_STATE_ADD_BODY)
-                    sim->editedBody->trail.head->position = vector_toPoint(sim->editedBody->position);
+                    sim->editedBody->trail.top->position = vector_toPoint(sim->editedBody->position);
             }
     }
 }

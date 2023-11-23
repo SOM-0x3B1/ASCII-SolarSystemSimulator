@@ -31,7 +31,7 @@ typedef struct Trail{
 
 /** A queue of trail points. */
 typedef struct TrailQueue{
-    Trail *head;
+    Trail *top;
     int length;
     int capacity; // Max capacity of the queue, after it automatically dequeues the last element
 } TrailQueue;

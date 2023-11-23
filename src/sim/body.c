@@ -53,9 +53,9 @@ void body_addGravityEffect(Body *dest, Body const *src, Simulation *sim){
 
 
 void trailQueue_init(TrailQueue *tq, Body *b) {
-    tq->head = (Trail *) malloc(sizeof(Trail));
-    tq->head->position = vector_toPoint(b->position);
-    tq->head->next = NULL;
+    tq->top = (Trail *) malloc(sizeof(Trail));
+    tq->top->position = vector_toPoint(b->position);
+    tq->top->next = NULL;
 
     tq->capacity = TRAIL_LENGTH;
     tq->length = 1;
@@ -63,7 +63,7 @@ void trailQueue_init(TrailQueue *tq, Body *b) {
 
 
 Trail *trail_dequeue(TrailQueue *tq){
-    Trail *ct = tq->head;
+    Trail *ct = tq->top;
     for (int i = 0; i < tq->length - 2; ++i)
         ct = ct->next;
 
@@ -79,8 +79,8 @@ void trail_enqueue(TrailQueue *tq, Vector v) {
     Point p = vector_toPoint(v);
     Trail *newT = (Trail *) malloc(sizeof(Trail));
     newT->position = p;
-    newT->next = tq->head;
-    tq->head = newT;
+    newT->next = tq->top;
+    tq->top = newT;
     tq->length++;
 
     if(tq->length > tq->capacity)
@@ -88,7 +88,7 @@ void trail_enqueue(TrailQueue *tq, Vector v) {
 }
 
 void trailQueue_clear(TrailQueue *tq){
-    Trail *cNode = tq->head;
+    Trail *cNode = tq->top;
     while (cNode != NULL){
         Trail *next = cNode->next;
         free(cNode);
@@ -148,7 +148,7 @@ static void body_drawInfo(Body const *body, LayerInstances *li, Screen *screen) 
 
 /** Draws the trail part of a body. */
 static void body_drawTrail(Body const *body, LayerInstances *li, Screen *screen) {
-    Trail *t = body->trail.head;
+    Trail *t = body->trail.top;
     int i = 1;
     do {
         Point p = t->position;
