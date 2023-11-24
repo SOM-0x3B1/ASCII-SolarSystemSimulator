@@ -10,6 +10,7 @@
 #include "sim/body_array.h"
 #include "lib/debugmalloc.h"
 #include "gui/body_editor.h"
+#include "gui/main_menu.h"
 #include "fs.h"
 #include "gui/error.h"
 
@@ -30,7 +31,7 @@ int main() {
     program.sleepTime = 0.02;
     program.error = SUCCESS;
     program.exiting = false;
-    program.state = PROGRAM_STATE_SIMULATION;
+    program.state = PROGRAM_STATE_MAIN_MENU;
 
     Screen screen;
     screen.width = 119;
@@ -50,12 +51,16 @@ int main() {
     Gui gui;
     gui.editMenu_state = EDIT_MENU_STATE_MAIN;
     gui.cursorPos = 0;
+    gui.mainMenu_animation_frame = 0;
 
     LayerStatic layerStatic;
 
 
     // Attept to load settings.ini
-    program.error = settings_loadSettings(&sim, &screen);
+    program.error = fs_settings_loadSettings(&sim, &screen);
+
+    // Attempts to load earth animation
+    fs_loadMainMenu(&sim, &screen, &gui);
 
 
     screen.bufferSize = screen.height * screen.width * sizeof(char);
@@ -73,13 +78,18 @@ int main() {
     while (!program.exiting){
         if(program.error == SUCCESS) {
             switch (program.state) {
-                case PROGRAM_STATE_EDIT_MENU:
-                    simulation_tick(&sim, &screen);
-                    program.error = editMenu_processInput(&program, &sim, &screen, &gui, &layerStatic.layerInstances);
+                case PROGRAM_STATE_MAIN_MENU:
+                    mainMenu_render(&screen, &layerStatic.layerInstances, &gui);
+                    mainMenu_processInput(&program, &layerStatic.layerInstances);
+                    render_refreshScreen(&program, &sim, &screen, &layerStatic);
                     break;
                 case PROGRAM_STATE_SIMULATION:
                     simulation_tick(&sim, &screen);
                     simulation_processInput(&sim, &screen, &program, &gui, &layerStatic.layerInstances);
+                    break;
+                case PROGRAM_STATE_EDIT_MENU:
+                    simulation_tick(&sim, &screen);
+                    program.error = editMenu_processInput(&program, &sim, &screen, &gui, &layerStatic.layerInstances);
                     break;
                 case PROGRAM_STATE_PLACING_BODY:
                     bodyEditor_processPlacementInput(&program, &gui, &sim);
@@ -89,7 +99,8 @@ int main() {
                     break;
             }
 
-            render_fullRender(&program, &sim, &screen, &layerStatic, &gui);
+            if(program.state != PROGRAM_STATE_MAIN_MENU)
+                render_fullRender(&program, &sim, &screen, &layerStatic, &gui);
 
             // Speed & FPS regulator
             if (sim.pausedByUser || !sim.fullSpeed)
@@ -102,7 +113,7 @@ int main() {
                         program.error = bodyEditor_processTextInput(&program, &gui, &sim);
                         break;
                     case TEXT_INPUT_EXPORT:
-                        program.error = export_processTextInput(&gui, &program, &sim);
+                        program.error = fs_export_processTextInput(&gui, &program, &sim);
                         break;
                     case TEXT_INPUT_IMPORT:
                         break;

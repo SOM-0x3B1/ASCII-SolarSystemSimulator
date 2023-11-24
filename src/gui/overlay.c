@@ -34,6 +34,8 @@ static char *programStateToString(ProgramState s){
             return "PAUSED (INPUT)";
         case PROGRAM_STATE_PLACING_BODY:
             return "PAUSED (PLACING)";
+        case PROGRAM_STATE_MAIN_MENU:
+            return "PAUSED (MAIN)";
     }
 }
 

@@ -7,12 +7,12 @@ static void layer_clear(Layer *l, Screen *screen);
 
 
 Error layer_init(LayerInstances *li, Layer **layers, Screen *screen){
-    li->overlayLayer.enabled = true;
-    li->menuLayer.enabled = false;
-    li->infoLayer.enabled = true;
-    li->bodyLayer.enabled = true;
-    li->rangeLayer.enabled = true;
-    li->trailLayer.enabled = true;
+    li->overlayLayer.enabled = false;
+    li->menuLayer.enabled = true;
+    li->infoLayer.enabled = false;
+    li->bodyLayer.enabled = false;
+    li->rangeLayer.enabled = false;
+    li->trailLayer.enabled = false;
 
     layers[0] = &li->overlayLayer;
     layers[1] = &li->menuLayer;

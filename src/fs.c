@@ -26,7 +26,7 @@ static void getSValue(char *dest, const char *src){
     dest[j] = '\0';
 }
 
-Error settings_loadSettings(Simulation *sim, Screen *screen) {
+Error fs_settings_loadSettings(Simulation *sim, Screen *screen) {
     FILE *f;
     f = fopen("settings.ini", "r");
 
@@ -69,13 +69,42 @@ Error settings_loadSettings(Simulation *sim, Screen *screen) {
 }
 
 
-void export_switchTo(Program *program){
+Error fs_loadMainMenu(Simulation *sim, Screen *screen, Gui *gui) {
+    FILE *f;
+    f = fopen("earth-animation.txt", "r");
+
+    if (f == NULL)
+        return ERR_MAIN_MENU_ART_MISSING;
+
+    for (int i = 0; i < EARTH_ANIMATION_FRAMES; ++i) {
+        for (int y = 0; y < EARTH_ANIMATION_HEIGHT; ++y) {
+            fgets(gui->mainMenu_animation_art[i][y], EARTH_ANIMATION_WIDTH + 1, f);
+            gui->mainMenu_animation_art[i][y][60] = '\0';
+        }
+    }
+    fclose(f);
+    f = NULL;
+
+    f = fopen("title.txt", "r");
+    if (f == NULL)
+        return ERR_MAIN_MENU_ART_MISSING;
+
+    for (int y = 0; y < 13; ++y) {
+        fgets(gui->mainMenu_title[y], 60, f);
+        gui->mainMenu_title[y][51] = '\0';
+    }
+
+    return SUCCESS;
+}
+
+
+void fs_export_switchTo(Program *program){
     program->state = PROGRAM_STATE_TEXT_INPUT;
     program->textInputDest = TEXT_INPUT_EXPORT;
 }
 
 
-void export_render(Gui *gui, LayerInstances *li, Screen *screen){
+void fs_export_render(Gui *gui, LayerInstances *li, Screen *screen){
     gui->textPos = drawing_drawInputPrompt(&li->menuLayer, screen->height / 2 - 2, "Export system", "Name:", screen);
 }
 
@@ -120,7 +149,7 @@ static Error export_export(char *filename, Simulation *sim) {
 }
 
 
-Error export_processTextInput(Gui *gui, Program *program, Simulation *sim) {
+Error fs_export_processTextInput(Gui *gui, Program *program, Simulation *sim) {
     econio_gotoxy((int) gui->textPos.x, (int) gui->textPos.y);
     econio_normalmode();
 
@@ -132,7 +161,7 @@ Error export_processTextInput(Gui *gui, Program *program, Simulation *sim) {
 
     program->state = PROGRAM_STATE_EDIT_MENU;
 
-    if(checkFilename(filename) == 0)
+    if (checkFilename(filename) == 0)
         return export_export(filename, sim);
     else
         return ERR_FS_FILENAME;

@@ -113,7 +113,15 @@ typedef enum BodyEditorState {
     BODY_SET_V,
 } BodyEditorState;
 
+
+#define EARTH_ANIMATION_FRAMES 240
+#define EARTH_ANIMATION_HEIGHT 30
+#define EARTH_ANIMATION_WIDTH 107
+
 typedef struct Gui{
+    char mainMenu_animation_art[EARTH_ANIMATION_FRAMES][EARTH_ANIMATION_HEIGHT][EARTH_ANIMATION_WIDTH + 1];
+    char mainMenu_title[13][53];
+    int mainMenu_animation_frame;
     EditMenuSTATE editMenu_state;
     BodyEditorState bodyEditor_state;
     int cursorPos; // The current position of the selection cursor
@@ -168,6 +176,7 @@ typedef enum Error {
     ERR_SETTINGS_OPEN_FILE,
     ERR_SETTINGS_PARAMETER,
     ERR_SETTIGNS_VALUE,
+    ERR_MAIN_MENU_ART_MISSING,
     ERR_MEMORY,
     ERR_ADDBODY_VALUE,
     ERR_FS_FILENAME,
@@ -181,6 +190,7 @@ typedef enum Error {
 //============= Program =================
 
 typedef enum ProgramState{
+    PROGRAM_STATE_MAIN_MENU,
     PROGRAM_STATE_EDIT_MENU,
     PROGRAM_STATE_SIMULATION,
     PROGRAM_STATE_TEXT_INPUT,

@@ -196,7 +196,7 @@ static Error editMenu_selectMainOption(Gui *gui, Simulation *sim, Screen *screen
             li->trailLayer.enabled = !li->trailLayer.enabled;
             break;
         case OPTION_EXPORT_SYSTEM:
-            export_switchTo(program);
+            fs_export_switchTo(program);
             break;
         case OPTION_EXIT:
             program->exiting = true;
