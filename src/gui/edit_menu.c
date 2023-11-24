@@ -2,6 +2,7 @@
 #include "../graphics/drawing.h"
 #include "body_editor.h"
 #include "../fs.h"
+#include "string.h"
 
 
 void editMenu_switchTo(EconioKey key, Program *program, Gui *gui, Screen *screen, LayerInstances *li){
@@ -31,28 +32,38 @@ static void editMenu_renderSelection(int i, int y, Gui *gui, LayerInstances *li,
 }
 
 
-static char* mainOptionToString(EditMenuMainOption o){
+static void mainOptionToString(char *res, EditMenuMainOption o){
     switch (o) {
         case OPTION_ADD_BODY:
-            return "Add body";
+            strcpy(res, "Add body");
+            break;
         case OPTION_EDIT_BODY:
-            return "Edit body";
+            strcpy(res, "Edit body");
+            break;
         case OPTION_DELETE_BODY:
-            return "Delete body";
+            strcpy(res, "Delete body");
+            break;
         case OPTION_FOLLOW_BODY:
-            return "Follow body";
+            strcpy(res, "Follow body");
+            break;
         case OPTION_TOGGLE_DETAILS:
-            return "Toggle details";
+            strcpy(res, "Toggle details");
+            break;
         case OPTION_TOGGLE_G_RANGE:
-            return "Toggle G range";
+            strcpy(res, "Toggle G range");
+            break;
         case OPTION_TOGGLE_TRAILS:
-            return "Toggle trails";
+            strcpy(res, "Toggle trails");
+            break;
         case OPTION_IMPORT_SYSTEM:
-            return "Import system";
+            strcpy(res, "Import system");
+            break;
         case OPTION_EXPORT_SYSTEM:
-            return "Export system";
+            strcpy(res, "Export system");
+            break;
         default:
-            return "Exit";
+            strcpy(res, "Exit");
+            break;
     }
 }
 
@@ -70,7 +81,9 @@ static void editMenu_renderMain(LayerInstances *li, Gui *gui, Screen *screen){
 
         int y = 5 + i + yOffset;
 
-        drawing_drawText(&li->menuLayer, screen->width - 28, y, mainOptionToString(i), screen);
+        char sMainOption[20];
+        mainOptionToString(sMainOption, i);
+        drawing_drawText(&li->menuLayer, screen->width - 28, y, sMainOption, screen);
         editMenu_renderSelection(i, y, gui, li, screen);
 
         if(i == OPTION_TOGGLE_DETAILS)
@@ -97,20 +110,26 @@ static void editMenu_renderBodyList(Simulation *sim, LayerInstances *li, Screen 
 }
 
 
-static char* bodyOptionToString(BodyEditableProperty p){
+static void bodyOptionToString(char *res, BodyEditableProperty p){
     switch (p) {
         case BODY_PROPERTY_NAME:
-            return "Set name";
+            strcpy(res, "Set name");
+            break;
         case BODY_PROPERTY_MASS:
-            return "Set mass";
+            strcpy(res, "Set mass");
+            break;
         case BODY_PROPERTY_R:
-            return "Set radius";
+            strcpy(res, "Set radius");
+            break;
         case BODY_PROPERTY_POS:
-            return "Set position";
+            strcpy(res, "Set position");
+            break;
         case BODY_PROPERTY_VEL:
-            return "Set velocity";
+            strcpy(res, "Set velocity");
+            break;
         default:
-            return "";
+            strcpy(res, "");
+            break;
     }
 }
 
@@ -122,7 +141,9 @@ static void editMenu_renderEditProperties(LayerInstances *li, Screen *screen, Si
     for (int i = 0; i < bodyEditableProperty_MAX; ++i) {
         int y = 6 + i;
 
-        drawing_drawText(&li->menuLayer, screen->width - 28, y, bodyOptionToString(i), screen);
+        char sBodyOption[15];
+        bodyOptionToString(sBodyOption, i);
+        drawing_drawText(&li->menuLayer, screen->width - 28, y, sBodyOption, screen);
         editMenu_renderSelection(i, y, gui, li, screen);
     }
 
@@ -282,20 +303,18 @@ static int getOptionCount(EditMenuSTATE s){
     switch (s) {
         case EDIT_MENU_STATE_MAIN:
             return EditMenuMainOption_MAX;
-        case EDIT_MENU_STATE_EDIT_BODY:
-        case EDIT_MENU_STATE_DELETE_BODY:
-        case EDIT_MENU_STATE_FOLLOW_BODY:
-            return -1;
         case EDIT_MENU_STATE_ADD_BODY:
         case EDIT_MENU_STATE_EDIT_BODY_SET:
             return bodyEditableProperty_MAX + 1;
+        default:
+            return -1;
     }
 }
 
 
 Error editMenu_processInput(Program *program, Simulation *sim, Screen *screen, Gui *gui, LayerInstances *li){
+    int key = 0;
     if (econio_kbhit()) {
-        int key;
         while (econio_kbhit())
             key = econio_getch();
 

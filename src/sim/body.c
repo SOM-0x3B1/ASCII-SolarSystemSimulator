@@ -186,7 +186,7 @@ static void body_draw(Body const *body, Simulation *sim, LayerInstances *li, Scr
             long long int dY = (y - p.y) * 2;
             long long int dx2dy2 = (dX * dX) + (dY * dY);
 
-            long long int dx2dy2Light;
+            long long int dx2dy2Light = 0;
             if(drawShadows) {
                 long long int ldX = x - pLight.x;
                 long long int ldY = (y - pLight.y) * 2;

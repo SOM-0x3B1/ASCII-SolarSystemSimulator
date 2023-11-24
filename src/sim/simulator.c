@@ -76,7 +76,7 @@ static bool simulation_moveCam(EconioKey key, Screen *screen){
 
 void simulation_processInput(Simulation *sim, Screen *screen, Program *program, Gui *gui, LayerInstances *li) {
     if (econio_kbhit()) {
-        int key;
+        int key = 0;
         while (econio_kbhit())
             key = econio_getch();
 

@@ -32,7 +32,7 @@ Error fs_settings_loadSettings(Simulation *sim, Screen *screen) {
 
     if(f != NULL) {
         char line[32];
-        while (fscanf(f, "%s", line) != EOF) {
+        while (fscanf(f, "%31s", line) != EOF) {
             char param[32];
             char sValue[32];
 
@@ -154,7 +154,9 @@ Error fs_export_processTextInput(Gui *gui, Program *program, Simulation *sim) {
     econio_normalmode();
 
     char filename[MAX_FILENAME_LENGTH + 5];
-    scanf("%s", filename);
+    char tempFormat[6];
+    sprintf(tempFormat, "%%%ds", MAX_FILENAME_LENGTH);
+    scanf(tempFormat, filename);
 
     econio_rawmode();
     econio_gotoxy(0, 0);

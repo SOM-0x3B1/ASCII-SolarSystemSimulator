@@ -25,17 +25,21 @@ static void overlay_renderHeader(Screen *screen, LayerInstances *li){
 
 
 /** Returns a string describing the current state of the program. */
-static char *programStateToString(ProgramState s){
+static void programStateToString(char *res, ProgramState s){
     switch (s) {
         case PROGRAM_STATE_SIMULATION:
         case PROGRAM_STATE_EDIT_MENU:
-            return "RUNNING";
+            strcpy(res, "RUNNING");
+            break;
         case PROGRAM_STATE_TEXT_INPUT:
-            return "PAUSED (INPUT)";
+            strcpy(res, "PAUSED (INPUT)");
+            break;
         case PROGRAM_STATE_PLACING_BODY:
-            return "PAUSED (PLACING)";
+            strcpy(res, "PAUSED (PLACING)");
+            break;
         case PROGRAM_STATE_MAIN_MENU:
-            return "PAUSED (MAIN)";
+            strcpy(res, "PAUSED (MAIN)");
+            break;
     }
 }
 
@@ -45,11 +49,15 @@ static void overlay_renderFooter(Program *program, Screen *screen, LayerInstance
     drawing_drawLine(&li->overlayLayer, 0, screen->height - 3, screen->width, false, '_', screen);
     drawing_drawLine(&li->overlayLayer, 0, screen->height - 2, screen->width, false, ' ', screen);
     drawing_drawText(&li->overlayLayer, 2, screen->height - 2, "Status:", screen);
+
+    char sProgramState[30];
+    programStateToString(sProgramState, program->state);
+
     if(!sim->pausedByUser || (program->state != PROGRAM_STATE_SIMULATION && program->state != PROGRAM_STATE_EDIT_MENU)) {
         if (sim->fullSpeed && program->state == PROGRAM_STATE_SIMULATION)
             drawing_drawText(&li->overlayLayer, 10, screen->height - 2, "RUNNING (FULL SPEED)", screen);
         else
-            drawing_drawText(&li->overlayLayer, 10, screen->height - 2, programStateToString(program->state), screen);
+            drawing_drawText(&li->overlayLayer, 10, screen->height - 2, sProgramState, screen);
     }
     else
         drawing_drawText(&li->overlayLayer, 10, screen->height - 2, "PAUSED (BY USER)", screen);
