@@ -34,7 +34,11 @@ static void errToString(char *res, Error error){
         case ERR_IMPORT_VALUE:
             strcpy(res, "Invalid body parameter in import file.");
             break;
+        case ERR_MAIN_MENU_ART_MISSING:
+            strcpy(res, "Missing main menu art files.");
+            break;
         default:
+            strcpy(res, "Unkown error.");
             break;
     }
 }

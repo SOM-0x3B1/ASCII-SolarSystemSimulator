@@ -119,9 +119,9 @@ typedef enum BodyEditorState {
 #define EARTH_ANIMATION_WIDTH 107
 
 typedef struct Gui{
-    char mainMenu_animation_art[EARTH_ANIMATION_FRAMES][EARTH_ANIMATION_HEIGHT][EARTH_ANIMATION_WIDTH + 1];
-    char mainMenu_title[13][53];
-    int mainMenu_animation_frame;
+    char mainMenu_animation[EARTH_ANIMATION_FRAMES][EARTH_ANIMATION_HEIGHT][EARTH_ANIMATION_WIDTH + 1]; // [frame][y][x]
+    char mainMenu_title[13][53];       // Title art
+    int mainMenu_animation_frameIndex; // Current frame
     EditMenuSTATE editMenu_state;
     BodyEditorState bodyEditor_state;
     int cursorPos; // The current position of the selection cursor
@@ -163,8 +163,8 @@ typedef struct Screen{
     Point offset;       // The top-left position of the camera
     int fps;
     int targetFPS;
-    time_t frameCountResetedTime; // The last time the FPS was evaluated
-    int frameCount; // Frames since last reset (~1s)
+    time_t frameCountResetedTime; // The last time FPS was evaluated
+    int frameCount;     // Frames since last reset (~1s)
 } Screen;
 
 

@@ -51,7 +51,7 @@ int main() {
     Gui gui;
     gui.editMenu_state = EDIT_MENU_STATE_MAIN;
     gui.cursorPos = 0;
-    gui.mainMenu_animation_frame = 0;
+    gui.mainMenu_animation_frameIndex = 0;
 
     LayerStatic layerStatic;
 
@@ -59,13 +59,18 @@ int main() {
     // Attept to load settings.ini
     program.error = fs_settings_loadSettings(&sim, &screen);
 
-    // Attempts to load earth animation
-    fs_loadMainMenu(&sim, &screen, &gui);
-
-
     screen.bufferSize = screen.height * screen.width * sizeof(char);
 
     init_modulesWithDMM(&program.exiting, &program, &layerStatic, &sim, &screen);
+
+
+    // Attempt to load main menu earth animation and title
+    if(fs_loadMainMenu(&sim, &screen, &gui) != SUCCESS) {
+        mainMenu_startSim(&program, &layerStatic.layerInstances);
+        error_render(ERR_MAIN_MENU_ART_MISSING, &screen, &layerStatic.layerInstances);
+        render_refreshScreen(&program, &sim, &screen, &layerStatic);
+        error_awaitConfirmation();
+    }
 
 
     // Adds some default bodies to the sim

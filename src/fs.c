@@ -78,8 +78,8 @@ Error fs_loadMainMenu(Simulation *sim, Screen *screen, Gui *gui) {
 
     for (int i = 0; i < EARTH_ANIMATION_FRAMES; ++i) {
         for (int y = 0; y < EARTH_ANIMATION_HEIGHT; ++y) {
-            fgets(gui->mainMenu_animation_art[i][y], EARTH_ANIMATION_WIDTH + 1, f);
-            gui->mainMenu_animation_art[i][y][60] = '\0';
+            fgets(gui->mainMenu_animation[i][y], EARTH_ANIMATION_WIDTH + 1, f);
+            gui->mainMenu_animation[i][y][60] = '\0';
         }
     }
     fclose(f);

@@ -13,7 +13,7 @@
  */
 Error fs_settings_loadSettings(Simulation *sim, Screen *screen);
 
-/** Loads the earth animation.
+/** Loads the earth animation and title for the main menu.
  *  @return Successful / error
  */
 Error fs_loadMainMenu(Simulation *sim, Screen *screen, Gui *gui);
