@@ -10,6 +10,15 @@ static double pow2(double x){
     return x * x;
 }
 
+
+Vector vector_create(double length, double degree){
+    Vector v;
+    double rad = degree * (3.14159265359 / 180.0);
+    v.x = length * cos(rad);
+    v.y = length * sin(rad);
+    return v;
+}
+
 Vector vector_add(Vector u, Vector v){
     Vector res = {u.x + v.x, u.y + v.y};
     return res;

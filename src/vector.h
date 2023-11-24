@@ -5,6 +5,9 @@
 #include "structs.h"
 
 
+/** Creates a vector from a length and a degree. */
+Vector vector_create(double length, double degree);
+
 /** Adds two vectors together. */
 Vector vector_add(Vector u, Vector v);
 

@@ -43,7 +43,7 @@ void bodyEditor_render(Program *program, LayerInstances *li, Screen *screen, Gui
     }
 }
 
-Error bodyEditor_processTextInput(Program *program, Gui *gui, Simulation *sim) {
+Error bodyEditor_processTextInput(Program *program, Gui *gui, Simulation *sim, Screen *screen) {
     econio_gotoxy((int) gui->textPos.x, (int)gui->textPos.y);
     econio_normalmode();
 
@@ -97,8 +97,9 @@ Error bodyEditor_processTextInput(Program *program, Gui *gui, Simulation *sim) {
         case BODY_SET_V:
             scanf("%31s %31s", sValue1, sValue2);
             if (sscanf(sValue1, "%lf", &value1) == 1 && sscanf(sValue2, "%lf", &value2) == 1) {
-                sim->editedBody->velocity.x = value1;
-                sim->editedBody->velocity.y = value2;
+                sim->editedBody->velocity = vector_create(value1 / screen->targetFPS / 3, value2);
+                /*sim->editedBody->velocity.x = value1;
+                sim->editedBody->velocity.y = value2;*/
                 sim->editedBody->velocity.y = -sim->editedBody->velocity.y;
                 if (gui->editMenu_state == EDIT_MENU_STATE_ADD_BODY) {
                     program->state = PROGRAM_STATE_EDIT_MENU;

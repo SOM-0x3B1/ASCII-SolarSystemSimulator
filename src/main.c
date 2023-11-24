@@ -115,7 +115,7 @@ int main() {
             if (program.state == PROGRAM_STATE_TEXT_INPUT) {
                 switch (program.textInputDest) {
                     case TEXT_INPUT_BODY_EDITOR:
-                        program.error = bodyEditor_processTextInput(&program, &gui, &sim);
+                        program.error = bodyEditor_processTextInput(&program, &gui, &sim, &screen);
                         break;
                     case TEXT_INPUT_EXPORT:
                         program.error = fs_export_processTextInput(&gui, &program, &sim);
