@@ -6,12 +6,12 @@
  * @param x base
  * @return base^2
  */
-static double pow2(double x){
+static double pow2(double x) {
     return x * x;
 }
 
 
-Vector vector_create(double length, double degree){
+Vector vector_create(double length, double degree) {
     Vector v;
     double rad = degree * (3.14159265359 / 180.0);
     v.x = length * cos(rad);
@@ -19,12 +19,12 @@ Vector vector_create(double length, double degree){
     return v;
 }
 
-Vector vector_add(Vector u, Vector v){
+Vector vector_add(Vector u, Vector v) {
     Vector res = {u.x + v.x, u.y + v.y};
     return res;
 }
 
-Vector vector_subtract(Vector u, Vector v){
+Vector vector_subtract(Vector u, Vector v) {
     Vector res = {u.x - v.x, u.y - v.y};
     return res;
 }
@@ -34,22 +34,22 @@ Vector vector_subtract(Vector u, Vector v){
     return res;
 }*/
 
-Vector vector_scalarMultiply(Vector u, double m){
+Vector vector_scalarMultiply(Vector u, double m) {
     Vector res = {u.x * m, u.y * m};
     return res;
 }
 
-Vector vector_scalarDivide(Vector u, double d){
+Vector vector_scalarDivide(Vector u, double d) {
     Vector res = {u.x / d, u.y / d};
     return res;
 }
 
-Vector vector_invert(Vector a){
+Vector vector_invert(Vector a) {
     Vector res = {-(a.x), -(a.y)};
     return res;
 }
 
-double vector_distance(Vector u, Vector v){
+double vector_distance(Vector u, Vector v) {
     return sqrt(pow2(u.x - v.x) + pow2(u.y - v.y));
 }
 
@@ -65,7 +65,7 @@ double vector_distance(Vector u, Vector v){
     return acos(m / (dU * dV));
 }*/
 
-Vector vector_unitVector(Vector u, Vector v){
+Vector vector_unitVector(Vector u, Vector v) {
     Vector w = vector_subtract(u, v);
     double d = vector_distance(u, v);
     return vector_scalarDivide(w, d);
@@ -77,12 +77,12 @@ Point vector_toPoint(Vector a) {
 }
 
 
-Point point_subtract(Point p, Point q){
+Point point_subtract(Point p, Point q) {
     Point res = {p.x - q.x, p.y - q.y};
     return res;
 }
 
-Point point_scalarMultiply(Point p, int m){
+Point point_scalarMultiply(Point p, int m) {
     Point res = {p.x * m, p.y * m};
     return res;
 }

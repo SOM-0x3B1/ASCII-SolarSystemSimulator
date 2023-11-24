@@ -6,7 +6,7 @@
 static void layer_clear(Layer *l, Screen *screen);
 
 
-Error layer_init(LayerInstances *li, Layer **layers, Screen *screen){
+Error layer_init(LayerInstances *li, Layer **layers, Screen *screen) {
     li->overlayLayer.enabled = false;
     li->menuLayer.enabled = true;
     li->infoLayer.enabled = false;
@@ -27,7 +27,7 @@ Error layer_init(LayerInstances *li, Layer **layers, Screen *screen){
         for (int y = 1; y < screen->height; ++y)
             layers[i]->text[y] = layers[i]->text[0] + y * screen->width;
 
-        if(layers[i]->text == NULL || layers[i]->text[0] == NULL)
+        if (layers[i]->text == NULL || layers[i]->text[0] == NULL)
             return ERR_MEMORY;
 
         layer_clear(layers[i], screen);
@@ -35,7 +35,8 @@ Error layer_init(LayerInstances *li, Layer **layers, Screen *screen){
 
     return SUCCESS;
 }
-void layer_dispose(Layer **layers){
+
+void layer_dispose(Layer **layers) {
     for (int i = 0; i < LAYER_COUNT; ++i) {
         free(layers[i]->text[0]);
         free(layers[i]->text);
@@ -43,8 +44,8 @@ void layer_dispose(Layer **layers){
 }
 
 
-void layer_writeAtXY(Layer *l, int x, int y, char c, Screen *screen){
-    if(x >= 0 && y >= 0 && x < screen->width && y < screen->height)
+void layer_writeAtXY(Layer *l, int x, int y, char c, Screen *screen) {
+    if (x >= 0 && y >= 0 && x < screen->width && y < screen->height)
         l->text[y][x] = c;
 }
 
@@ -56,6 +57,6 @@ static void layer_clear(Layer *l, Screen *screen) {
 
 void layer_clearAll(Layer **layers, Screen *screen) {
     for (int i = 0; i < LAYER_COUNT; ++i)
-        if(layers[i]->enabled)
+        if (layers[i]->enabled)
             layer_clear(layers[i], screen);
 }

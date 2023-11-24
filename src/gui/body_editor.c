@@ -6,7 +6,7 @@
 
 
 /** Returns the input promt text based on the bodyeditor's current state. */
-static void getPrompt(char *res, BodyEditorState s){
+static void getPrompt(char *res, BodyEditorState s) {
     switch (s) {
         case BODY_SET_NAME:
             strcpy(res, "Name:");
@@ -24,7 +24,7 @@ static void getPrompt(char *res, BodyEditorState s){
 }
 
 
-void bodyEditor_switchTo(Program *p){
+void bodyEditor_switchTo(Program *p) {
     p->state = PROGRAM_STATE_TEXT_INPUT;
     p->textInputDest = TEXT_INPUT_BODY_EDITOR;
 }
@@ -44,7 +44,7 @@ void bodyEditor_render(Program *program, LayerInstances *li, Screen *screen, Gui
 }
 
 Error bodyEditor_processTextInput(Program *program, Gui *gui, Simulation *sim, Screen *screen) {
-    econio_gotoxy((int) gui->textPos.x, (int)gui->textPos.y);
+    econio_gotoxy((int) gui->textPos.x, (int) gui->textPos.y);
     econio_normalmode();
 
     char sValue1[32];
@@ -59,7 +59,7 @@ Error bodyEditor_processTextInput(Program *program, Gui *gui, Simulation *sim, S
             fgets(name, 12, stdin);
             name[12] = '\0';
             for (int i = 0; i < 12; ++i)
-                if(name[i] == '\n')
+                if (name[i] == '\n')
                     name[i] = '\0';
             strcpy(sim->editedBody->name, name);
             //scanf("%12[^\n]s", sim->editedBody->name);
@@ -120,44 +120,38 @@ Error bodyEditor_processTextInput(Program *program, Gui *gui, Simulation *sim, S
 }
 
 
-bool bodyEditor_moveBody(EconioKey key, Simulation *sim){
+bool bodyEditor_moveBody(EconioKey key, Simulation *sim) {
     if (key == 's' || key == KEY_DOWN) {
-        sim->editedBody->position.y++;
+        sim->editedBody->position.y += 2;
         return true;
-    }
-    else if (key == 'w' || key == KEY_UP) {
-        sim->editedBody->position.y--;
+    } else if (key == 'w' || key == KEY_UP) {
+        sim->editedBody->position.y -= 2;
         return true;
-    }
-    else if (key == 'a' || key == KEY_LEFT) {
+    } else if (key == 'a' || key == KEY_LEFT) {
         sim->editedBody->position.x -= 2;
         return true;
-    }
-    else if (key == 'd' || key == KEY_RIGHT) {
+    } else if (key == 'd' || key == KEY_RIGHT) {
         sim->editedBody->position.x += 2;
         return true;
     }
     return false;
 }
 
-void bodyEditor_processPlacementInput(Program *program, Gui *gui, Simulation *sim){
+void bodyEditor_processPlacementInput(Program *program, Gui *gui, Simulation *sim) {
     int key = 0;
     if (econio_kbhit()) {
         while (econio_kbhit())
             key = econio_getch();
 
-        if (key == KEY_ENTER)
-        {
-            if(gui->editMenu_state == EDIT_MENU_STATE_ADD_BODY) {
+        if (key == KEY_ENTER) {
+            if (gui->editMenu_state == EDIT_MENU_STATE_ADD_BODY) {
                 program->state = PROGRAM_STATE_TEXT_INPUT;
                 gui->bodyEditor_state = BODY_SET_V;
             } else
                 program->state = PROGRAM_STATE_EDIT_MENU;
+        } else if (bodyEditor_moveBody(key, sim)) {
+            if (gui->editMenu_state == EDIT_MENU_STATE_ADD_BODY)
+                sim->editedBody->trail.top->position = vector_toPoint(sim->editedBody->position);
         }
-        else
-            if(bodyEditor_moveBody(key, sim)) {
-                if (gui->editMenu_state == EDIT_MENU_STATE_ADD_BODY)
-                    sim->editedBody->trail.top->position = vector_toPoint(sim->editedBody->position);
-            }
     }
 }

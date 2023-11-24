@@ -5,10 +5,10 @@
 
 
 /** Processes the gravitatinal interactions of the bodies, and updates their velocity. */
-static void simulation_doGravityCalculations(BodyArray *ba, Simulation *sim){
-    for (int i = 0; i < ba->length; ++i){
+static void simulation_doGravityCalculations(BodyArray *ba, Simulation *sim) {
+    for (int i = 0; i < ba->length; ++i) {
         for (int j = 0; j < ba->length; ++j) {
-            if(i != j)
+            if (i != j)
                 body_addGravityEffect(&ba->data[i], &ba->data[j], sim);
         }
     }
@@ -16,11 +16,11 @@ static void simulation_doGravityCalculations(BodyArray *ba, Simulation *sim){
 
 
 /** Moves the bodies. */
-static void simulation_doMovements(Simulation *sim, Screen *screen){
+static void simulation_doMovements(Simulation *sim, Screen *screen) {
     for (int i = 0; i < sim->bodyArray.length; ++i) {
-        body_move(& sim->bodyArray.data[i]);
+        body_move(&sim->bodyArray.data[i]);
         if (sim->trailSpacingCounter > screen->targetFPS / 2)
-            trail_enqueue(& sim->bodyArray.data[i].trail,  sim->bodyArray.data[i].position);
+            trail_enqueue(&sim->bodyArray.data[i].trail, sim->bodyArray.data[i].position);
     }
     if (sim->trailSpacingCounter > screen->targetFPS / 2)
         sim->trailSpacingCounter = 0;
@@ -29,7 +29,7 @@ static void simulation_doMovements(Simulation *sim, Screen *screen){
 
 
 /** Checks if any of the bodies is colliding with another body.  */
-static void simulation_detectCollisions(BodyArray *ba, Simulation *sim){
+static void simulation_detectCollisions(BodyArray *ba, Simulation *sim) {
     for (int i = 0; i < ba->length - 1; ++i) {
         for (int j = i + 1; j < ba->length; ++j) {
             Body *a = &ba->data[i];
@@ -40,8 +40,8 @@ static void simulation_detectCollisions(BodyArray *ba, Simulation *sim){
 }
 
 
-void simulation_tick(Simulation *sim, Screen *screen){
-    if(!sim->pausedByUser) {
+void simulation_tick(Simulation *sim, Screen *screen) {
+    if (!sim->pausedByUser) {
         simulation_doGravityCalculations(&sim->bodyArray, sim);
         simulation_doMovements(sim, screen);
         simulation_detectCollisions(&sim->bodyArray, sim);
@@ -53,20 +53,17 @@ void simulation_tick(Simulation *sim, Screen *screen){
  * Moves the camera in accordance to the input key.
  * @return Has the camare been moved
  */
-static bool simulation_moveCam(EconioKey key, Screen *screen){
+static bool simulation_moveCam(EconioKey key, Screen *screen) {
     if (key == 's' || key == KEY_DOWN) {
         screen->offset.y++;
         return true;
-    }
-    else if (key == 'w' || key == KEY_UP) {
+    } else if (key == 'w' || key == KEY_UP) {
         screen->offset.y--;
         return true;
-    }
-    else if (key == 'a' || key == KEY_LEFT) {
+    } else if (key == 'a' || key == KEY_LEFT) {
         screen->offset.x -= 2;
         return true;
-    }
-    else if (key == 'd' || key == KEY_RIGHT) {
+    } else if (key == 'd' || key == KEY_RIGHT) {
         screen->offset.x += 2;
         return true;
     }

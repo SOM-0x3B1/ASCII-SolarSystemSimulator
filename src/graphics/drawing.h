@@ -56,7 +56,7 @@ void drawing_drawRectangleOutline(Layer *l, int x1, int y1, int x2, int y2, Scre
  * @param y2 Bottom right (y)
  * @return The horizontal (x) position of the center of the box
  */
-int drawing_drawBox(Layer *l, int x1, int y1, int x2, int y2, const char* title, Screen *screen);
+int drawing_drawBox(Layer *l, int x1, int y1, int x2, int y2, const char *title, Screen *screen);
 
 /**
  * Draws a text input box.

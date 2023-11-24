@@ -8,15 +8,15 @@
 #define MAX_FILENAME_LENGTH 250
 
 /** Copies the string name of the parameter into the destination from the source. */
-static void getParam(char *dest, const char *src){
+static void getParam(char *dest, const char *src) {
     int i = 0, j = 0;
-    for (; src[i] != '\0' && src[i] != '=' ; ++i)
+    for (; src[i] != '\0' && src[i] != '='; ++i)
         dest[j++] = src[i];
     dest[j] = '\0';
 }
 
 /** Copies the value string into the destination from the source. */
-static void getSValue(char *dest, const char *src){
+static void getSValue(char *dest, const char *src) {
     int i = 0, j = 0;
     while (src[i] != '\0' && src[i] != '=')
         i++;
@@ -30,7 +30,7 @@ Error fs_settings_loadSettings(Simulation *sim, Screen *screen) {
     FILE *f;
     f = fopen("settings.ini", "r");
 
-    if(f != NULL) {
+    if (f != NULL) {
         char line[32];
         while (fscanf(f, "%31s", line) != EOF) {
             char param[32];
@@ -98,26 +98,26 @@ Error fs_loadMainMenu(Simulation *sim, Screen *screen, Gui *gui) {
 }
 
 
-void fs_export_switchTo(Program *program){
+void fs_export_switchTo(Program *program) {
     program->state = PROGRAM_STATE_TEXT_INPUT;
     program->textInputDest = TEXT_INPUT_EXPORT;
 }
 
 
-void fs_export_render(Gui *gui, LayerInstances *li, Screen *screen){
+void fs_export_render(Gui *gui, LayerInstances *li, Screen *screen) {
     gui->textPos = drawing_drawInputPrompt(&li->menuLayer, screen->height / 2 - 2, "Export system", "Name:", screen);
 }
 
 
 /** Scans the input file name for illegal characters. */
-static int checkFilename(const char *fn){
+static int checkFilename(const char *fn) {
     int i = 0;
     for (; fn[i] != '\0' && i < MAX_FILENAME_LENGTH; ++i) {
         char c = fn[i];
-        if(c != '-' && c != '_' && c !='.' && (c < '0' || (c > '9' && c < 'A') || (c > 'Z' && c < 'a') || (c > 'z')))
+        if (c != '-' && c != '_' && c != '.' && (c < '0' || (c > '9' && c < 'A') || (c > 'Z' && c < 'a') || (c > 'z')))
             return 1; // invalid character
     }
-    if(fn[i] != '\0')
+    if (fn[i] != '\0')
         return 2; // invalid length
 
     return 0;

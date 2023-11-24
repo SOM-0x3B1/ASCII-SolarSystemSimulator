@@ -12,6 +12,7 @@
  * @return Successful / error
  */
 Error render_init(Screen *screen);
+
 /** Frees the memory of the screenbuffer. */
 void render_dispose(Screen *screen);
 

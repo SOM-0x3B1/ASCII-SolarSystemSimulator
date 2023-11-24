@@ -36,7 +36,7 @@ int main() {
     Screen screen;
     screen.width = 119;
     screen.height = 30;
-    screen.offset = (Point){0, 0};
+    screen.offset = (Point) {0, 0};
     screen.fps = 0;
     screen.targetFPS = 30;
     screen.frameCount = 0; // Frames since last reset (~1s)
@@ -65,7 +65,7 @@ int main() {
 
 
     // Attempt to load main menu earth animation and title
-    if(fs_loadMainMenu(&sim, &screen, &gui) != SUCCESS) {
+    if (fs_loadMainMenu(&sim, &screen, &gui) != SUCCESS) {
         mainMenu_startSim(&program, &layerStatic.layerInstances);
         error_render(ERR_MAIN_MENU_ART_MISSING, &screen, &layerStatic.layerInstances);
         render_refreshScreen(&program, &sim, &screen, &layerStatic);
@@ -80,8 +80,8 @@ int main() {
 
 
     // Main program loop
-    while (!program.exiting){
-        if(program.error == SUCCESS) {
+    while (!program.exiting) {
+        if (program.error == SUCCESS) {
             switch (program.state) {
                 case PROGRAM_STATE_MAIN_MENU:
                     mainMenu_render(&screen, &layerStatic.layerInstances, &gui);
@@ -104,7 +104,7 @@ int main() {
                     break;
             }
 
-            if(program.state != PROGRAM_STATE_MAIN_MENU)
+            if (program.state != PROGRAM_STATE_MAIN_MENU)
                 render_fullRender(&program, &sim, &screen, &layerStatic, &gui);
 
             // Speed & FPS regulator
@@ -127,7 +127,7 @@ int main() {
         }
 
         // Handle error
-        if (program.error != SUCCESS){
+        if (program.error != SUCCESS) {
             error_render(program.error, &screen, &layerStatic.layerInstances);
             render_refreshScreen(&program, &sim, &screen, &layerStatic);
 
@@ -156,7 +156,7 @@ void init_modulesWithDMM(bool *exiting, Program *program, LayerStatic *ls, Simul
 }
 
 
-void exitProgram(LayerStatic *ls, Simulation sim, Screen *screen){
+void exitProgram(LayerStatic *ls, Simulation sim, Screen *screen) {
     econio_clrscr();
     econio_gotoxy(0, 0);
     printf("Exiting...\n\n");

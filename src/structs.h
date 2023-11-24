@@ -9,12 +9,12 @@
 
 //============= Vector geometry =================
 
-typedef struct Vector{
+typedef struct Vector {
     double x;
     double y;
 } Vector;
 
-typedef struct Point{
+typedef struct Point {
     long long int x;
     long long int y;
 } Point;
@@ -24,13 +24,13 @@ typedef struct Point{
 //============= Simulation =================
 
 /** A node of a trail; a queue element. */
-typedef struct Trail{
+typedef struct Trail {
     Point position;
     struct Trail *next;
 } Trail;
 
 /** A queue of trail points. */
-typedef struct TrailQueue{
+typedef struct TrailQueue {
     Trail *top;
     int length;
     int capacity; // Max capacity of the queue, after it automatically dequeues the last element
@@ -48,7 +48,7 @@ typedef enum BodyEditableProperty {
 
 
 /** A celestial body. */
-typedef struct Body{
+typedef struct Body {
     char name[13];
     Vector position;
     Vector velocity;
@@ -58,13 +58,13 @@ typedef struct Body{
     TrailQueue trail;
 } Body;
 
-typedef struct BodyArray{
+typedef struct BodyArray {
     Body *data;
     int length;
     int capacity; // Currently allocated size (will be doubled when exceeded)
 } BodyArray;
 
-typedef struct Simulation{
+typedef struct Simulation {
     double solarMass;                   // The mass of the sun; every gravitational effect is relative to this!
     double detectCollisionPercentage;   // The percentage of the minimum radius overlap that triggers a collision event.
     bool fullSpeed;                     // Overrides the FPS limit -> the simulation will run at maximum speed
@@ -118,7 +118,7 @@ typedef enum BodyEditorState {
 #define EARTH_ANIMATION_HEIGHT 30
 #define EARTH_ANIMATION_WIDTH 107
 
-typedef struct Gui{
+typedef struct Gui {
     char mainMenu_animation[EARTH_ANIMATION_FRAMES][EARTH_ANIMATION_HEIGHT][EARTH_ANIMATION_WIDTH + 1]; // [frame][y][x]
     char mainMenu_title[13][53];       // Title art
     int mainMenu_animation_frameIndex; // Current frame
@@ -135,13 +135,13 @@ typedef struct Gui{
 #define LAYER_COUNT 6
 
 /** A 2D matrix that can be written onto the console. */
-typedef struct Layer{
+typedef struct Layer {
     char **text; // 2D array
     bool enabled;
 } Layer;
 
 // All layers are declared here
-typedef struct LayerInstances{
+typedef struct LayerInstances {
     Layer overlayLayer;
     Layer menuLayer;
     Layer infoLayer;
@@ -150,12 +150,12 @@ typedef struct LayerInstances{
     Layer trailLayer;
 } LayerInstances;
 
-typedef struct LayerStatic{
+typedef struct LayerStatic {
     LayerInstances layerInstances;  // All layers are declared here --> can be directly accessed here
     Layer *layers[LAYER_COUNT];     // The array of layers in order of priority (0. > 1. > ...)
 } LayerStatic;
 
-typedef struct Screen{
+typedef struct Screen {
     int width;
     int height;
     char *buffer;       // Used as the buffer of the console
@@ -189,7 +189,7 @@ typedef enum Error {
 
 //============= Program =================
 
-typedef enum ProgramState{
+typedef enum ProgramState {
     PROGRAM_STATE_MAIN_MENU,
     PROGRAM_STATE_EDIT_MENU,
     PROGRAM_STATE_SIMULATION,
@@ -198,13 +198,13 @@ typedef enum ProgramState{
 } ProgramState;
 
 /** Which part of the program should process the text input. */
-typedef enum TextInputDest{
+typedef enum TextInputDest {
     TEXT_INPUT_BODY_EDITOR,
     TEXT_INPUT_EXPORT,
     TEXT_INPUT_IMPORT,
 } TextInputDest;
 
-typedef struct Program{
+typedef struct Program {
     ProgramState state;
     TextInputDest textInputDest;
     double sleepTime; // Regulates simulation speed (and FPS)

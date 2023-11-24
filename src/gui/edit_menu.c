@@ -5,34 +5,34 @@
 #include "string.h"
 
 
-void editMenu_switchTo(EconioKey key, Program *program, Gui *gui, Screen *screen, LayerInstances *li){
+void editMenu_switchTo(EconioKey key, Program *program, Gui *gui, Screen *screen, LayerInstances *li) {
     program->state = PROGRAM_STATE_EDIT_MENU;
     gui->editMenu_state = EDIT_MENU_STATE_MAIN;
 
     li->menuLayer.enabled = true;
     screen->offset.x += EDIT_MENU_WIDTH / 2;
 
-    if(key == KEY_ESCAPE)
+    if (key == KEY_ESCAPE)
         gui->cursorPos = OPTION_EXIT;
 }
 
 
 /** Renders the "[ON]"/"[OFF]" texts next to toggle buttons. */
-static void editMenu_renderToggleOptionSTATE(int y, bool stat, LayerInstances *li, Screen *screen){
+static void editMenu_renderToggleOptionSTATE(int y, bool stat, LayerInstances *li, Screen *screen) {
     drawing_drawText(&li->menuLayer, screen->width - 13, y, stat ? "[ON] " : "[OFF]", screen);
 }
 
 
 /** Renders the '>' sign next to the selected option. */
-static void editMenu_renderSelection(int i, int y, Gui *gui, LayerInstances *li, Screen *screen){
-    if(i == gui->cursorPos)
+static void editMenu_renderSelection(int i, int y, Gui *gui, LayerInstances *li, Screen *screen) {
+    if (i == gui->cursorPos)
         drawing_drawText(&li->menuLayer, screen->width - 30, y, ">", screen);
     else
         drawing_drawText(&li->menuLayer, screen->width - 30, y, " ", screen);
 }
 
 
-static void mainOptionToString(char *res, EditMenuMainOption o){
+static void mainOptionToString(char *res, EditMenuMainOption o) {
     switch (o) {
         case OPTION_ADD_BODY:
             strcpy(res, "Add body");
@@ -69,14 +69,14 @@ static void mainOptionToString(char *res, EditMenuMainOption o){
 
 
 /** Renders the list of main options. */
-static void editMenu_renderMain(LayerInstances *li, Gui *gui, Screen *screen){
+static void editMenu_renderMain(LayerInstances *li, Gui *gui, Screen *screen) {
     int yOffset = 0;
     for (int i = 0; i < EditMenuMainOption_MAX; ++i) {
-        if(i > OPTION_EXPORT_SYSTEM)
+        if (i > OPTION_EXPORT_SYSTEM)
             yOffset = 3;
-        else if(i > OPTION_TOGGLE_TRAILS)
+        else if (i > OPTION_TOGGLE_TRAILS)
             yOffset = 2;
-        else if(i > OPTION_DELETE_BODY)
+        else if (i > OPTION_DELETE_BODY)
             yOffset = 1;
 
         int y = 5 + i + yOffset;
@@ -86,9 +86,9 @@ static void editMenu_renderMain(LayerInstances *li, Gui *gui, Screen *screen){
         drawing_drawText(&li->menuLayer, screen->width - 28, y, sMainOption, screen);
         editMenu_renderSelection(i, y, gui, li, screen);
 
-        if(i == OPTION_TOGGLE_DETAILS)
+        if (i == OPTION_TOGGLE_DETAILS)
             editMenu_renderToggleOptionSTATE(y, li->infoLayer.enabled, li, screen);
-        else if(i == OPTION_TOGGLE_G_RANGE)
+        else if (i == OPTION_TOGGLE_G_RANGE)
             editMenu_renderToggleOptionSTATE(y, li->rangeLayer.enabled, li, screen);
         else if (i == OPTION_TOGGLE_TRAILS)
             editMenu_renderToggleOptionSTATE(y, li->trailLayer.enabled, li, screen);
@@ -97,7 +97,7 @@ static void editMenu_renderMain(LayerInstances *li, Gui *gui, Screen *screen){
 
 
 /** Renders the list of bodies. */
-static void editMenu_renderBodyList(Simulation *sim, LayerInstances *li, Screen *screen, Gui *gui){
+static void editMenu_renderBodyList(Simulation *sim, LayerInstances *li, Screen *screen, Gui *gui) {
     for (int i = 0; i < sim->bodyArray.length; ++i) {
         int y = 5 + i;
 
@@ -110,7 +110,7 @@ static void editMenu_renderBodyList(Simulation *sim, LayerInstances *li, Screen 
 }
 
 
-static void bodyOptionToString(char *res, BodyEditableProperty p){
+static void bodyOptionToString(char *res, BodyEditableProperty p) {
     switch (p) {
         case BODY_PROPERTY_NAME:
             strcpy(res, "Set name");
@@ -135,7 +135,7 @@ static void bodyOptionToString(char *res, BodyEditableProperty p){
 
 
 /** Renders the list of edit body properties. */
-static void editMenu_renderEditProperties(LayerInstances *li, Screen *screen, Simulation *sim, Gui *gui){
+static void editMenu_renderEditProperties(LayerInstances *li, Screen *screen, Simulation *sim, Gui *gui) {
     drawing_drawText(&li->menuLayer, screen->width - 30, 5, sim->editedBody->name, screen);
 
     for (int i = 0; i < bodyEditableProperty_MAX; ++i) {
@@ -152,7 +152,7 @@ static void editMenu_renderEditProperties(LayerInstances *li, Screen *screen, Si
 }
 
 
-void editMenu_render(LayerInstances *li, Screen *screen, Gui *gui, Simulation *sim){
+void editMenu_render(LayerInstances *li, Screen *screen, Gui *gui, Simulation *sim) {
     drawing_drawLine(&li->menuLayer, screen->width - 32, 2,
                      screen->height - 4, true, '|', screen);
     drawing_drawRectangleFill(&li->menuLayer, screen->width - 31, 2,
@@ -179,7 +179,8 @@ void editMenu_render(LayerInstances *li, Screen *screen, Gui *gui, Simulation *s
 
 
 /** Enter on main menu option. */
-static Error editMenu_selectMainOption(Gui *gui, Simulation *sim, Screen *screen, LayerInstances *li, Program *program){
+static Error
+editMenu_selectMainOption(Gui *gui, Simulation *sim, Screen *screen, LayerInstances *li, Program *program) {
     EditMenuSTATE lastState = gui->editMenu_state;
 
     switch (gui->cursorPos) {
@@ -189,10 +190,11 @@ static Error editMenu_selectMainOption(Gui *gui, Simulation *sim, Screen *screen
             bodyEditor_switchTo(program);
             sim->editedBody =
                     body_new("",
-                             (Vector) {(double) screen->offset.x + (double) screen->width / 2 - (double)EDIT_MENU_WIDTH / 2,
+                             (Vector) {(double) screen->offset.x + (double) screen->width / 2 -
+                                       (double) EDIT_MENU_WIDTH / 2,
                                        ((double) screen->offset.y + (double) screen->height / 2) * 2},
-                                       (Vector) {0, 0}, 0.0, 0.0, '#', sim);
-            if(sim->editedBody == NULL) {
+                             (Vector) {0, 0}, 0.0, 0.0, '#', sim);
+            if (sim->editedBody == NULL) {
                 program->exiting = true;
                 return ERR_MEMORY;
             }
@@ -226,7 +228,7 @@ static Error editMenu_selectMainOption(Gui *gui, Simulation *sim, Screen *screen
             break;
     }
 
-    if(lastState != gui->editMenu_state)
+    if (lastState != gui->editMenu_state)
         gui->cursorPos = 0;
 
     return SUCCESS;
@@ -234,11 +236,11 @@ static Error editMenu_selectMainOption(Gui *gui, Simulation *sim, Screen *screen
 
 
 /** Enter on "Edit body"/[body] */
-static void editMenu_selectEditOption(Gui *gui, Simulation *sim){
-    if(gui->cursorPos == sim->bodyArray.length){
+static void editMenu_selectEditOption(Gui *gui, Simulation *sim) {
+    if (gui->cursorPos == sim->bodyArray.length) {
         gui->editMenu_state = EDIT_MENU_STATE_MAIN;
         gui->cursorPos = 0;
-    } else{
+    } else {
         sim->editedBody = &sim->bodyArray.data[gui->cursorPos];
         sim->following = sim->editedBody;
         gui->editMenu_state = EDIT_MENU_STATE_EDIT_BODY_SET;
@@ -248,13 +250,13 @@ static void editMenu_selectEditOption(Gui *gui, Simulation *sim){
 
 
 /** Enter on "Edit body"/[body]/[property] */
-static void editMenu_selectEditPropertyOption(Gui *gui, Program *program){
-    if(gui->cursorPos == bodyEditableProperty_MAX){
+static void editMenu_selectEditPropertyOption(Gui *gui, Program *program) {
+    if (gui->cursorPos == bodyEditableProperty_MAX) {
         gui->cursorPos = 0;
         gui->editMenu_state = EDIT_MENU_STATE_EDIT_BODY;
     } else {
         gui->bodyEditor_state = gui->cursorPos;
-        if(gui->cursorPos != BODY_SET_POS)
+        if (gui->cursorPos != BODY_SET_POS)
             bodyEditor_switchTo(program);
         else
             program->state = PROGRAM_STATE_PLACING_BODY;
@@ -263,23 +265,23 @@ static void editMenu_selectEditPropertyOption(Gui *gui, Program *program){
 
 
 /** Enter on "Delete body"/[body] */
-static void editMenu_selectDeleteOption(Gui *gui, Simulation *sim){
-    if(gui->cursorPos == sim->bodyArray.length){
+static void editMenu_selectDeleteOption(Gui *gui, Simulation *sim) {
+    if (gui->cursorPos == sim->bodyArray.length) {
         gui->editMenu_state = EDIT_MENU_STATE_MAIN;
         gui->cursorPos = 0;
     } else {
-        if(sim->following == &sim->bodyArray.data[gui->cursorPos])
+        if (sim->following == &sim->bodyArray.data[gui->cursorPos])
             sim->following = NULL;
         bodyArray_removeAt(&sim->bodyArray, gui->cursorPos, sim);
-        if(gui->cursorPos == sim->bodyArray.length && gui->cursorPos > 0)
+        if (gui->cursorPos == sim->bodyArray.length && gui->cursorPos > 0)
             gui->cursorPos--;
     }
 }
 
 
 /** Enter on "Follow body"/[body] */
-static void editMenu_selectFollowOption(Gui *gui, Simulation *sim){
-    if(gui->cursorPos == sim->bodyArray.length){
+static void editMenu_selectFollowOption(Gui *gui, Simulation *sim) {
+    if (gui->cursorPos == sim->bodyArray.length) {
         gui->editMenu_state = EDIT_MENU_STATE_MAIN;
         gui->cursorPos = 0;
     } else
@@ -288,7 +290,7 @@ static void editMenu_selectFollowOption(Gui *gui, Simulation *sim){
 
 
 /** Closes the edit menu and returns to simulation mode. */
-static void editMenu_close(Program *program, Gui *gui, LayerInstances *li, Screen *screen, Simulation *sim){
+static void editMenu_close(Program *program, Gui *gui, LayerInstances *li, Screen *screen, Simulation *sim) {
     program->state = PROGRAM_STATE_SIMULATION;
     gui->editMenu_state = EDIT_MENU_STATE_MAIN;
     li->menuLayer.enabled = false;
@@ -299,7 +301,7 @@ static void editMenu_close(Program *program, Gui *gui, LayerInstances *li, Scree
 }
 
 
-static int getOptionCount(EditMenuSTATE s){
+static int getOptionCount(EditMenuSTATE s) {
     switch (s) {
         case EDIT_MENU_STATE_MAIN:
             return EditMenuMainOption_MAX;
@@ -312,17 +314,17 @@ static int getOptionCount(EditMenuSTATE s){
 }
 
 
-Error editMenu_processInput(Program *program, Simulation *sim, Screen *screen, Gui *gui, LayerInstances *li){
+Error editMenu_processInput(Program *program, Simulation *sim, Screen *screen, Gui *gui, LayerInstances *li) {
     int key = 0;
     if (econio_kbhit()) {
         while (econio_kbhit())
             key = econio_getch();
 
         int cursorMax = getOptionCount(gui->editMenu_state);
-        if(cursorMax < 0)
+        if (cursorMax < 0)
             cursorMax = sim->bodyArray.length + 1;
 
-        if(key == KEY_ESCAPE || key =='e')
+        if (key == KEY_ESCAPE || key == 'e')
             editMenu_close(program, gui, li, screen, sim);
         else if ((key == 's' || key == KEY_DOWN) && gui->cursorPos < cursorMax - 1)
             gui->cursorPos++;
