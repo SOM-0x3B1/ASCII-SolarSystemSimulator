@@ -3,6 +3,7 @@
 #include "fs.h"
 #include "sim/body.h"
 #include "graphics/drawing.h"
+#include "lib/debugmalloc.h"
 
 
 #define MAX_FILENAME_LENGTH 250
@@ -218,6 +219,7 @@ Error fs_saving_processTextInput(Gui *gui, Program *program, Simulation *sim) {
     char tempFormat[6];
     sprintf(tempFormat, "%%%ds", MAX_FILENAME_LENGTH);
     scanf(tempFormat, filename);
+    fflush(stdin);
 
     econio_rawmode();
     econio_gotoxy(0, 0);

@@ -51,16 +51,18 @@ Error bodyEditor_processTextInput(Program *program, Gui *gui, Simulation *sim, S
     char sValue2[32];
     double value1;
     double value2;
-    char temp;
 
     switch (gui->bodyEditor_state) {
         case BODY_SET_NAME: {
             char name[13];
             fgets(name, 12, stdin);
             name[12] = '\0';
-            for (int i = 0; i < 12; ++i)
+            for (int i = 0; i < 12; ++i) {
                 if (name[i] == '\n')
                     name[i] = '\0';
+                else if (name[i] == '\t')
+                    name[i] = ' ';
+            }
             strcpy(sim->editedBody->name, name);
             //scanf("%12[^\n]s", sim->editedBody->name);
             if (gui->editMenu_state == EDIT_MENU_STATE_ADD_BODY)
@@ -79,7 +81,7 @@ Error bodyEditor_processTextInput(Program *program, Gui *gui, Simulation *sim, S
                     program->state = PROGRAM_STATE_EDIT_MENU;
             } else
                 return ERR_ADDBODY_VALUE;
-            scanf("%c", &temp);
+            fflush(stdin);
             break;
         case BODY_SET_R:
             scanf("%31s", sValue1);
@@ -92,7 +94,7 @@ Error bodyEditor_processTextInput(Program *program, Gui *gui, Simulation *sim, S
                     program->state = PROGRAM_STATE_EDIT_MENU;
             } else
                 return ERR_ADDBODY_VALUE;
-            scanf("%c", &temp);
+            fflush(stdin);
             break;
         case BODY_SET_V:
             scanf("%31s %31s", sValue1, sValue2);
@@ -108,7 +110,7 @@ Error bodyEditor_processTextInput(Program *program, Gui *gui, Simulation *sim, S
                     program->state = PROGRAM_STATE_EDIT_MENU;
             } else
                 return ERR_ADDBODY_VALUE;
-            scanf("%c", &temp);
+            fflush(stdin);
             break;
         default:
             break;
