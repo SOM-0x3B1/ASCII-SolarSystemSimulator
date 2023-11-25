@@ -117,10 +117,9 @@ int main() {
                     case TEXT_INPUT_BODY_EDITOR:
                         program.error = bodyEditor_processTextInput(&program, &gui, &sim, &screen);
                         break;
-                    case TEXT_INPUT_EXPORT:
-                        program.error = fs_export_processTextInput(&gui, &program, &sim);
-                        break;
                     case TEXT_INPUT_IMPORT:
+                    case TEXT_INPUT_EXPORT:
+                        program.error = fs_saving_processTextInput(&gui, &program, &sim);
                         break;
                 }
             }

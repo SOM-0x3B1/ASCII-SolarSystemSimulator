@@ -98,16 +98,6 @@ Error fs_loadMainMenu(Simulation *sim, Screen *screen, Gui *gui) {
 }
 
 
-void fs_export_switchTo(Program *program) {
-    program->state = PROGRAM_STATE_TEXT_INPUT;
-    program->textInputDest = TEXT_INPUT_EXPORT;
-}
-
-
-void fs_export_render(Gui *gui, LayerInstances *li, Screen *screen) {
-    gui->textPos = drawing_drawInputPrompt(&li->menuLayer, screen->height / 2 - 2, "Export system", "Name:", screen);
-}
-
 
 /** Scans the input file name for illegal characters. */
 static int checkFilename(const char *fn) {
@@ -124,11 +114,20 @@ static int checkFilename(const char *fn) {
 }
 
 
+void fs_export_switchTo(Program *program) {
+    program->state = PROGRAM_STATE_TEXT_INPUT;
+    program->textInputDest = TEXT_INPUT_EXPORT;
+}
+
+void fs_export_render(Gui *gui, LayerInstances *li, Screen *screen) {
+    gui->textPos = drawing_drawInputPrompt(&li->menuLayer, screen->height / 2 - 2, "Export system", "Name:", screen);
+}
+
 /**
  * Creates a new file, and writes the content of the body array into it.
  * @return Success / error
  */
-static Error export_export(char *filename, Simulation *sim) {
+static Error export(char *filename, Simulation *sim) {
     FILE *f;
     f = fopen(strcat(filename, ".tsv"), "w");
     if (f != NULL) {
@@ -149,7 +148,69 @@ static Error export_export(char *filename, Simulation *sim) {
 }
 
 
-Error fs_export_processTextInput(Gui *gui, Program *program, Simulation *sim) {
+
+void fs_import_switchTo(Program *program) {
+    program->state = PROGRAM_STATE_TEXT_INPUT;
+    program->textInputDest = TEXT_INPUT_IMPORT;
+}
+
+void fs_import_render(Gui *gui, LayerInstances *li, Screen *screen) {
+    gui->textPos = drawing_drawInputPrompt(&li->menuLayer, screen->height / 2 - 2, "Import system", "Name:", screen);
+}
+
+/**
+ * Creates a new file, and writes the content of the body array into it.
+ * @return Success / error
+ */
+static Error import(char *filename, Simulation *sim) {
+    FILE *f;
+    f = fopen(strcat(filename, ".tsv"), "r");
+    if (f != NULL) {
+        char line[120];
+        for (int i = 0; i < 2; ++i) {
+            if(fgets(line, 120, f) == NULL)
+                return ERR_IMPORT_VALUE;
+        }
+
+        bodyArray_dispose(&sim->bodyArray);
+        bodyArray_init(&sim->bodyArray);
+
+        double value;
+        if(sscanf(line, "%lf", &value) != 1)
+            return ERR_IMPORT_VALUE;
+        sim->solarMass = value;
+
+        for (int i = 0; i < 2; ++i) {
+            if(fgets(line, 120, f) == NULL)
+                return ERR_IMPORT_VALUE;
+        }
+
+        Body b;
+        int res = 8;
+        while (res == 8){
+            res = fscanf(f, " %12[^\t]\t%lf\t%lf\t%lf\t%lf\t%lf\t%lf\t%c ",
+                   b.name, &b.mass, &b.position.x, &b.position.y,
+                   &b.r, &b.velocity.x, &b.velocity.y, &b.color);
+            if (res == 8) {
+                Body *nb = body_new(b.name, b.position, b.velocity, b.r, b.mass, b.color, sim);
+                nb->name[12] = '\0';
+                if(sim->bodyArray.length == 1) {
+                    sim->sun = nb;
+                    sim->following = nb;
+                }
+            } else if(res == EOF)
+                break;
+            else
+                return ERR_IMPORT_VALUE;
+        }
+    } else
+        return ERR_IMPORT_OPEN_FILE; // unable to create file
+
+    return SUCCESS;
+}
+
+
+Error fs_saving_processTextInput(Gui *gui, Program *program, Simulation *sim) {
     econio_gotoxy((int) gui->textPos.x, (int) gui->textPos.y);
     econio_normalmode();
 
@@ -163,8 +224,12 @@ Error fs_export_processTextInput(Gui *gui, Program *program, Simulation *sim) {
 
     program->state = PROGRAM_STATE_EDIT_MENU;
 
-    if (checkFilename(filename) == 0)
-        return export_export(filename, sim);
+    if (checkFilename(filename) == 0) {
+        if(program->textInputDest == TEXT_INPUT_EXPORT)
+            return export(filename, sim);
+        else
+            return import(filename, sim);
+    }
     else
         return ERR_FS_FILENAME;
 }

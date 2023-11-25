@@ -21,11 +21,17 @@ Error fs_loadMainMenu(Simulation *sim, Screen *screen, Gui *gui);
 /** Sets the proper program states to read input text for export. */
 void fs_export_switchTo(Program *program);
 
-/** Renders the input prompt. */
+/** Renders the export prompt. */
 void fs_export_render(Gui *gui, LayerInstances *li, Screen *screen);
 
+/** Sets the proper program states to read input text for import. */
+void fs_import_switchTo(Program *program);
+
+/** Renders the import prompt. */
+void fs_import_render(Gui *gui, LayerInstances *li, Screen *screen);
+
 /** Reads the name of the export file. */
-Error fs_export_processTextInput(Gui *gui, Program *program, Simulation *sim);
+Error fs_saving_processTextInput(Gui *gui, Program *program, Simulation *sim);
 
 
 #endif //ASCII_SSS_FS_H

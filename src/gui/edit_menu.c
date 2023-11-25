@@ -221,6 +221,9 @@ editMenu_selectMainOption(Gui *gui, Simulation *sim, Screen *screen, LayerInstan
         case OPTION_EXPORT_SYSTEM:
             fs_export_switchTo(program);
             break;
+        case OPTION_IMPORT_SYSTEM:
+            fs_import_switchTo(program);
+            break;
         case OPTION_EXIT:
             program->exiting = true;
             break;

@@ -96,8 +96,12 @@ void render_fullRender(Program *program, Simulation *sim, Screen *screen, LayerS
     if (program->textInputDest == TEXT_INPUT_BODY_EDITOR &&
         (program->state == PROGRAM_STATE_TEXT_INPUT || program->state == PROGRAM_STATE_PLACING_BODY))
         bodyEditor_render(program, &ls->layerInstances, screen, gui);
-    else if (program->textInputDest == TEXT_INPUT_EXPORT && program->state == PROGRAM_STATE_TEXT_INPUT)
-        fs_export_render(gui, &ls->layerInstances, screen);
+    else if (program->state == PROGRAM_STATE_TEXT_INPUT) {
+        if (program->textInputDest == TEXT_INPUT_EXPORT)
+            fs_export_render(gui, &ls->layerInstances, screen);
+        else if(program->textInputDest == TEXT_INPUT_IMPORT)
+            fs_import_render(gui, &ls->layerInstances, screen);
+    }
 
     render_refreshScreen(program, sim, screen, ls);
 }
