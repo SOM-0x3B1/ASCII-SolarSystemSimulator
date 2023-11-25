@@ -70,7 +70,7 @@ Error fs_settings_loadSettings(Simulation *sim, Screen *screen) {
 }
 
 
-Error fs_loadMainMenu(Simulation *sim, Screen *screen, Gui *gui) {
+Error fs_loadMainMenu(Gui *gui) {
     FILE *f;
     f = fopen("earth-animation.txt", "r");
 
@@ -221,7 +221,7 @@ Error fs_saving_processTextInput(Gui *gui, Program *program, Simulation *sim) {
     char tempFormat[6];
     sprintf(tempFormat, "%%%ds", MAX_FILENAME_LENGTH);
     scanf(tempFormat, filename);
-    fflush(stdin);
+    while (getchar() != '\n');
 
     econio_rawmode();
     econio_gotoxy(0, 0);

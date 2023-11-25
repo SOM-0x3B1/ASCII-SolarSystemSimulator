@@ -16,13 +16,13 @@ static void simulation_doGravityCalculations(BodyArray *ba, Simulation *sim) {
 
 
 /** Moves the bodies. */
-static void simulation_doMovements(Simulation *sim, Screen *screen) {
+static void simulation_doMovements(Simulation *sim) {
     for (int i = 0; i < sim->bodyArray.length; ++i) {
         body_move(&sim->bodyArray.data[i]);
-        if (sim->trailSpacingCounter > screen->targetFPS / 2)
+        if (sim->trailSpacingCounter > 15)
             trail_enqueue(&sim->bodyArray.data[i].trail, sim->bodyArray.data[i].position);
     }
-    if (sim->trailSpacingCounter > screen->targetFPS / 2)
+    if (sim->trailSpacingCounter > 15)
         sim->trailSpacingCounter = 0;
     sim->trailSpacingCounter++;
 }
@@ -40,10 +40,10 @@ static void simulation_detectCollisions(BodyArray *ba, Simulation *sim) {
 }
 
 
-void simulation_tick(Simulation *sim, Screen *screen) {
+void simulation_tick(Simulation *sim) {
     if (!sim->pausedByUser) {
         simulation_doGravityCalculations(&sim->bodyArray, sim);
-        simulation_doMovements(sim, screen);
+        simulation_doMovements(sim);
         simulation_detectCollisions(&sim->bodyArray, sim);
     }
 }

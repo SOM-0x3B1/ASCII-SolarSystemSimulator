@@ -8,7 +8,6 @@
 #include "gui/edit_menu.h"
 #include "sim/body.h"
 #include "sim/body_array.h"
-#include "lib/debugmalloc.h"
 #include "gui/body_editor.h"
 #include "gui/main_menu.h"
 #include "fs.h"
@@ -16,7 +15,7 @@
 
 
 /** Initialize modules with dinamic memory management. */
-void init_modulesWithDMM(bool *exiting, Program *program, LayerStatic *ls, Simulation *sim, Screen *screen);
+void init_modulesWithDMM(Program *program, LayerStatic *ls, Simulation *sim, Screen *screen);
 
 /** Frees allocated memory, and clears the screen. */
 void exitProgram(LayerStatic *ls, Simulation sim, Screen *screen);
@@ -61,11 +60,11 @@ int main() {
 
     screen.bufferSize = screen.height * screen.width * sizeof(char);
 
-    init_modulesWithDMM(&program.exiting, &program, &layerStatic, &sim, &screen);
+    init_modulesWithDMM(&program, &layerStatic, &sim, &screen);
 
 
     // Attempt to load main menu earth animation and title
-    if (fs_loadMainMenu(&sim, &screen, &gui) != SUCCESS) {
+    if (fs_loadMainMenu(&gui) != SUCCESS) {
         mainMenu_startSim(&program, &layerStatic.layerInstances);
         error_render(ERR_MAIN_MENU_ART_MISSING, &screen, &layerStatic.layerInstances);
         render_refreshScreen(&program, &sim, &screen, &layerStatic);
@@ -89,11 +88,11 @@ int main() {
                     render_refreshScreen(&program, &sim, &screen, &layerStatic);
                     break;
                 case PROGRAM_STATE_SIMULATION:
-                    simulation_tick(&sim, &screen);
+                    simulation_tick(&sim);
                     simulation_processInput(&sim, &screen, &program, &gui, &layerStatic.layerInstances);
                     break;
                 case PROGRAM_STATE_EDIT_MENU:
-                    simulation_tick(&sim, &screen);
+                    simulation_tick(&sim);
                     program.error = editMenu_processInput(&program, &sim, &screen, &gui, &layerStatic.layerInstances);
                     break;
                 case PROGRAM_STATE_PLACING_BODY:
@@ -115,7 +114,7 @@ int main() {
             if (program.state == PROGRAM_STATE_TEXT_INPUT) {
                 switch (program.textInputDest) {
                     case TEXT_INPUT_BODY_EDITOR:
-                        program.error = bodyEditor_processTextInput(&program, &gui, &sim, &screen);
+                        program.error = bodyEditor_processTextInput(&program, &gui, &sim);
                         break;
                     case TEXT_INPUT_IMPORT:
                     case TEXT_INPUT_EXPORT:
@@ -146,7 +145,7 @@ int main() {
 }
 
 
-void init_modulesWithDMM(bool *exiting, Program *program, LayerStatic *ls, Simulation *sim, Screen *screen) {
+void init_modulesWithDMM(Program *program, LayerStatic *ls, Simulation *sim, Screen *screen) {
     if (layer_init(&ls->layerInstances, ls->layers, screen) != SUCCESS ||
         render_init(screen) != SUCCESS ||
         body_init(sim) != SUCCESS) {
@@ -164,7 +163,6 @@ void exitProgram(LayerStatic *ls, Simulation sim, Screen *screen) {
     render_dispose(screen);
     bodyArray_dispose(&sim.bodyArray);
 
-    debugmalloc_atexit_dump();
-
-    econio_sleep(5);
+    /*debugmalloc_atexit_dump();
+    econio_sleep(5);*/
 }

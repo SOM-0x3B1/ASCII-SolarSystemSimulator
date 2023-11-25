@@ -16,7 +16,7 @@ Error fs_settings_loadSettings(Simulation *sim, Screen *screen);
 /** Loads the earth animation and title for the main menu.
  *  @return Successful / error
  */
-Error fs_loadMainMenu(Simulation *sim, Screen *screen, Gui *gui);
+Error fs_loadMainMenu(Gui *gui);
 
 /** Sets the proper program states to read input text for export. */
 void fs_export_switchTo(Program *program);

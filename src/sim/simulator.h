@@ -9,7 +9,7 @@
 
 
 /** Performs all of the simulation steps. */
-void simulation_tick(Simulation *sim, Screen *screen);
+void simulation_tick(Simulation *sim);
 
 /** Processes the raw input. */
 void simulation_processInput(Simulation *sim, Screen *screen, Program *program, Gui *gui, LayerInstances *li);

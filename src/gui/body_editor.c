@@ -43,7 +43,7 @@ void bodyEditor_render(Program *program, LayerInstances *li, Screen *screen, Gui
     }
 }
 
-Error bodyEditor_processTextInput(Program *program, Gui *gui, Simulation *sim, Screen *screen) {
+Error bodyEditor_processTextInput(Program *program, Gui *gui, Simulation *sim) {
     econio_gotoxy((int) gui->textPos.x, (int) gui->textPos.y);
     econio_normalmode();
 
@@ -56,7 +56,7 @@ Error bodyEditor_processTextInput(Program *program, Gui *gui, Simulation *sim, S
         case BODY_SET_NAME: {
             char name[13];
             fgets(name, 12, stdin);
-            fflush(stdin);
+            //while (getchar() != '\n');
             name[12] = '\0';
             for (int i = 0; i < 12; ++i) {
                 if (name[i] == '\n')
@@ -65,7 +65,6 @@ Error bodyEditor_processTextInput(Program *program, Gui *gui, Simulation *sim, S
                     name[i] = ' ';
             }
             strcpy(sim->editedBody->name, name);
-            //scanf("%12[^\n]s", sim->editedBody->name);
             if (gui->editMenu_state == EDIT_MENU_STATE_ADD_BODY)
                 gui->bodyEditor_state = BODY_SET_MASS;
             else
@@ -74,7 +73,7 @@ Error bodyEditor_processTextInput(Program *program, Gui *gui, Simulation *sim, S
         }
         case BODY_SET_MASS:
             scanf("%31s", sValue1);
-            fflush(stdin);
+            while (getchar() != '\n');
             if (sscanf(sValue1, "%lf", &value1) == 1 && value1 >= 0) {
                 sim->editedBody->mass = value1;
                 if (gui->editMenu_state == EDIT_MENU_STATE_ADD_BODY)
@@ -86,7 +85,7 @@ Error bodyEditor_processTextInput(Program *program, Gui *gui, Simulation *sim, S
             break;
         case BODY_SET_R:
             scanf("%31s", sValue1);
-            fflush(stdin);
+            while (getchar() != '\n');
             if (sscanf(sValue1, "%lf", &value1) == 1 && value1 > 0) {
                 sim->editedBody->r = value1;
                 if (gui->editMenu_state == EDIT_MENU_STATE_ADD_BODY) {
@@ -99,11 +98,9 @@ Error bodyEditor_processTextInput(Program *program, Gui *gui, Simulation *sim, S
             break;
         case BODY_SET_V:
             scanf("%31s %31s", sValue1, sValue2);
-            fflush(stdin);
+            while (getchar() != '\n');
             if (sscanf(sValue1, "%lf", &value1) == 1 && sscanf(sValue2, "%lf", &value2) == 1) {
-                sim->editedBody->velocity = vector_create(value1 / screen->targetFPS / 3, value2);
-                /*sim->editedBody->velocity.x = value1;
-                sim->editedBody->velocity.y = value2;*/
+                sim->editedBody->velocity = vector_create(value1 / 100, value2);
                 sim->editedBody->velocity.y = -sim->editedBody->velocity.y;
                 if (gui->editMenu_state == EDIT_MENU_STATE_ADD_BODY) {
                     program->state = PROGRAM_STATE_EDIT_MENU;

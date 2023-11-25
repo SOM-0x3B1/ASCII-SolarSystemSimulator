@@ -15,7 +15,7 @@ void bodyEditor_render(Program *program, LayerInstances *li, Screen *screen, Gui
 /** Processes the input text after pressing enter.
  *  @return Success / error
  */
-Error bodyEditor_processTextInput(Program *program, Gui *gui, Simulation *sim, Screen *screen);
+Error bodyEditor_processTextInput(Program *program, Gui *gui, Simulation *sim);
 
 /** Moves and places the edited body on the simulation window. */
 void bodyEditor_processPlacementInput(Program *program, Gui *gui, Simulation *sim);
