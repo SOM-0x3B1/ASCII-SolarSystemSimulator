@@ -179,6 +179,8 @@ static Error import(char *filename, Simulation *sim) {
         double value;
         if(sscanf(line, "%lf", &value) != 1)
             return ERR_IMPORT_VALUE;
+        if(value <= 0)
+            return ERR_IMPORT_VALUE;
         sim->solarMass = value;
 
         for (int i = 0; i < 2; ++i) {

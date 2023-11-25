@@ -56,6 +56,7 @@ Error bodyEditor_processTextInput(Program *program, Gui *gui, Simulation *sim, S
         case BODY_SET_NAME: {
             char name[13];
             fgets(name, 12, stdin);
+            fflush(stdin);
             name[12] = '\0';
             for (int i = 0; i < 12; ++i) {
                 if (name[i] == '\n')
@@ -73,6 +74,7 @@ Error bodyEditor_processTextInput(Program *program, Gui *gui, Simulation *sim, S
         }
         case BODY_SET_MASS:
             scanf("%31s", sValue1);
+            fflush(stdin);
             if (sscanf(sValue1, "%lf", &value1) == 1 && value1 >= 0) {
                 sim->editedBody->mass = value1;
                 if (gui->editMenu_state == EDIT_MENU_STATE_ADD_BODY)
@@ -81,10 +83,10 @@ Error bodyEditor_processTextInput(Program *program, Gui *gui, Simulation *sim, S
                     program->state = PROGRAM_STATE_EDIT_MENU;
             } else
                 return ERR_ADDBODY_VALUE;
-            fflush(stdin);
             break;
         case BODY_SET_R:
             scanf("%31s", sValue1);
+            fflush(stdin);
             if (sscanf(sValue1, "%lf", &value1) == 1 && value1 > 0) {
                 sim->editedBody->r = value1;
                 if (gui->editMenu_state == EDIT_MENU_STATE_ADD_BODY) {
@@ -94,10 +96,10 @@ Error bodyEditor_processTextInput(Program *program, Gui *gui, Simulation *sim, S
                     program->state = PROGRAM_STATE_EDIT_MENU;
             } else
                 return ERR_ADDBODY_VALUE;
-            fflush(stdin);
             break;
         case BODY_SET_V:
             scanf("%31s %31s", sValue1, sValue2);
+            fflush(stdin);
             if (sscanf(sValue1, "%lf", &value1) == 1 && sscanf(sValue2, "%lf", &value2) == 1) {
                 sim->editedBody->velocity = vector_create(value1 / screen->targetFPS / 3, value2);
                 /*sim->editedBody->velocity.x = value1;
@@ -110,7 +112,6 @@ Error bodyEditor_processTextInput(Program *program, Gui *gui, Simulation *sim, S
                     program->state = PROGRAM_STATE_EDIT_MENU;
             } else
                 return ERR_ADDBODY_VALUE;
-            fflush(stdin);
             break;
         default:
             break;
