@@ -140,7 +140,7 @@ typedef struct Layer {
     bool enabled;
 } Layer;
 
-// All layers are declared here
+// All layers are stored here
 typedef struct LayerInstances {
     Layer overlayLayer;
     Layer menuLayer;
@@ -197,7 +197,6 @@ typedef enum ProgramState {
     PROGRAM_STATE_PLACING_BODY,
 } ProgramState;
 
-/** Which part of the program should process the text input. */
 typedef enum TextInputDest {
     TEXT_INPUT_BODY_EDITOR,
     TEXT_INPUT_EXPORT,
@@ -205,11 +204,11 @@ typedef enum TextInputDest {
 } TextInputDest;
 
 typedef struct Program {
-    ProgramState state;
-    TextInputDest textInputDest;
-    double sleepTime; // Regulates simulation speed (and FPS)
-    Error error;
-    bool exiting;
+    ProgramState state; // The current state of the program.
+    TextInputDest textInputDest; // Which part of the program should process the text input.
+    double sleepTime;   // Regulates simulation speed (and FPS)
+    Error error;        // Is not SUCCESS if the program has encountered an unadressed error.
+    bool exiting;       // Exits the main program loop.
 } Program;
 
 

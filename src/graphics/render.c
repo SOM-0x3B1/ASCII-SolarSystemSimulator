@@ -19,6 +19,7 @@ Error render_init(Screen *screen) {
 
     if (screen->buffer != NULL) {
         memset(screen->buffer, '\0', buffSize);
+        // Enable full buffering (for econio_flush)
         if (setvbuf(stdout, screen->buffer, _IOFBF, screen->height * screen->width) != 0)
             return ERR_MEMORY;
     } else

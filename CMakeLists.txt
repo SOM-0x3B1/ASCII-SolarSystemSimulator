@@ -35,5 +35,5 @@ add_executable(ASCII_SSS src/main.c
         src/gui/main_menu.h
 )
 
-set(GCC_ENABLE_WARNINGS "-O1 -Wall -Werror -Wno-unused-result")
+set(GCC_ENABLE_WARNINGS "-O1 -Wall -Werror")
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${GCC_ENABLE_WARNINGS}")

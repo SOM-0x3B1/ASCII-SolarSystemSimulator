@@ -18,7 +18,7 @@ static void getPrompt(char *res, BodyEditorState s) {
             strcpy(res, "Radius:");
             break;
         default:
-            strcpy(res, "Velocity:");
+            strcpy(res, "Velocity (speed, angle):");
             break;
     }
 }
