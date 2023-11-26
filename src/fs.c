@@ -41,30 +41,49 @@ Error fs_settings_loadSettings(Simulation *sim, Screen *screen) {
             getSValue(sValue, line);
 
             double value = 0;
-            if (sscanf(sValue, "%lf", &value) != 1)
+            if (sscanf(sValue, "%lf", &value) != 1) {
+                fclose(f);
                 return ERR_SETTIGNS_VALUE; // invalid value
+            }
 
             if (strcmp(param, "screen_width") == 0) {
                 if (value > 0) screen->width = (int) value;
-                else return ERR_SETTIGNS_VALUE;
+                else {
+                    fclose(f);
+                    return ERR_SETTIGNS_VALUE;
+                }
             } else if (strcmp(param, "screen_height") == 0) {
                 if (value > 0) screen->height = (int) value;
-                else return ERR_SETTIGNS_VALUE;
+                else {
+                    fclose(f);
+                    return ERR_SETTIGNS_VALUE;
+                }
             } else if (strcmp(param, "targetFPS") == 0) {
                 if (value > 0) screen->targetFPS = (int) value;
-                else return ERR_SETTIGNS_VALUE;
+                else {
+                    fclose(f);
+                    return ERR_SETTIGNS_VALUE;
+                }
             } else if (strcmp(param, "solarMass") == 0) {
                 if (value > 0) sim->solarMass = value;
-                else return ERR_SETTIGNS_VALUE;
+                else {
+                    fclose(f);
+                    return ERR_SETTIGNS_VALUE;
+                }
             } else if (strcmp(param, "detectCollisionPercentage") == 0) {
                 if (value > 0) sim->detectCollisionPercentage = (double) value / 100;
-                else return ERR_SETTIGNS_VALUE;
-            } else
-                return ERR_SETTINGS_PARAMETER; // invalid parameter
+                else {
+                    fclose(f);
+                    return ERR_SETTIGNS_VALUE;
+                }
+            } else {
+                fclose(f);
+                return ERR_SETTINGS_PARAMETER;
+            }
         }
         fclose(f);
     } else
-        return ERR_SETTINGS_OPEN_FILE; // unable to open
+        return ERR_SETTINGS_OPEN_FILE;
 
     return SUCCESS;
 }
@@ -94,6 +113,7 @@ Error fs_loadMainMenu(Gui *gui) {
         fgets(gui->mainMenu_title[y], 60, f);
         gui->mainMenu_title[y][51] = '\0';
     }
+    fclose(f);
 
     return SUCCESS;
 }
@@ -169,23 +189,31 @@ static Error import(char *filename, Simulation *sim) {
     if (f != NULL) {
         char line[120];
         for (int i = 0; i < 2; ++i) {
-            if(fgets(line, 120, f) == NULL)
+            if(fgets(line, 120, f) == NULL) {
+                fclose(f);
                 return ERR_IMPORT_VALUE;
+            }
         }
 
         bodyArray_dispose(&sim->bodyArray);
         bodyArray_init(&sim->bodyArray);
 
         double value;
-        if(sscanf(line, "%lf", &value) != 1)
+        if(sscanf(line, "%lf", &value) != 1) {
+            fclose(f);
             return ERR_IMPORT_VALUE;
-        if(value <= 0)
+        }
+        if(value <= 0) {
+            fclose(f);
             return ERR_IMPORT_VALUE;
+        }
         sim->solarMass = value;
 
         for (int i = 0; i < 2; ++i) {
-            if(fgets(line, 120, f) == NULL)
+            if(fgets(line, 120, f) == NULL) {
+                fclose(f);
                 return ERR_IMPORT_VALUE;
+            }
         }
 
         Body b;
@@ -203,9 +231,12 @@ static Error import(char *filename, Simulation *sim) {
                 }
             } else if(res == EOF)
                 break;
-            else
+            else {
+                fclose(f);
                 return ERR_IMPORT_VALUE;
+            }
         }
+        fclose(f);
     } else
         return ERR_IMPORT_OPEN_FILE; // unable to create file
 
