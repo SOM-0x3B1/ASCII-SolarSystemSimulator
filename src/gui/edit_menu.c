@@ -239,7 +239,7 @@ editMenu_selectMainOption(Gui *gui, Simulation *sim, Screen *screen, LayerInstan
 
 
 /** Enter on "Edit body"/[body] */
-static void editMenu_selectEditOption(Gui *gui, Simulation *sim) {
+static void editMenu_selectEditOption(Program *p, Gui *gui, Simulation *sim) {
     if (gui->cursorPos == sim->bodyArray.length) {
         gui->editMenu_state = EDIT_MENU_STATE_MAIN;
         gui->cursorPos = 0;
@@ -261,8 +261,10 @@ static void editMenu_selectEditPropertyOption(Gui *gui, Program *program) {
         gui->bodyEditor_state = gui->cursorPos;
         if (gui->cursorPos != BODY_SET_POS)
             bodyEditor_switchTo(program);
-        else
+        else {
+            program->textInputDest = TEXT_INPUT_BODY_EDITOR;
             program->state = PROGRAM_STATE_PLACING_BODY;
+        }
     }
 }
 
@@ -338,7 +340,7 @@ Error editMenu_processInput(Program *program, Simulation *sim, Screen *screen, G
                 case EDIT_MENU_STATE_MAIN:
                     return editMenu_selectMainOption(gui, sim, screen, li, program);
                 case EDIT_MENU_STATE_EDIT_BODY:
-                    editMenu_selectEditOption(gui, sim);
+                    editMenu_selectEditOption(program, gui, sim);
                     break;
                 case EDIT_MENU_STATE_EDIT_BODY_SET:
                     editMenu_selectEditPropertyOption(gui, program);
