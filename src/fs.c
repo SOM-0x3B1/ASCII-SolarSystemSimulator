@@ -4,6 +4,7 @@
 #include "sim/body.h"
 #include "graphics/drawing.h"
 #include "lib/debugmalloc.h"
+#include "gui/edit_menu.h"
 
 
 #define MAX_FILENAME_LENGTH 250
@@ -183,7 +184,7 @@ void fs_import_render(Gui *gui, LayerInstances *li, Screen *screen) {
  * Creates a new file, and writes the content of the body array into it.
  * @return Success / error
  */
-static Error import(char *filename, Simulation *sim) {
+static Error import(char *filename, Simulation *sim, Program *program, Gui *gui, Screen *screen, LayerInstances *li) {
     FILE *f;
     f = fopen(strcat(filename, ".tsv"), "r");
     if (f != NULL) {
@@ -240,11 +241,13 @@ static Error import(char *filename, Simulation *sim) {
     } else
         return ERR_IMPORT_OPEN_FILE; // unable to create file
 
+    editMenu_close(program, gui, li, screen, sim);
+
     return SUCCESS;
 }
 
 
-Error fs_saving_processTextInput(Gui *gui, Program *program, Simulation *sim) {
+Error fs_saving_processTextInput(Gui *gui, Program *program, Simulation *sim, Screen *screen, LayerInstances *li) {
     econio_gotoxy((int) gui->textPos.x, (int) gui->textPos.y);
     econio_normalmode();
 
@@ -263,7 +266,7 @@ Error fs_saving_processTextInput(Gui *gui, Program *program, Simulation *sim) {
         if(program->textInputDest == TEXT_INPUT_EXPORT)
             return export(filename, sim);
         else
-            return import(filename, sim);
+            return import(filename, sim, program, gui, screen, li);
     }
     else
         return ERR_FS_FILENAME;

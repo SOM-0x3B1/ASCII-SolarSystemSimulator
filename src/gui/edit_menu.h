@@ -16,6 +16,9 @@
  */
 void editMenu_switchTo(EconioKey key, Program *program, Gui *gui, Screen *screen, LayerInstances *li);
 
+/** Closes the edit menu and returns to simulation. */
+void editMenu_close(Program *program, Gui *gui, LayerInstances *li, Screen *screen, Simulation *sim);
+
 /** Renders all edit menu components. */
 void editMenu_render(LayerInstances *li, Screen *screen, Gui *gui, Simulation *sim);
 

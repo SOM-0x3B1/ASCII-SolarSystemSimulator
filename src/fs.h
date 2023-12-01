@@ -31,7 +31,7 @@ void fs_import_switchTo(Program *program);
 void fs_import_render(Gui *gui, LayerInstances *li, Screen *screen);
 
 /** Reads the name of the export file. */
-Error fs_saving_processTextInput(Gui *gui, Program *program, Simulation *sim);
+Error fs_saving_processTextInput(Gui *gui, Program *program, Simulation *sim, Screen *screen, LayerInstances *li);
 
 
 #endif //ASCII_SSS_FS_H

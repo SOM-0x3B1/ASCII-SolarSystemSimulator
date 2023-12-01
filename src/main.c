@@ -26,6 +26,7 @@ int main() {
     econio_rawmode();
 
     // Default settings
+
     Program program;
     program.sleepTime = 0.02;
     program.error = SUCCESS;
@@ -56,6 +57,7 @@ int main() {
 
 
     // Attept to load settings.ini
+
     program.error = fs_settings_loadSettings(&sim, &screen);
 
     screen.bufferSize = screen.height * screen.width * sizeof(char);
@@ -118,7 +120,7 @@ int main() {
                         break;
                     case TEXT_INPUT_IMPORT:
                     case TEXT_INPUT_EXPORT:
-                        program.error = fs_saving_processTextInput(&gui, &program, &sim);
+                        program.error = fs_saving_processTextInput(&gui, &program, &sim, &screen, &layerStatic.layerInstances);
                         break;
                 }
             }

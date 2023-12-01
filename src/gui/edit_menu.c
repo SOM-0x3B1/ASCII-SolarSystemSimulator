@@ -295,7 +295,7 @@ static void editMenu_selectFollowOption(Gui *gui, Simulation *sim) {
 
 
 /** Closes the edit menu and returns to simulation mode. */
-static void editMenu_close(Program *program, Gui *gui, LayerInstances *li, Screen *screen, Simulation *sim) {
+void editMenu_close(Program *program, Gui *gui, LayerInstances *li, Screen *screen, Simulation *sim) {
     program->state = PROGRAM_STATE_SIMULATION;
     gui->editMenu_state = EDIT_MENU_STATE_MAIN;
     li->menuLayer.enabled = false;
