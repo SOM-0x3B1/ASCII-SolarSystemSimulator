@@ -3,7 +3,7 @@
 #include <string.h>
 #include "../graphics/drawing.h"
 #include "math.h"
-#include "../lib/debugmalloc.h"
+
 
 
 #define TRAIL_LENGTH 15

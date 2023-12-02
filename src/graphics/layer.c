@@ -1,5 +1,5 @@
 #include "layer.h"
-#include "../lib/debugmalloc.h"
+#include "string.h"
 
 
 /** Replaces every character in a layers with \0. */

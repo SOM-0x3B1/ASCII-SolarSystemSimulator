@@ -164,7 +164,4 @@ void exitProgram(LayerStatic *ls, Simulation sim, Screen *screen) {
     layer_dispose(ls->layers);
     render_dispose(screen);
     bodyArray_dispose(&sim.bodyArray);
-
-    /*debugmalloc_atexit_dump();
-    econio_sleep(5);*/
 }

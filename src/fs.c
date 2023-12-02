@@ -3,7 +3,7 @@
 #include "fs.h"
 #include "sim/body.h"
 #include "graphics/drawing.h"
-#include "lib/debugmalloc.h"
+
 #include "gui/edit_menu.h"
 
 

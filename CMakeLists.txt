@@ -21,7 +21,6 @@ add_executable(ASCII_SSS src/main.c
         src/graphics/drawing.h
         src/gui/overlay.c
         src/gui/overlay.h
-        src/lib/debugmalloc.h
         src/sim/body_array.c
         src/sim/body_array.h
         src/gui/body_editor.c
