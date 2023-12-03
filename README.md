@@ -15,6 +15,8 @@ The purpose of this program is to simulate the physics of a solar system.
 It lets the user...
 - manage (add, edit delete) celestial bodies in real time
 - operate the camera (move, follow)
+- speed up simulation
+- toggle visual elements
 - export and import systems
 
 ## Requirements
