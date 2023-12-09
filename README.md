@@ -26,8 +26,8 @@ It lets the user:
 
 ## Requirements
 
-While the project will probably work on most consoles/terminals, currently it only officially supports the default Command Prompt of Microsoft Windows. Using any other softwares might cause unexpected behavior. <br><br>
-In order to keep the program fully functional the following files must be present beside the executable:
+While the project is probably compatible with most terminals, currently it only has official support for the default Command Prompt of Microsoft Windows. Using any other solution might cause unexpected behavior. <br><br>
+In order to keep the program fully functional, the following files must be present beside the executable:
 - settings.ini
 - title.txt
 - earth-animation.txt
