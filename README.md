@@ -16,7 +16,10 @@ The zip contains all required files. No installation is needed.
 
 ## About
 
+<img width="398" height="253" align="right" src="https://www.onekilobit.eu/ascii-sss/editor.png">
+
 The purpose of this program is to simulate the physics of a solar system.
+
 It lets the user:
 - manage (add, edit delete) celestial bodies in real time
 - operate the camera (move, follow)
@@ -28,9 +31,14 @@ It lets the user:
 
 While the project is probably compatible with most terminals, currently it only has official support for the default Command Prompt of Microsoft Windows. Using any other solution might cause unexpected behavior. <br><br>
 In order to keep the program fully functional, the following files must be present beside the executable:
+
+<img width="248" height="142" align="right" src="https://www.onekilobit.eu/ascii-sss/error.png">
+
 - settings.ini
 - title.txt
 - earth-animation.txt
+
+All of these files are included by default in the downloadable zips.
 
 ## Usage
 
