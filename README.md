@@ -7,7 +7,12 @@
 
 <p align="center">A console display based solar system / gravity simulator made in C.</p>
 
+## Download
+You can download the latest release by clicking here:
 
+[![Download zip](https://custom-icon-badges.demolab.com/badge/-Download-blue?style=for-the-badge&logo=download&logoColor=white "Download zip")](https://github.com/SOM-0x3B1/ASCII-SolarSystemSimulator/releases/download/v1.0/ascii-sss-v1.0.zip)
+
+The zip contains all required files. No installation is needed. 
 
 ## About
 
