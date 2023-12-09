@@ -31,7 +31,7 @@ In order to keep the program fully functional the following files must be presen
 
 ### Controls
 
-<img width="500" height="250" align="right" src="https://www.onekilobit.eu/ascii-sss/sim.gif">
+<img width="400" height="200" align="right" src="https://www.onekilobit.eu/ascii-sss/sim.gif">
 
 Input | Action
 --- | ---
