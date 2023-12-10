@@ -53,5 +53,5 @@ E | Open/close edit menu
 W-S | Move the edit menu cursor up and down
 Enter | Select option
 Space | Pauses the simulation
-Q | Enables full speed
+Q | Enables maximum simulation speed
 
